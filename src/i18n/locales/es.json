@@ -1,0 +1,639 @@
+{
+  "common": {
+    "home": "Inicio",
+    "stock": "Stock",
+    "admin": "Admin",
+    "email": "Correo",
+    "product": "Producto",
+    "morocco": "Marruecos",
+    "notAvailable": "N/D"
+  },
+  "nav": {
+    "home": "Inicio",
+    "stock": "Stock",
+    "stockUsed": "Ocasion",
+    "stockNew": "Nuevo",
+    "myOrders": "Mis pedidos",
+    "admin": "Admin",
+    "services": "Servicios",
+    "contact": "Contacto",
+    "login": "Acceder",
+    "signup": "Registro",
+    "logout": "Salir",
+    "languages": {
+      "en": "Ingles",
+      "fr": "Frances",
+      "es": "Espanol"
+    }
+  },
+  "hero": {
+    "title1": "Lecitrailer en Marruecos",
+    "title2": "Representante oficial",
+    "subtitle": "SAKI TRAILER 29 SARL es el unico representante de Lecitrailer en Marruecos. La empresa suministra remolques, semirremolques, frigorificos, cortinas laterales, rigidos y otros productos Lecitrailer en todo el pais, y tambien vende cabezas tractoras usadas y servicios relacionados con el transporte internacional.",
+    "viewStock": "Ver stock",
+    "contactUs": "Contactar",
+    "delivery": "Soporte de entrega nacional",
+    "securePurchase": "Proceso de compra seguro",
+    "available": "Disponibilidad rapida de stock",
+    "imageAlt": "Showroom de SakiTrailer29",
+    "stats": {
+      "vehicles": "Vehiculos publicados",
+      "regions": "Regiones atendidas",
+      "customers": "Clientes atendidos",
+      "experience": "Anos de experiencia"
+    }
+  },
+  "categoriesSection": {
+    "eyebrow": "Categorias",
+    "title": "Explora los productos Lecitrailer y el stock de transporte usado por tipo de vehiculo",
+    "viewAll": "Ver todo el stock",
+    "vehicleType": "Tipo de vehiculo"
+  },
+  "home": {
+    "seoTitle": "SAKI TRAILER 29",
+    "seoDescription": "SAKI TRAILER 29 SARL es el unico representante de Lecitrailer en Marruecos, con productos Lecitrailer nuevos, cabezas tractoras usadas y apoyo relacionado con el transporte internacional.",
+    "inventoryEyebrow": "Stock del representante",
+    "inventoryTitle": "Productos Lecitrailer nuevos y cabezas tractoras usadas",
+    "inventoryDescription": "Consulta remolques, semirremolques, frigorificos, cortinas laterales, rigidos y otros productos Lecitrailer, junto con una seleccion de cabezas tractoras usadas y vehiculos comerciales disponibles en Marruecos.",
+    "fullStockCta": "Ir al stock completo",
+    "noResultsTitle": "No se encontraron resultados",
+    "noResultsDescription": "No hay productos disponibles en este momento."
+  },
+  "stockPage": {
+    "seoTitle": "SakiTrailer29 | Stock",
+    "seoDescription": "Consulta el stock con busqueda, filtros y ordenacion.",
+    "eyebrow": "Stock disponible",
+    "title": "Explora el inventario con busqueda, filtros y ordenacion",
+    "description": "Los clientes pueden explorar libremente el inventario, comparar productos rapidamente y abrir las paginas de detalle sin iniciar sesion.",
+    "showing": "Mostrando {{filtered}} de {{total}} productos",
+    "noResultsTitle": "Ningun producto coincide con los filtros actuales",
+    "noResultsDescription": "Reinicia los controles para volver a ver todo el inventario."
+  },
+  "stockUsedPage": {
+    "seoTitle": "Vehiculos usados en Marruecos | SakiTrailer29",
+    "seoDescription": "Consulta vehiculos usados, remolques y camiones en Marruecos con filtros por tipo, marca y dedouanee.",
+    "eyebrow": "Stock usado",
+    "title": "Vehiculos usados",
+    "description": "",
+    "showing": "Mostrando {{filtered}} de {{total}} productos usados",
+    "noResultsTitle": "Ningun producto usado coincide con los filtros actuales",
+    "noResultsDescription": "Limpia uno o mas filtros para recuperar coincidencias."
+  },
+  "stockNewPage": {
+    "seoTitle": "Productos Lecitrailer nuevos | SakiTrailer29 Marruecos",
+    "seoDescription": "Descubre productos Lecitrailer nuevos en Marruecos con busqueda y solicitudes rapidas.",
+    "eyebrow": "Stock nuevo",
+    "title": "Productos nuevos de Lecitrailer",
+    "description": "",
+    "showing": "Mostrando {{filtered}} de {{total}} productos nuevos",
+    "noResultsTitle": "Ningun producto nuevo coincide con los filtros actuales",
+    "noResultsDescription": "Restablece los filtros para ver todos los productos Lecitrailer."
+  },
+  "filters": {
+    "searchLabel": "Buscar",
+    "searchPlaceholder": "Buscar por titulo o marca",
+    "categoryLabel": "Categoria",
+    "categoryAll": "Todas las categorias",
+    "brandLabel": "Marca",
+    "brandAll": "Todas las marcas",
+    "statusLabel": "Estado",
+    "statusAll": "Todos los estados",
+    "minPriceLabel": "Precio min",
+    "maxPriceLabel": "Precio max",
+    "minYearLabel": "Ano min",
+    "maxYearLabel": "Ano max",
+    "sortLabel": "Ordenar",
+    "sortNewest": "Mas reciente",
+    "sortPriceAsc": "Precio: menor a mayor",
+    "sortPriceDesc": "Precio: mayor a menor",
+    "sortYearDesc": "Ano: mas reciente",
+    "sortMileageAsc": "Kilometraje: menor",
+    "reset": "Restablecer filtros"
+  },
+  "usedFilters": {
+    "vehicleTypeLabel": "Tipo de vehiculo",
+    "vehicleTypeAll": "Todos los tipos",
+    "brandLabel": "Marca",
+    "brandAll": "Todas las marcas",
+    "dedouaneeLabel": "Dedouanee",
+    "dedouaneeAll": "Todos los estados de aduana",
+    "dedouaneeYes": "Dedouanee",
+    "dedouaneeNo": "No dedouanee",
+    "transmissionLabel": "Transmision",
+    "transmissionAll": "Todas las transmisiones",
+    "minKilometersLabel": "Kilometraje min",
+    "maxKilometersLabel": "Kilometraje max",
+    "minPriceLabel": "Precio min",
+    "maxPriceLabel": "Precio max"
+  },
+  "product": {
+    "viewDetails": "Ver detalles",
+    "relatedEyebrow": "Productos relacionados",
+    "relatedTitle": "Mas en la misma categoria",
+    "quoteDefaultMessage": "Hola, me gustaria recibir un presupuesto para {{title}} ({{id}}).",
+    "whatsappMessage": "Hola, me gustaria recibir mas informacion sobre {{title}} ({{id}}).",
+    "specifications": {
+      "year": "Ano",
+      "modelYear": "Ano modelo",
+      "transmission": "Transmision",
+      "mileage": "Kilometraje",
+      "location": "Ubicacion"
+    },
+    "catalogue": "Catalogo de Producto",
+    "catalogueNoPreview": "Tu navegador no soporta la vista previa de PDF.",
+    "downloadCatalogue": "Descargar Catalogo",
+    "actions": {
+      "whatsapp": "WhatsApp",
+      "call": "Llamar",
+      "email": "Correo",
+      "backToStock": "Volver al stock"
+    },
+    "status": {
+      "available": "Disponible",
+      "reserved": "Reservado",
+      "sold": "Vendido"
+    },
+    "transmission": {
+      "manual": "Manual",
+      "automatic": "Automatica",
+      "semiAutomatic": "Semiautomatica"
+    },
+    "categories": {
+      "curtainsiders-semicurtainsiders": "Cortinas y semilonas",
+      "reefers": "Frigorificos",
+      "dry-freight-vans": "Furgones de carga seca",
+      "container-carrier-chassis": "Chasis portacontenedores",
+      "platforms": "Plataformas",
+      "trailers": "Remolques",
+      "dolly": "Dolly",
+      "special-vehicles-tailor-made": "Vehiculos especiales y a medida",
+      "rigids": "Rigidos",
+      "other": "Otra"
+    }
+  },
+  "productDetailPage": {
+    "seoTitle": "{{title}} | {{brand}} - SakiTrailer29",
+    "seoDescription": "Consulta imagenes, especificaciones y solicita presupuesto para {{title}} de {{brand}}.",
+    "fallbackSeoTitle": "Producto | SakiTrailer29",
+    "fallbackSeoDescription": "Consulta informacion detallada de vehiculos en SakiTrailer29."
+  },
+  "leadForm": {
+    "title": "Solicitar presupuesto",
+    "fullName": "Nombre completo",
+    "phone": "Telefono",
+    "email": "Correo",
+    "preferredContact": "Contacto preferido",
+    "preferredContactPlaceholder": "Elegir metodo de contacto",
+    "message": "Mensaje",
+    "submit": "Solicitar presupuesto",
+    "submitting": "Enviando solicitud...",
+    "success": "Tu solicitud se ha guardado.",
+    "error": "No hemos podido enviar tu solicitud. Intentalo de nuevo.",
+    "contactOptions": {
+      "phone": "Telefono",
+      "whatsapp": "WhatsApp",
+      "email": "Correo"
+    },
+    "validation": {
+      "fullName": "El nombre completo es obligatorio.",
+      "phone": "El telefono es obligatorio.",
+      "email": "Correo invalido.",
+      "message": "El mensaje es obligatorio.",
+      "generic": "Revisa el formulario y vuelve a intentarlo."
+    }
+  },
+  "auth": {
+    "common": {
+      "password": "Contrasena",
+      "socialDivider": "O continuar con",
+      "continueWithGoogle": "Google",
+      "continueWithFacebook": "Facebook",
+      "socialPlaceholder": "El acceso social todavia no esta conectado.",
+      "googlePromptEmail": "Introduce tu email de Google",
+      "googlePromptName": "Introduce tu nombre completo para la cuenta de Google",
+      "googleInvalidEmail": "Introduce un email valido.",
+      "googleSuccess": "Sesion iniciada con Google.",
+      "googleCancelled": "Inicio de sesion con Google cancelado.",
+      "googleNotConfigured": "El acceso con Google todavia no esta configurado.",
+      "googlePopupBlocked": "El navegador bloqueo la ventana emergente de Google.",
+      "googleUnauthorizedDomain": "Este dominio no esta autorizado en Firebase Auth.",
+      "googleBackendNotConfigured": "El servidor de autenticacion no tiene credenciales Firebase Admin.",
+      "googleTokenInvalid": "La verificacion del token de Google fallo."
+    },
+    "login": {
+      "seoTitle": "Acceso | SakiTrailer29",
+      "seoDescription": "Inicia sesion para acceder al stock protegido y al area admin.",
+      "title": "Acceder",
+      "description": "Usa tu cuenta para acceder al stock protegido y a las herramientas admin.",
+      "submit": "Acceder",
+      "noAccount": "Todavia no tienes cuenta?",
+      "createAccount": "Crear una",
+      "adminHelpTitle": "Acceso admin",
+      "adminHelpText": "El acceso de administrador se configura de forma segura en el backend.",
+      "forgotPassword": "Olvidaste tu contrasena?",
+      "forgotPlaceholder": "El restablecimiento de contrasena todavia no esta conectado.",
+      "invalidCredentials": "Correo o contrasena no validos.",
+      "success": "Sesion iniciada correctamente.",
+      "failed": "Error al iniciar sesion.",
+      "validation": {
+        "email": "Introduce un correo valido.",
+        "password": "La contrasena es obligatoria."
+      }
+    },
+    "signup": {
+      "seoTitle": "Registro | SakiTrailer29",
+      "seoDescription": "Crea una cuenta para ahorrar tiempo al solicitar presupuestos y acceder al inventario protegido.",
+      "title": "Crear cuenta",
+      "description": "Accede al stock protegido y a un flujo de contacto mas rapido.",
+      "confirmPassword": "Confirmar contrasena",
+      "submit": "Crear cuenta",
+      "haveAccount": "Ya tienes una cuenta?",
+      "login": "Acceder",
+      "emailExists": "Ya existe una cuenta con este correo.",
+      "success": "Cuenta creada correctamente.",
+      "failed": "Error al crear la cuenta.",
+      "validation": {
+        "fullName": "El nombre completo es obligatorio.",
+        "email": "Introduce un correo valido.",
+        "password": "La contrasena debe tener al menos 6 caracteres.",
+        "confirmPassword": "Confirma tu contrasena.",
+        "passwordMatch": "Las contrasenas no coinciden."
+      }
+    },
+    "resetPassword": {
+      "title": "Olvidaste tu contrasena?",
+      "description": "Introduce tu correo y te enviaremos un enlace de restablecimiento.",
+      "submit": "Enviar enlace",
+      "successToast": "Correo enviado! Revisa tu bandeja de entrada.",
+      "errorToast": "Error al enviar el correo. Comprueba la direccion.",
+      "successMessage": "Revisa tu bandeja (y la carpeta de spam) para el enlace.",
+      "backToLogin": "Volver al acceso"
+    }
+  },
+  "dashboard": {
+    "title": "Mi espacio",
+    "subtitle": "Gestiona tu perfil y sigue tus pedidos.",
+    "profileTitle": "Informacion personal",
+    "profileDescription": "Actualiza tus datos",
+    "companyName": "Nombre de la empresa",
+    "emailReadOnly": "Correo (solo lectura)",
+    "securityTitle": "Seguridad",
+    "securityDescription": "Cambia tu contrasena",
+    "newPassword": "Nueva contrasena",
+    "confirmPassword": "Confirmar contrasena",
+    "changePassword": "Cambiar contrasena",
+    "saveChanges": "Guardar cambios",
+    "passwordValidation": "La contrasena debe tener al menos 6 caracteres",
+    "passwordMatch": "Las contrasenas no coinciden",
+    "profileUpdated": "Perfil actualizado correctamente",
+    "profileUpdateFailed": "No se pudo actualizar el perfil",
+    "passwordUnsupported": "El cambio de contrasena no esta disponible en esta version.",
+    "passwordUpdated": "Contrasena actualizada correctamente",
+    "passwordUpdateFailed": "No se pudo actualizar la contrasena.",
+    "requiresRecentLoginPassword": "Requisito de seguridad: cierra sesion y vuelve a entrar antes de cambiar tu contrasena.",
+    "accountDeleted": "Cuenta eliminada correctamente.",
+    "accountDeleteFailed": "No se pudo eliminar la cuenta.",
+    "requiresRecentLoginDelete": "Requisito de seguridad: cierra sesion y vuelve a entrar antes de eliminar tu cuenta.",
+    "dangerZone": "Zona de peligro",
+    "deleteAccountWarning": "Elimina permanentemente tu cuenta y todos los datos asociados.",
+    "deleteAccount": "Eliminar cuenta",
+    "deleteConfirmTitle": "Estas absolutamente seguro?",
+    "deleteConfirmDescription": "Esta accion no se puede deshacer. Eliminara tu cuenta y todos tus datos.",
+    "deleteConfirmAction": "Si, eliminar mi cuenta",
+    "cancel": "Cancelar"
+  },
+  "admin": {
+    "seoTitle": "Admin | SakiTrailer29",
+    "seoDescription": "Gestiona productos, clientes y pedidos en el panel admin y exporta el catalogo en CSV.",
+    "eyebrow": "Panel admin",
+    "title": "Panel de catalogo y pedidos",
+    "description": "Los productos, usuarios y pedidos se gestionan mediante la API backend para que el frontend se centre en la navegacion y los flujos admin.",
+    "exportCsv": "Exportar CSV",
+    "addProduct": "Agregar producto",
+    "productsTitle": "Productos",
+    "productsCount": "{{count}} elementos en el backend.",
+    "table": {
+      "title": "Titulo",
+      "category": "Categoria",
+      "brand": "Marca",
+      "stockType": "Tipo de stock",
+      "source": "Fuente",
+      "dedouanee": "Dedouanee",
+      "year": "Ano",
+      "modelYear": "Ano modelo",
+      "transmission": "Transmision",
+      "price": "Precio",
+      "status": "Estado",
+      "actions": "Acciones"
+    },
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "dialog": {
+      "addTitle": "Agregar producto",
+      "editTitle": "Editar producto",
+      "description": "Los cambios se guardan en la API backend y actualizan el resto de la aplicacion al instante."
+    },
+    "form": {
+      "title": "Titulo (EN)",
+      "titleFr": "Titulo (FR)",
+      "titleEs": "Titulo (ES)",
+      "category": "Categoria",
+      "categoryOther": "Otra",
+      "customCategoryName": "Nombre de la categoria personalizada",
+      "customCategoryPlaceholder": "Ejemplo: Cabezas tractoras",
+      "brand": "Marca",
+      "stockType": "Tipo de stock",
+      "source": "Fuente",
+      "dedouanee": "Dedouanee",
+      "dedouaneeNotSpecified": "No especificado",
+      "price": "Precio",
+      "year": "Ano",
+      "modelYear": "Ano modelo",
+      "transmission": "Transmision",
+      "transmissionNotSpecified": "No especificada",
+      "transmissionManual": "Manual",
+      "transmissionAutomatic": "Automatica",
+      "transmissionSemiAutomatic": "Semiautomatica",
+      "mileage": "Kilometraje (km)",
+      "location": "Ubicacion",
+      "images": "Imagenes",
+      "imagesPlaceholder": "Pega las URL de las imagenes aqui (una por linea)",
+      "imagesUploadHelp": "Selecciona una o varias imagenes.",
+      "imagesCount": "{{count}} imagenes cargadas",
+      "clearAllImages": "Borrar todo",
+      "removeImage": "Eliminar",
+      "catalogue": "Catalogos de Producto (PDF)",
+      "cataloguesCount": "{{count}} catalogos cargados",
+      "clearAllCatalogues": "Borrar todos",
+      "remove": "Eliminar",
+      "catalogueUploaded": "Catalogo cargado listo para guardar",
+      "catalogueSizeError": "Cada catalogo debe ser menor a 5 MB.",
+      "description": "Descripcion (EN)",
+      "descriptionFr": "Descripcion (FR)",
+      "descriptionEs": "Descripcion (ES)",
+      "previewTitle": "Vista previa del producto",
+      "status": "Estado"
+    },
+    "stockType": {
+      "new": "Nuevo",
+      "used": "Ocasion"
+    },
+    "source": {
+      "lecitrailer": "Lecitrailer",
+      "sakitrailer29": "SakiTrailer29"
+    },
+    "cancel": "Cancelar",
+    "saveChanges": "Guardar cambios",
+    "createProduct": "Crear producto",
+    "confirmDelete": "Eliminar este producto?",
+    "toasts": {
+      "duplicateId": "Ya existe un producto con este ID.",
+      "updated": "Producto actualizado.",
+      "created": "Producto creado.",
+      "deleted": "Producto eliminado.",
+      "backendUnavailable": "La API backend no esta disponible. Inicia el servidor backend e intentalo de nuevo.",
+      "updateFailed": "No se pudo actualizar el producto en la base de datos backend.",
+      "createFailed": "No se pudo crear el producto en la base de datos backend.",
+      "deleteFailed": "No se pudo eliminar el producto de la base de datos backend."
+    },
+    "leads": {
+      "title": "Solicitudes de presupuesto",
+      "count": "{{count}} solicitudes en el almacenamiento backend.",
+      "empty": "Todavia no se han recibido solicitudes.",
+      "table": {
+        "date": "Fecha",
+        "customer": "Cliente",
+        "contact": "Contacto",
+        "product": "Producto",
+        "preferredContact": "Contacto preferido",
+        "message": "Mensaje"
+      }
+    },
+    "validation": {
+      "id": "El ID es obligatorio.",
+      "title": "El titulo es obligatorio.",
+      "brand": "La marca es obligatoria.",
+      "price": "El precio debe ser mayor que 0.",
+      "year": "El ano debe ser valido.",
+      "modelYear": "El ano modelo debe ser valido.",
+      "customCategoryName": "El nombre de la categoria personalizada es obligatorio para ocasion.",
+      "customCategoryUsedOnly": "Las categorias personalizadas solo estan disponibles para ocasion.",
+      "mileage": "El kilometraje debe ser positivo.",
+      "images": "Introduce al menos una imagen o URL.",
+      "description": "La descripcion es obligatoria."
+    },
+    "orders": {
+      "title": "Pedidos",
+      "count": "{{count}} pedidos en el backend.",
+      "addOrder": "Agregar pedido",
+      "addTitle": "Agregar pedido",
+      "editTitle": "Editar pedido",
+      "dialogDescription": "Crea numeros de pedido, asignalos a usuarios y actualiza el estado.",
+      "createOrder": "Crear pedido",
+      "unassigned": "Sin asignar",
+      "table": {
+        "orderNumber": "Numero de pedido",
+        "user": "Usuario",
+        "status": "Estado",
+        "productId": "ID de producto",
+        "updatedAt": "Actualizado"
+      },
+      "form": {
+        "orderNumber": "Numero de pedido",
+        "user": "Asignar usuario",
+        "productId": "ID de producto (opcional)",
+        "status": "Estado",
+        "notes": "Notas"
+      },
+      "toasts": {
+        "created": "Pedido creado.",
+        "updated": "Pedido actualizado.",
+        "duplicateOrderNumber": "Ya existe un pedido con este numero.",
+        "userNotFound": "No se encontro el usuario seleccionado.",
+        "createFailed": "No se pudo crear el pedido.",
+        "updateFailed": "No se pudo actualizar el pedido."
+      },
+      "validation": {
+        "orderNumber": "El numero de pedido es obligatorio."
+      }
+    }
+  },
+  "orders": {
+    "seoTitle": "Mis pedidos | SakiTrailer29",
+    "seoDescription": "Sigue tus pedidos asignados por numero y revisa su ultimo estado.",
+    "eyebrow": "Seguimiento de pedidos",
+    "title": "Sigue tus pedidos",
+    "description": "Busca por numero de pedido y consulta todos los pedidos asignados a tu cuenta.",
+    "search": {
+      "title": "Buscar numero de pedido",
+      "description": "Introduce tu numero de pedido para revisar su ultimo estado.",
+      "placeholder": "Ejemplo: ORD-12345",
+      "submit": "Seguir pedido",
+      "notFound": "No se encontro un pedido con ese numero en tu cuenta."
+    },
+    "myOrdersTitle": "Mis pedidos asignados",
+    "myOrdersCount": "{{count}} pedidos asignados a tu cuenta.",
+    "noOrders": "Todavia no tienes pedidos asignados.",
+    "fields": {
+      "orderNumber": "Numero de pedido",
+      "status": "Estado",
+      "productId": "ID de producto",
+      "updatedAt": "Actualizado"
+    },
+    "status": {
+      "created": "Creado",
+      "assigned": "Asignado",
+      "in_progress": "En progreso",
+      "ready": "Listo",
+      "delivered": "Entregado",
+      "cancelled": "Cancelado"
+    }
+  },
+  "services": {
+    "subtitle": "Servicios",
+    "title": "Vehiculos, transporte y apoyo operativo",
+    "support": "Asesoramiento oficial Lecitrailer",
+    "supportDesc": "Acompanamiento directo del unico representante de Lecitrailer en Marruecos para elegir productos, preparar presupuestos y organizar entregas.",
+    "bestPrices": "Cabezas tractoras usadas disponibles",
+    "bestPricesDesc": "Seleccion de cabezas tractoras usadas y equipos de transporte listos para operadores y compradores de flota.",
+    "delivery": "Soporte para transporte internacional",
+    "deliveryDesc": "Ayudamos con el sourcing, la coordinacion de entrega y los servicios relacionados con la actividad de transporte en Marruecos y mas alla.",
+    "stats": {
+      "newVehicles": "Productos Lecitrailer",
+      "usedVehicles": "Cabezas tractoras usadas",
+      "workshops": "Soporte transporte"
+    },
+    "newVehicles": {
+      "title": "Productos Lecitrailer nuevos",
+      "subtitle": "Suministro oficial Lecitrailer en Marruecos",
+      "description": "Explora remolques, semirremolques, frigorificos, cortinas laterales, rigidos, chasis portacontenedores y soluciones Lecitrailer a medida para flotas marroquies.",
+      "features": [
+        "Representante oficial en Marruecos",
+        "Asesoramiento directo de producto",
+        "Multiples configuraciones",
+        "Stock listo para presupuesto"
+      ],
+      "cta": "Explorar stock Lecitrailer"
+    },
+    "usedVehicles": {
+      "title": "Cabezas tractoras usadas",
+      "subtitle": "Seleccion para trabajar de inmediato",
+      "description": "Consulta cabezas tractoras usadas y vehiculos comerciales seleccionados para transportistas que buscan disponibilidad rapida y soluciones practicas de flota.",
+      "features": [
+        "Cabezas tractoras usadas",
+        "Visibilidad rapida del stock",
+        "Seleccion orientada al transporte",
+        "Apoyo para presupuestos"
+      ],
+      "cta": "Ver vehiculos usados"
+    },
+    "afterSales": {
+      "title": "Servicios de transporte",
+      "subtitle": "Apoyo alrededor del transporte internacional",
+      "description": "Ademas de vender vehiculos, SAKI TRAILER 29 SARL tambien apoya la actividad de transporte con coordinacion y servicios relacionados con operaciones de transporte internacional.",
+      "features": [
+        "Coordinacion de entrega",
+        "Apoyo relacionado con transporte",
+        "Orientacion documental",
+        "Seguimiento agil"
+      ],
+      "cta": "Contactar al equipo"
+    }
+  },
+  "testimonials": {
+    "subtitle": "Opiniones de clientes",
+    "title": "Lo que dicen los compradores",
+    "description": "Resenas de clientes de transporte y logistica que compraron vehiculos a traves de SakiTrailer29.",
+    "items": [
+      {
+        "id": 1,
+        "name": "Ahmed Benali",
+        "location": "Casablanca",
+        "date": "15 feb 2026",
+        "rating": 5,
+        "text": "Excelente servicio. Compre un camion Iveco y todo fue claro, rapido y profesional desde el inicio hasta la entrega.",
+        "avatar": "AB"
+      },
+      {
+        "id": 2,
+        "name": "Fatima Zahra",
+        "location": "Rabat",
+        "date": "10 feb 2026",
+        "rating": 5,
+        "text": "Experiencia de compra muy fluida. El vehiculo coincidia con el anuncio y el equipo estuvo disponible en cada paso.",
+        "avatar": "FZ"
+      },
+      {
+        "id": 3,
+        "name": "Mohamed El Amrani",
+        "location": "Marrakech",
+        "date": "05 feb 2026",
+        "rating": 5,
+        "text": "Buen soporte al cliente, precios competitivos y buen seguimiento postventa. Compraria aqui otra vez.",
+        "avatar": "MA"
+      },
+      {
+        "id": 4,
+        "name": "Youssef Idrissi",
+        "location": "Tangier",
+        "date": "28 ene 2026",
+        "rating": 5,
+        "text": "El equipo me ayudo a encontrar el vehiculo correcto para mi empresa sin perder tiempo con opciones que no encajaban.",
+        "avatar": "YI"
+      },
+      {
+        "id": 5,
+        "name": "Khadija Oufkir",
+        "location": "Fes",
+        "date": "20 ene 2026",
+        "rating": 5,
+        "text": "Mi primera compra de un vehiculo utilitario y el proceso fue sencillo. Las explicaciones fueron claras y practicas.",
+        "avatar": "KO"
+      },
+      {
+        "id": 6,
+        "name": "Omar Bennani",
+        "location": "Agadir",
+        "date": "15 ene 2026",
+        "rating": 5,
+        "text": "SakiTrailer29 se ha convertido en una fuente fiable para vehiculos profesionales. Buen servicio, precios justos y comunicacion rapida.",
+        "avatar": "OB"
+      }
+    ]
+  },
+  "showroom": {
+    "subtitle": "Showroom",
+    "title": "Visita al representante oficial de Lecitrailer en Marruecos",
+    "description": "Conoce al equipo de SAKI TRAILER 29 SARL en Casablanca para revisar productos Lecitrailer nuevos, hablar de cabezas tractoras usadas y preparar soluciones para tus operaciones de transporte.",
+    "location": "Casablanca, Marruecos",
+    "hours": "Lun-Sab: 9:00 - 18:00",
+    "planVisit": "Planifica tu visita",
+    "address": "Direccion",
+    "addressLine": "Zona industrial, Casablanca, Marruecos",
+    "openingHours": "Horario",
+    "sundayClosed": "Domingo: cerrado",
+    "contact": "Contacto",
+    "schedule": "Programar visita"
+  },
+  "stickyContact": {
+    "call": "Llamar",
+    "whatsapp": "WhatsApp",
+    "quote": "Presupuesto"
+  },
+  "footer": {
+    "description": "SAKI TRAILER 29 SARL es el unico representante de Lecitrailer en Marruecos, con productos Lecitrailer nuevos, cabezas tractoras usadas seleccionadas y apoyo relacionado con el transporte internacional.",
+    "phone": "Telefono: +212 666 206 141",
+    "email": "Correo: contact@sakitrailer29.com",
+    "location": "Ubicacion: Casablanca, Marruecos",
+    "popularCategories": "Categorias populares",
+    "buy": "Comprar",
+    "company": "Empresa",
+    "viewStock": "Ver stock",
+    "availableNow": "Disponibles ahora",
+    "tractorHeads": "Cabezas tractoras",
+    "services": "Servicios",
+    "showroom": "Showroom",
+    "contact": "Contacto",
+    "copyright": "Copyright {{year}} SakiTrailer29. Todos los derechos reservados."
+  }
+}

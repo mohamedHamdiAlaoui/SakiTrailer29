@@ -1,0 +1,639 @@
+{
+  "common": {
+    "home": "Home",
+    "stock": "Stock",
+    "admin": "Admin",
+    "email": "Email",
+    "product": "Product",
+    "morocco": "Morocco",
+    "notAvailable": "N/A"
+  },
+  "nav": {
+    "home": "Home",
+    "stock": "Stock",
+    "stockUsed": "Used (Occasion)",
+    "stockNew": "New (Neuf)",
+    "myOrders": "My orders",
+    "admin": "Admin",
+    "services": "Services",
+    "contact": "Contact",
+    "login": "Login",
+    "signup": "Signup",
+    "logout": "Logout",
+    "languages": {
+      "en": "English",
+      "fr": "French",
+      "es": "Spanish"
+    }
+  },
+  "hero": {
+    "title1": "Lecitrailer in Morocco",
+    "title2": "Official Representative",
+    "subtitle": "SAKI TRAILER 29 SARL is the only representative of Lecitrailer in Morocco, supplying trailers, semi-trailers, reefers, curtainsiders, rigids, and other Lecitrailer products across the country, while also selling used tractor heads and supporting international transport services.",
+    "viewStock": "View stock",
+    "contactUs": "Contact us",
+    "delivery": "National delivery support",
+    "securePurchase": "Secure buying process",
+    "available": "Fast stock availability",
+    "imageAlt": "SakiTrailer29 showroom",
+    "stats": {
+      "vehicles": "Vehicles listed",
+      "regions": "Regions served",
+      "customers": "Customers supported",
+      "experience": "Years of experience"
+    }
+  },
+  "categoriesSection": {
+    "eyebrow": "Categories",
+    "title": "Browse Lecitrailer products and used transport stock by vehicle type",
+    "viewAll": "View all stock",
+    "vehicleType": "Vehicle type"
+  },
+  "home": {
+    "seoTitle": "SAKI TRAILER 29",
+    "seoDescription": "SAKI TRAILER 29 SARL is the only representative of Lecitrailer in Morocco, offering new Lecitrailer products, used tractor heads, and support linked to international transport services.",
+    "inventoryEyebrow": "Representative stock",
+    "inventoryTitle": "New Lecitrailer products and used tractor heads",
+    "inventoryDescription": "Browse new Lecitrailer trailers, semi-trailers, reefers, curtainsiders, rigids, and more, alongside selected used tractor heads and commercial vehicles available in Morocco.",
+    "fullStockCta": "Go to full stock",
+    "noResultsTitle": "No results found",
+    "noResultsDescription": "No products are available at the moment."
+  },
+  "stockPage": {
+    "seoTitle": "SakiTrailer29 | Stock",
+    "seoDescription": "Browse stock listings with search, filtering, and sorting controls.",
+    "eyebrow": "Available stock",
+    "title": "Browse inventory with search, filters, and sorting",
+    "description": "Customers can explore the showroom inventory freely, compare products quickly, and open detailed vehicle pages without logging in.",
+    "showing": "Showing {{filtered}} of {{total}} products",
+    "noResultsTitle": "No products match the current filters",
+    "noResultsDescription": "Reset the controls to see the entire product inventory again."
+  },
+  "stockUsedPage": {
+    "seoTitle": "Used Vehicles in Morocco | SakiTrailer29",
+    "seoDescription": "Browse used trailers, trucks, vans, and tractor heads in Morocco with filters for vehicle type, brand, and customs status.",
+    "eyebrow": "Used stock",
+    "title": "Used vehicles",
+    "description": "",
+    "showing": "Showing {{filtered}} of {{total}} used products",
+    "noResultsTitle": "No used products match the current filters",
+    "noResultsDescription": "Clear one or more filters to restore matching used stock."
+  },
+  "stockNewPage": {
+    "seoTitle": "New Lecitrailer Products | SakiTrailer29 Morocco",
+    "seoDescription": "Discover new Lecitrailer products in Morocco with searchable stock and direct quote-ready listings.",
+    "eyebrow": "New stock",
+    "title": "New products from Lecitrailer",
+    "description": "",
+    "showing": "Showing {{filtered}} of {{total}} new products",
+    "noResultsTitle": "No new products match the current filters",
+    "noResultsDescription": "Reset filters to view all available Lecitrailer products."
+  },
+  "filters": {
+    "searchLabel": "Search",
+    "searchPlaceholder": "Search by title or brand",
+    "categoryLabel": "Category",
+    "categoryAll": "All categories",
+    "brandLabel": "Brand",
+    "brandAll": "All brands",
+    "statusLabel": "Status",
+    "statusAll": "All statuses",
+    "minPriceLabel": "Min price",
+    "maxPriceLabel": "Max price",
+    "minYearLabel": "Min year",
+    "maxYearLabel": "Max year",
+    "sortLabel": "Sort",
+    "sortNewest": "Newest",
+    "sortPriceAsc": "Price: Low to High",
+    "sortPriceDesc": "Price: High to Low",
+    "sortYearDesc": "Year: Newest",
+    "sortMileageAsc": "Mileage: Lowest",
+    "reset": "Reset filters"
+  },
+  "usedFilters": {
+    "vehicleTypeLabel": "Vehicle Type",
+    "vehicleTypeAll": "All vehicle types",
+    "brandLabel": "Brand",
+    "brandAll": "All brands",
+    "dedouaneeLabel": "Dedouanee",
+    "dedouaneeAll": "All customs statuses",
+    "dedouaneeYes": "Dedouanee",
+    "dedouaneeNo": "Non dedouanee",
+    "transmissionLabel": "Transmission",
+    "transmissionAll": "All transmissions",
+    "minKilometersLabel": "Min kilometers",
+    "maxKilometersLabel": "Max kilometers",
+    "minPriceLabel": "Min price",
+    "maxPriceLabel": "Max price"
+  },
+  "product": {
+    "viewDetails": "View details",
+    "relatedEyebrow": "Related products",
+    "relatedTitle": "More in the same category",
+    "quoteDefaultMessage": "Hello, I would like a quote for {{title}} ({{id}}).",
+    "whatsappMessage": "Hello, I would like more information about {{title}} ({{id}}).",
+    "specifications": {
+      "year": "Year",
+      "modelYear": "Model year",
+      "transmission": "Transmission",
+      "mileage": "Mileage",
+      "location": "Location"
+    },
+    "catalogue": "Product Catalogue",
+    "catalogueNoPreview": "Your browser does not support PDF preview.",
+    "downloadCatalogue": "Download Catalogue",
+    "actions": {
+      "whatsapp": "WhatsApp",
+      "call": "Call",
+      "email": "Email",
+      "backToStock": "Back to stock"
+    },
+    "status": {
+      "available": "Available",
+      "reserved": "Reserved",
+      "sold": "Sold"
+    },
+    "transmission": {
+      "manual": "Manual",
+      "automatic": "Automatic",
+      "semiAutomatic": "Semi automatic"
+    },
+    "categories": {
+      "curtainsiders-semicurtainsiders": "Curtainsiders and Semicurtainsiders",
+      "reefers": "Reefers",
+      "dry-freight-vans": "Dry freight vans",
+      "container-carrier-chassis": "Container carrier chassis",
+      "platforms": "Platforms",
+      "trailers": "Trailers",
+      "dolly": "Dolly",
+      "special-vehicles-tailor-made": "Special vehicles and tailor made",
+      "rigids": "Rigids",
+      "other": "Other"
+    }
+  },
+  "productDetailPage": {
+    "seoTitle": "{{title}} | {{brand}} - SakiTrailer29",
+    "seoDescription": "Browse images, specifications, and request a quote for {{title}} from {{brand}}.",
+    "fallbackSeoTitle": "Product | SakiTrailer29",
+    "fallbackSeoDescription": "Browse detailed vehicle information at SakiTrailer29."
+  },
+  "leadForm": {
+    "title": "Request a quote",
+    "fullName": "Full name",
+    "phone": "Phone",
+    "email": "Email",
+    "preferredContact": "Preferred contact",
+    "preferredContactPlaceholder": "Choose contact method",
+    "message": "Message",
+    "submit": "Request a quote",
+    "submitting": "Sending request...",
+    "success": "Your request has been saved.",
+    "error": "We could not send your request. Please try again.",
+    "contactOptions": {
+      "phone": "Phone",
+      "whatsapp": "WhatsApp",
+      "email": "Email"
+    },
+    "validation": {
+      "fullName": "Full name is required.",
+      "phone": "Phone is required.",
+      "email": "Invalid email.",
+      "message": "Message is required.",
+      "generic": "Please review the form and try again."
+    }
+  },
+  "auth": {
+    "common": {
+      "password": "Password",
+      "socialDivider": "Or continue with",
+      "continueWithGoogle": "Google",
+      "continueWithFacebook": "Facebook",
+      "socialPlaceholder": "Social login is not connected yet.",
+      "googlePromptEmail": "Enter your Google email address",
+      "googlePromptName": "Enter your full name for the Google account",
+      "googleInvalidEmail": "Enter a valid email address.",
+      "googleSuccess": "Signed in with Google.",
+      "googleCancelled": "Google sign-in cancelled.",
+      "googleNotConfigured": "Google sign-in is not configured yet.",
+      "googlePopupBlocked": "Google popup was blocked by the browser.",
+      "googleUnauthorizedDomain": "This domain is not authorized in Firebase Auth settings.",
+      "googleBackendNotConfigured": "Auth server is not configured with Firebase Admin credentials.",
+      "googleTokenInvalid": "Google token verification failed."
+    },
+    "login": {
+      "seoTitle": "Login | SakiTrailer29",
+      "seoDescription": "Sign in to access protected stock listings and the admin area.",
+      "title": "Login",
+      "description": "Use your account to access protected stock and admin tools.",
+      "submit": "Login",
+      "noAccount": "No account yet?",
+      "createAccount": "Create one",
+      "adminHelpTitle": "Admin access",
+      "adminHelpText": "Administrator access is configured securely on the backend.",
+      "forgotPassword": "Forgot password?",
+      "forgotPlaceholder": "Password reset is not connected yet.",
+      "invalidCredentials": "Invalid email or password.",
+      "success": "Logged in successfully.",
+      "failed": "Login failed.",
+      "validation": {
+        "email": "Enter a valid email.",
+        "password": "Password is required."
+      }
+    },
+    "signup": {
+      "seoTitle": "Signup | SakiTrailer29",
+      "seoDescription": "Create an account to save time when requesting quotes and accessing protected inventory.",
+      "title": "Create account",
+      "description": "Get access to protected stock listings and faster contact flows.",
+      "confirmPassword": "Confirm password",
+      "submit": "Create account",
+      "haveAccount": "Already have an account?",
+      "login": "Login",
+      "emailExists": "An account with this email already exists.",
+      "success": "Account created successfully.",
+      "failed": "Signup failed.",
+      "validation": {
+        "fullName": "Full name is required.",
+        "email": "Enter a valid email.",
+        "password": "Password must be at least 6 characters.",
+        "confirmPassword": "Confirm your password.",
+        "passwordMatch": "Passwords do not match."
+      }
+    },
+    "resetPassword": {
+      "title": "Forgot your password?",
+      "description": "Enter your email address and we will send you a reset link.",
+      "submit": "Send reset link",
+      "successToast": "Reset email sent! Check your inbox.",
+      "errorToast": "Failed to send the reset email. Check the address.",
+      "successMessage": "Check your inbox (and spam folder) for the reset link.",
+      "backToLogin": "Back to login"
+    }
+  },
+  "dashboard": {
+    "title": "My Dashboard",
+    "subtitle": "Manage your profile and track your orders.",
+    "profileTitle": "Profile Information",
+    "profileDescription": "Update your personal details",
+    "companyName": "Company name",
+    "emailReadOnly": "Email (read only)",
+    "securityTitle": "Security",
+    "securityDescription": "Update your account password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password",
+    "changePassword": "Change Password",
+    "saveChanges": "Save Changes",
+    "passwordValidation": "Password must be at least 6 characters",
+    "passwordMatch": "Passwords do not match",
+    "profileUpdated": "Profile updated successfully",
+    "profileUpdateFailed": "Failed to update profile",
+    "passwordUnsupported": "Password change is not supported in this version.",
+    "passwordUpdated": "Password updated successfully",
+    "passwordUpdateFailed": "Failed to update password.",
+    "requiresRecentLoginPassword": "Security requirement: Please log out and log back in before changing your password.",
+    "accountDeleted": "Account deleted successfully.",
+    "accountDeleteFailed": "Failed to delete account.",
+    "requiresRecentLoginDelete": "Security requirement: Please log out and log back in before deleting your account.",
+    "dangerZone": "Danger Zone",
+    "deleteAccountWarning": "Permanently delete your account and all associated data. This action cannot be undone.",
+    "deleteAccount": "Delete Account",
+    "deleteConfirmTitle": "Are you absolutely sure?",
+    "deleteConfirmDescription": "This action cannot be undone. This will permanently delete your account and remove all your data.",
+    "deleteConfirmAction": "Yes, delete my account",
+    "cancel": "Cancel"
+  },
+  "admin": {
+    "seoTitle": "Admin | SakiTrailer29",
+    "seoDescription": "Manage products, customers, and orders in the admin dashboard and export the catalog as CSV.",
+    "eyebrow": "Admin dashboard",
+    "title": "Catalog and orders dashboard",
+    "description": "Products, users, and orders are managed through the backend API so the frontend stays focused on browsing and admin workflows.",
+    "exportCsv": "Export CSV",
+    "addProduct": "Add product",
+    "productsTitle": "Products",
+    "productsCount": "{{count}} items in backend storage.",
+    "table": {
+      "title": "Title",
+      "category": "Category",
+      "brand": "Brand",
+      "stockType": "Stock type",
+      "source": "Source",
+      "dedouanee": "Dedouanee",
+      "year": "Year",
+      "modelYear": "Model year",
+      "transmission": "Transmission",
+      "price": "Price",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "edit": "Edit",
+    "delete": "Delete",
+    "dialog": {
+      "addTitle": "Add product",
+      "editTitle": "Edit product",
+      "description": "Changes are saved to the backend API and update the rest of the app immediately."
+    },
+    "form": {
+      "title": "Title (EN)",
+      "titleFr": "Title (FR)",
+      "titleEs": "Title (ES)",
+      "category": "Category",
+      "categoryOther": "Other",
+      "customCategoryName": "Custom category name",
+      "customCategoryPlaceholder": "Example: Tractor heads",
+      "brand": "Brand",
+      "stockType": "Stock type",
+      "source": "Source",
+      "dedouanee": "Dedouanee",
+      "dedouaneeNotSpecified": "Not specified",
+      "price": "Price",
+      "year": "Year",
+      "modelYear": "Model year",
+      "transmission": "Transmission",
+      "transmissionNotSpecified": "Not specified",
+      "transmissionManual": "Manual",
+      "transmissionAutomatic": "Automatic",
+      "transmissionSemiAutomatic": "Semi automatic",
+      "mileage": "Mileage (km)",
+      "location": "Location",
+      "images": "Images",
+      "imagesPlaceholder": "Paste image URLs here (one per line)",
+      "imagesUploadHelp": "Select one or multiple images.",
+      "imagesCount": "{{count}} images loaded",
+      "clearAllImages": "Clear all",
+      "removeImage": "Remove",
+      "catalogue": "Product Catalogues (PDF)",
+      "cataloguesCount": "{{count}} catalogues loaded",
+      "clearAllCatalogues": "Clear all catalogues",
+      "remove": "Remove",
+      "catalogueUploaded": "Catalogue uploaded ready to save",
+      "catalogueSizeError": "Catalogues must be under 5MB each.",
+      "description": "Description (EN)",
+      "descriptionFr": "Description (FR)",
+      "descriptionEs": "Description (ES)",
+      "previewTitle": "Product preview",
+      "status": "Status"
+    },
+    "stockType": {
+      "new": "New",
+      "used": "Occasion"
+    },
+    "source": {
+      "lecitrailer": "Lecitrailer",
+      "sakitrailer29": "SakiTrailer29"
+    },
+    "cancel": "Cancel",
+    "saveChanges": "Save changes",
+    "createProduct": "Create product",
+    "confirmDelete": "Delete this product?",
+    "toasts": {
+      "duplicateId": "A product with this ID already exists.",
+      "updated": "Product updated.",
+      "created": "Product created.",
+      "deleted": "Product deleted.",
+      "backendUnavailable": "Backend API is not reachable. Start the backend server and try again.",
+      "updateFailed": "Unable to update product in backend database.",
+      "createFailed": "Unable to create product in backend database.",
+      "deleteFailed": "Unable to delete product from backend database."
+    },
+    "leads": {
+      "title": "Lead requests",
+      "count": "{{count}} lead requests in backend storage.",
+      "empty": "No lead requests have been received yet.",
+      "table": {
+        "date": "Date",
+        "customer": "Customer",
+        "contact": "Contact",
+        "product": "Product",
+        "preferredContact": "Preferred contact",
+        "message": "Message"
+      }
+    },
+    "validation": {
+      "id": "ID is required.",
+      "title": "Title is required.",
+      "brand": "Brand is required.",
+      "price": "Price must be greater than 0.",
+      "year": "Year must be valid.",
+      "modelYear": "Model year must be valid.",
+      "customCategoryName": "Custom category name is required for used products.",
+      "customCategoryUsedOnly": "Custom categories are available only for used products.",
+      "mileage": "Mileage must be positive.",
+      "images": "Provide at least one image path or URL.",
+      "description": "Description is required."
+    },
+    "orders": {
+      "title": "Orders",
+      "count": "{{count}} orders in backend storage.",
+      "addOrder": "Add order",
+      "addTitle": "Add order",
+      "editTitle": "Edit order",
+      "dialogDescription": "Create order numbers, assign them to users, and update status.",
+      "createOrder": "Create order",
+      "unassigned": "Unassigned",
+      "table": {
+        "orderNumber": "Order number",
+        "user": "User",
+        "status": "Status",
+        "productId": "Product ID",
+        "updatedAt": "Updated at"
+      },
+      "form": {
+        "orderNumber": "Order number",
+        "user": "Assign user",
+        "productId": "Product ID (optional)",
+        "status": "Status",
+        "notes": "Notes"
+      },
+      "toasts": {
+        "created": "Order created.",
+        "updated": "Order updated.",
+        "duplicateOrderNumber": "An order with this number already exists.",
+        "userNotFound": "Selected user was not found.",
+        "createFailed": "Order creation failed.",
+        "updateFailed": "Order update failed."
+      },
+      "validation": {
+        "orderNumber": "Order number is required."
+      }
+    }
+  },
+  "orders": {
+    "seoTitle": "My orders | SakiTrailer29",
+    "seoDescription": "Track your assigned orders by order number and check latest status updates.",
+    "eyebrow": "Order tracking",
+    "title": "Track your orders",
+    "description": "Search by order number and review all orders assigned to your account.",
+    "search": {
+      "title": "Search order number",
+      "description": "Enter your order number to check its latest status.",
+      "placeholder": "Example: ORD-12345",
+      "submit": "Track order",
+      "notFound": "No order found for this number in your account."
+    },
+    "myOrdersTitle": "My assigned orders",
+    "myOrdersCount": "{{count}} orders assigned to your account.",
+    "noOrders": "No orders are assigned to your account yet.",
+    "fields": {
+      "orderNumber": "Order number",
+      "status": "Status",
+      "productId": "Product ID",
+      "updatedAt": "Updated at"
+    },
+    "status": {
+      "created": "Created",
+      "assigned": "Assigned",
+      "in_progress": "In progress",
+      "ready": "Ready",
+      "delivered": "Delivered",
+      "cancelled": "Cancelled"
+    }
+  },
+  "services": {
+    "subtitle": "Services",
+    "title": "Vehicles, transport, and operational support",
+    "support": "Official Lecitrailer guidance",
+    "supportDesc": "Direct support from the only Lecitrailer representative in Morocco for product selection, quotations, and delivery planning.",
+    "bestPrices": "Used tractor heads available",
+    "bestPricesDesc": "Selected used tractor heads and related transport equipment ready for operators and fleet buyers.",
+    "delivery": "International transport support",
+    "deliveryDesc": "We assist with sourcing, delivery coordination, and related services for transport activity in Morocco and beyond.",
+    "stats": {
+      "newVehicles": "Lecitrailer products",
+      "usedVehicles": "Used tractor heads",
+      "workshops": "Transport support"
+    },
+    "newVehicles": {
+      "title": "New Lecitrailer products",
+      "subtitle": "Official Lecitrailer supply in Morocco",
+      "description": "Explore new Lecitrailer trailers, semi-trailers, reefers, curtainsiders, rigids, container chassis, and tailor-made transport solutions for Moroccan fleets.",
+      "features": [
+        "Official representative in Morocco",
+        "Direct product guidance",
+        "Multiple body configurations",
+        "Quote-ready stock"
+      ],
+      "cta": "Explore Lecitrailer stock"
+    },
+    "usedVehicles": {
+      "title": "Used tractor heads",
+      "subtitle": "Selected stock for immediate operation",
+      "description": "Browse used tractor heads and related commercial vehicles chosen for transport operators seeking faster availability and practical fleet solutions.",
+      "features": [
+        "Used tractor heads",
+        "Fast stock visibility",
+        "Transport-focused selection",
+        "Quote support"
+      ],
+      "cta": "Browse used vehicles"
+    },
+    "afterSales": {
+      "title": "Transport services",
+      "subtitle": "Support around international transport",
+      "description": "Beyond vehicle sales, SAKI TRAILER 29 SARL also supports transport activity with coordination and related services linked to international transport operations.",
+      "features": [
+        "Delivery coordination",
+        "Transport-related support",
+        "Documentation guidance",
+        "Responsive follow-up"
+      ],
+      "cta": "Contact the team"
+    }
+  },
+  "testimonials": {
+    "subtitle": "Customer feedback",
+    "title": "What buyers say",
+    "description": "Reviews from transport and logistics customers who bought vehicles through SakiTrailer29.",
+    "items": [
+      {
+        "id": 1,
+        "name": "Ahmed Benali",
+        "location": "Casablanca",
+        "date": "15 Feb 2026",
+        "rating": 5,
+        "text": "Excellent service. I bought an Iveco truck and the process was clear, fast, and professional from start to delivery.",
+        "avatar": "AB"
+      },
+      {
+        "id": 2,
+        "name": "Fatima Zahra",
+        "location": "Rabat",
+        "date": "10 Feb 2026",
+        "rating": 5,
+        "text": "Very smooth buying experience. The vehicle matched the listing and the team stayed available during every step.",
+        "avatar": "FZ"
+      },
+      {
+        "id": 3,
+        "name": "Mohamed El Amrani",
+        "location": "Marrakech",
+        "date": "05 Feb 2026",
+        "rating": 5,
+        "text": "Strong customer support, competitive pricing, and good after-sales follow-up. I would buy again.",
+        "avatar": "MA"
+      },
+      {
+        "id": 4,
+        "name": "Youssef Idrissi",
+        "location": "Tangier",
+        "date": "28 Jan 2026",
+        "rating": 5,
+        "text": "The team helped me find the right vehicle for my transport company without wasting time on unsuitable options.",
+        "avatar": "YI"
+      },
+      {
+        "id": 5,
+        "name": "Khadija Oufkir",
+        "location": "Fes",
+        "date": "20 Jan 2026",
+        "rating": 5,
+        "text": "My first utility vehicle purchase and the process felt straightforward. The explanations were clear and practical.",
+        "avatar": "KO"
+      },
+      {
+        "id": 6,
+        "name": "Omar Bennani",
+        "location": "Agadir",
+        "date": "15 Jan 2026",
+        "rating": 5,
+        "text": "SakiTrailer29 has become a reliable source for professional vehicles. Good service, fair pricing, and fast communication.",
+        "avatar": "OB"
+      }
+    ]
+  },
+  "showroom": {
+    "subtitle": "Showroom",
+    "title": "Visit the official Lecitrailer representative in Morocco",
+    "description": "Meet the SAKI TRAILER 29 SARL team in Casablanca to review new Lecitrailer products, discuss used tractor heads, and plan solutions for transport operations.",
+    "location": "Casablanca, Morocco",
+    "hours": "Mon-Sat: 9:00 - 18:00",
+    "planVisit": "Plan your visit",
+    "address": "Address",
+    "addressLine": "Industrial Zone, Casablanca, Morocco",
+    "openingHours": "Opening hours",
+    "sundayClosed": "Sunday: Closed",
+    "contact": "Contact",
+    "schedule": "Schedule a visit"
+  },
+  "stickyContact": {
+    "call": "Call",
+    "whatsapp": "WhatsApp",
+    "quote": "Quote"
+  },
+  "footer": {
+    "description": "SAKI TRAILER 29 SARL is the only representative of Lecitrailer in Morocco, supplying new Lecitrailer products, selected used tractor heads, and support linked to international transport services.",
+    "phone": "Phone: +212 666 206 141",
+    "email": "Email: contact@sakitrailer29.com",
+    "location": "Location: Casablanca, Morocco",
+    "popularCategories": "Popular categories",
+    "buy": "Buy",
+    "company": "Company",
+    "viewStock": "View stock",
+    "availableNow": "Available now",
+    "tractorHeads": "Tractor heads",
+    "services": "Services",
+    "showroom": "Showroom",
+    "contact": "Contact",
+    "copyright": "Copyright {{year}} SakiTrailer29. All rights reserved."
+  }
+}

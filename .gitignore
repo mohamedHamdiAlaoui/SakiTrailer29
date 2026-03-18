@@ -1,0 +1,14 @@
+node_modules/
+dist/
+
+.env
+*.sqlite
+*.db
+*.log
+
+sakitrailer29-fb76e-807833d0fe31.json
+
+.vite/
+.cache/
+.DS_Store
+Thumbs.db

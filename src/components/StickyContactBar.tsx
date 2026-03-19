@@ -1,7 +1,6 @@
-import { Link, useLocation } from 'react-router-dom';
-import { MessageCircle, Phone, FileText } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
+import { MessageCircle, Phone } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { buildHomeSectionLink } from '@/lib/links';
 
 const hiddenPrefixes = ['/admin', '/dashboard', '/login', '/signup', '/forgot-password'];
 
@@ -15,7 +14,7 @@ export default function StickyContactBar() {
 
   return (
     <div className="fixed inset-x-3 bottom-3 z-40 lg:hidden">
-      <div className="grid grid-cols-3 overflow-hidden rounded-2xl border border-white/20 bg-brand-blue/95 shadow-2xl backdrop-blur">
+      <div className="grid grid-cols-2 overflow-hidden rounded-2xl border border-white/20 bg-brand-blue/95 shadow-2xl backdrop-blur">
         <a
           href="tel:+212666206141"
           className="flex flex-col items-center justify-center gap-1 border-r border-white/10 px-3 py-3 text-center text-white"
@@ -32,10 +31,6 @@ export default function StickyContactBar() {
           <MessageCircle className="size-4" />
           <span className="text-xs font-semibold">{t('stickyContact.whatsapp')}</span>
         </a>
-        <Link to={buildHomeSectionLink('contact')} className="flex flex-col items-center justify-center gap-1 px-3 py-3 text-center text-white">
-          <FileText className="size-4" />
-          <span className="text-xs font-semibold">{t('stickyContact.quote')}</span>
-        </Link>
       </div>
     </div>
   );

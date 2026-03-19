@@ -75,7 +75,7 @@ export async function loginWithPasswordInApi(input: { email: string; password: s
   return payload.user;
 }
 
-export async function signupInApi(input: { fullName: string; email: string; password: string }) {
+export async function signupInApi(input: { fullName: string; companyName?: string; email: string; password: string }) {
   const response = await fetch(getApiEndpoint('/api/auth/signup'), {
     method: 'POST',
     headers: createApiHeaders({ json: true }),

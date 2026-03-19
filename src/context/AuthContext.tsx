@@ -7,6 +7,7 @@ import {
   loginWithPasswordInApi,
   logoutFromApi,
   restoreAuthSessionFromApi,
+  signupInApi,
   type AuthUser,
 } from '@/lib/auth-api';
 import {
@@ -46,6 +47,17 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 const isGoogleAuthDebugEnabled = import.meta.env.DEV;
+const legacyPasswordFallbackErrors = new Set([
+  'firebase_not_configured',
+  'auth/operation-not-allowed',
+  'auth/invalid-credential',
+  'auth/user-not-found',
+  'auth/configuration-not-found',
+  'firebase_admin_not_configured',
+  'firebase_admin_init_failed',
+  'firebase_admin_unavailable',
+  'invalid_id_token',
+]);
 
 function logGoogleAuthDebug(message: string, details?: Record<string, unknown>) {
   if (!isGoogleAuthDebugEnabled) {
@@ -108,12 +120,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             if (firebaseError instanceof Error && firebaseError.message === 'email_not_verified') {
               return { success: false, error: 'email_not_verified' };
             }
-            if (
-              firebaseError instanceof Error &&
-              (firebaseError.message === 'auth/invalid-credential' ||
-                firebaseError.message === 'auth/user-not-found' ||
-                firebaseError.message === 'auth/configuration-not-found')
-            ) {
+            if (firebaseError instanceof Error && legacyPasswordFallbackErrors.has(firebaseError.message)) {
               // Fallback to legacy backend password auth
               const nextUser = await loginWithPasswordInApi(input);
               setUser(nextUser);
@@ -127,18 +134,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       },
       async signup(input) {
         try {
-          // Register user in Firebase Auth
-          const firebaseResult = await signUpWithEmailFirebase(input.email, input.password);
+          try {
+            // Register user in Firebase Auth
+            const firebaseResult = await signUpWithEmailFirebase(input.email, input.password);
 
-          // Register user in our backend database
-          await createFirebaseUserInApi({
-            idToken: firebaseResult.idToken,
-            fullName: input.fullName,
-            companyName: input.companyName,
-          });
+            // Register user in our backend database
+            await createFirebaseUserInApi({
+              idToken: firebaseResult.idToken,
+              fullName: input.fullName,
+              companyName: input.companyName,
+            });
 
-          // Send verification email
-          await sendVerificationEmailFirebase(firebaseResult.user);
+            // Send verification email
+            await sendVerificationEmailFirebase(firebaseResult.user);
+          } catch (firebaseError) {
+            if (firebaseError instanceof Error && legacyPasswordFallbackErrors.has(firebaseError.message)) {
+              await signupInApi(input);
+            } else {
+              throw firebaseError;
+            }
+          }
 
           // DO NOT setUser here. They must verify email and log in manually.
           return { success: true };

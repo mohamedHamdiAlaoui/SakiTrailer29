@@ -43,7 +43,7 @@ function getSchemaAvailability(status: 'available' | 'reserved' | 'sold') {
 export default function ProductDetail() {
   const { i18n, t } = useTranslation();
   const { id } = useParams<{ id: string }>();
-  const { products } = useProductStore();
+  const { products, isLoading } = useProductStore();
   const product = products.find((item) => item.id === id);
   const [activeCatalogueIndex, setActiveCatalogueIndex] = useState(0);
   const [catalogueBlobUrl, setCatalogueBlobUrl] = useState<string | null>(null);
@@ -130,6 +130,24 @@ export default function ProductDetail() {
         : undefined,
     }
   );
+
+  if (isLoading) {
+    return (
+      <section className="min-h-screen bg-slate-50 pt-32">
+        <div className="container mx-auto px-4 pb-20">
+          <Card className="rounded-3xl border-0 shadow-xl">
+            <CardContent className="flex min-h-[320px] flex-col items-center justify-center gap-4 p-8 text-center">
+              <div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-brand-blue" />
+              <div className="space-y-2">
+                <p className="text-lg font-semibold text-slate-950">{t('common.loading')}</p>
+                <p className="text-sm text-slate-500">{t('productDetailPage.loadingDescription', 'Loading product details...')}</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+    );
+  }
 
   if (!product) {
     return <Navigate to="/" replace />;

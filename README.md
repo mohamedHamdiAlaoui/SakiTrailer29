@@ -44,3 +44,41 @@ Copy `.env.example` to `.env` and provide Firebase values:
 5. Add your dev domain (`http://localhost:5173`) to Firebase Authentication authorized domains.
 
 See [.env.example](./.env.example).
+
+## Deployment
+
+Recommended setup:
+
+- Netlify for the Vite frontend
+- Render for the backend API
+
+Frontend on Netlify:
+
+- Base directory: `app`
+- Build command: `npm run build`
+- Publish directory: `dist`
+
+Backend on Render:
+
+- Root directory: `app`
+- Build command: `npm install`
+- Start command: `npm run start:server`
+
+Required production env vars:
+
+- `VITE_API_BASE_URL`
+- `VITE_FIREBASE_API_KEY`
+- `VITE_FIREBASE_AUTH_DOMAIN`
+- `VITE_FIREBASE_PROJECT_ID`
+- `VITE_FIREBASE_APP_ID`
+- `AUTH_API_ALLOWED_ORIGIN`
+- `PRODUCTS_DB_PATH`
+- `ADMIN_SEED_EMAIL`
+- `ADMIN_SEED_PASSWORD`
+- `FIREBASE_PROJECT_ID`
+- `FIREBASE_CLIENT_EMAIL`
+- `FIREBASE_PRIVATE_KEY`
+
+Render note:
+
+- Attach a persistent disk and set `PRODUCTS_DB_PATH=/var/data/sakitrailer29.sqlite`

@@ -11,8 +11,11 @@ import { DatabaseSync } from 'node:sqlite';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const port = Number(process.env.AUTH_API_PORT || 4000);
-const allowedOrigin = process.env.AUTH_API_ALLOWED_ORIGIN || 'http://localhost:5173';
+const port = Number(process.env.PORT || process.env.AUTH_API_PORT || 4000);
+const allowedOrigins = (process.env.AUTH_API_ALLOWED_ORIGIN || 'http://localhost:5173')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 const databasePath = process.env.PRODUCTS_DB_PATH || path.join(__dirname, 'data', 'sakitrailer29.sqlite');
 
 const adminSeedEmail = process.env.ADMIN_SEED_EMAIL?.trim().toLowerCase();
@@ -648,7 +651,15 @@ const app = express();
 
 app.use(
   cors({
-    origin: allowedOrigin,
+    origin(origin, callback) {
+      // Allow server-to-server requests and health checks that do not send Origin.
+      if (!origin) {
+        callback(null, true);
+        return;
+      }
+
+      callback(null, allowedOrigins.includes(origin));
+    },
     credentials: true,
   })
 );

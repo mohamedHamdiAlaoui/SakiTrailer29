@@ -15,13 +15,14 @@ i18n
       fr: { translation: fr },
       es: { translation: es },
     },
-    fallbackLng: 'en',
+    fallbackLng: 'fr',
+    supportedLngs: ['fr', 'en', 'es'],
     debug: false,
     interpolation: {
       escapeValue: false,
     },
     detection: {
-      order: ['localStorage', 'navigator', 'htmlTag'],
+      order: ['localStorage', 'htmlTag'],
       caches: ['localStorage'],
     },
   });

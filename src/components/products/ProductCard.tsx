@@ -28,19 +28,21 @@ export default function ProductCard({ product }: { product: Product }) {
 
   return (
     <article className="overflow-hidden rounded-2xl border bg-white shadow-sm transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl">
-      <div className="relative h-56 overflow-hidden">
-        <img src={product.images[0]} alt={title} className="h-full w-full object-cover" loading="lazy" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-        <div className="absolute left-4 top-4 flex items-center gap-2">
-          <Badge className={statusClasses[product.status]}>{getLocalizedStatusName(product.status, t)}</Badge>
-          <Badge variant="secondary" className="bg-white/90 text-slate-900">
-            {product.brand}
-          </Badge>
+      <Link to={`/product/${product.id}`} className="block">
+        <div className="relative h-56 overflow-hidden">
+          <img src={product.images[0]} alt={title} className="h-full w-full object-cover transition-transform duration-300 hover:scale-105" loading="lazy" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+          <div className="absolute left-4 top-4 flex items-center gap-2">
+            <Badge className={statusClasses[product.status]}>{getLocalizedStatusName(product.status, t)}</Badge>
+            <Badge variant="secondary" className="bg-white/90 text-slate-900">
+              {product.brand}
+            </Badge>
+          </div>
+          <div className="absolute bottom-4 left-4">
+            <p className="text-2xl font-bold text-white">{formatCurrency(product.price, i18n.language)}</p>
+          </div>
         </div>
-        <div className="absolute bottom-4 left-4">
-          <p className="text-2xl font-bold text-white">{formatCurrency(product.price, i18n.language)}</p>
-        </div>
-      </div>
+      </Link>
 
       <div className="space-y-4 p-5">
         <div>

@@ -47,6 +47,11 @@ export default function Header() {
             src="/logo_full.png"
             alt="SakiTrailer29"
             className="h-12 w-auto max-w-[240px] bg-brand-blue object-contain"
+            width="240"
+            height="48"
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
           />
         </Link>
 

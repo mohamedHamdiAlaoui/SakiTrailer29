@@ -605,15 +605,34 @@
     "subtitle": "Showroom",
     "title": "Visitez le representant officiel Lecitrailer au Maroc",
     "description": "Rencontrez l'equipe SAKI TRAILER 29 SARL a Casablanca pour examiner les produits Lecitrailer neufs, discuter des tetes tractrices d'occasion et preparer vos solutions transport.",
-    "location": "Casablanca, Maroc",
+      "location": "35.77568193917511, -5.796048432226565",
     "hours": "Lun-Sam : 9:00 - 18:00",
     "planVisit": "Planifier votre visite",
     "address": "Adresse",
-    "addressLine": "Zone industrielle, Casablanca, Maroc",
-    "openingHours": "Horaires d'ouverture",
-    "sundayClosed": "Dimanche : ferme",
-    "contact": "Contact",
-    "schedule": "Programmer une visite"
+      "addressLine": "35.77568193917511, -5.796048432226565",
+      "openingHours": "Horaires d'ouverture",
+      "sundayClosed": "Dimanche : ferme",
+      "contact": "Contact",
+      "schedule": "Programmer une visite",
+      "openInMaps": "Ouvrir dans Google Maps",
+      "mapTitle": "Localisation du showroom SAKI TRAILER 29 sur Google Maps",
+      "visitForm": {
+      "title": "Programmer une visite du showroom",
+      "description": "Envoyez-nous la date souhaitee et vos coordonnees. L'equipe SAKI TRAILER 29 confirmera votre visite rapidement.",
+        "dateLabel": "Date souhaitee pour la visite",
+        "defaultMessage": "Bonjour, je souhaite programmer une visite du showroom et discuter des vehicules et services disponibles.",
+        "submit": "Envoyer la demande de visite",
+        "googleCalendar": "Ouvrir Google Calendar",
+        "calendarTitle": "Visite du showroom - SAKI TRAILER 29",
+        "calendarIntro": "Demande de visite du showroom envoyee depuis le site.",
+        "calendarNote": "Merci d'attendre la confirmation de l'equipe SAKI TRAILER 29 avant de finaliser votre deplacement.",
+        "submitting": "Envoi en cours...",
+        "success": "Votre demande de visite a bien ete envoyee.",
+        "error": "Nous n'avons pas pu envoyer votre demande de visite. Veuillez reessayer.",
+        "validation": {
+          "preferredDate": "Veuillez choisir une date de visite."
+      }
+    }
   },
   "stickyContact": {
     "call": "Appeler",

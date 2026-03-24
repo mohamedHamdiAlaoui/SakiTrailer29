@@ -605,15 +605,34 @@
     "subtitle": "Showroom",
     "title": "Visita al representante oficial de Lecitrailer en Marruecos",
     "description": "Conoce al equipo de SAKI TRAILER 29 SARL en Casablanca para revisar productos Lecitrailer nuevos, hablar de cabezas tractoras usadas y preparar soluciones para tus operaciones de transporte.",
-    "location": "Casablanca, Marruecos",
+      "location": "35.77568193917511, -5.796048432226565",
     "hours": "Lun-Sab: 9:00 - 18:00",
     "planVisit": "Planifica tu visita",
     "address": "Direccion",
-    "addressLine": "Zona industrial, Casablanca, Marruecos",
-    "openingHours": "Horario",
-    "sundayClosed": "Domingo: cerrado",
-    "contact": "Contacto",
-    "schedule": "Programar visita"
+      "addressLine": "35.77568193917511, -5.796048432226565",
+      "openingHours": "Horario",
+      "sundayClosed": "Domingo: cerrado",
+      "contact": "Contacto",
+      "schedule": "Programar visita",
+      "openInMaps": "Abrir en Google Maps",
+      "mapTitle": "Ubicacion del showroom SAKI TRAILER 29 en Google Maps",
+      "visitForm": {
+      "title": "Programar una visita al showroom",
+      "description": "Envianos tu fecha preferida y tus datos de contacto. El equipo de SAKI TRAILER 29 confirmara tu visita rapidamente.",
+        "dateLabel": "Fecha preferida de visita",
+        "defaultMessage": "Hola, me gustaria programar una visita al showroom y hablar sobre los vehiculos y servicios disponibles.",
+        "submit": "Enviar solicitud de visita",
+        "googleCalendar": "Abrir Google Calendar",
+        "calendarTitle": "Visita al showroom - SAKI TRAILER 29",
+        "calendarIntro": "Solicitud de visita al showroom enviada desde el sitio web.",
+        "calendarNote": "Espera la confirmacion del equipo de SAKI TRAILER 29 antes de cerrar tu desplazamiento.",
+        "submitting": "Enviando solicitud...",
+        "success": "Tu solicitud de visita se envio correctamente.",
+        "error": "No pudimos enviar tu solicitud de visita. Intentalo de nuevo.",
+        "validation": {
+          "preferredDate": "Por favor, elige una fecha de visita."
+      }
+    }
   },
   "stickyContact": {
     "call": "Llamar",

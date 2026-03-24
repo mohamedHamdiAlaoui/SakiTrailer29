@@ -605,15 +605,34 @@
     "subtitle": "Showroom",
     "title": "Visit the official Lecitrailer representative in Morocco",
     "description": "Meet the SAKI TRAILER 29 SARL team in Casablanca to review new Lecitrailer products, discuss used tractor heads, and plan solutions for transport operations.",
-    "location": "Casablanca, Morocco",
+      "location": "35.77568193917511, -5.796048432226565",
     "hours": "Mon-Sat: 9:00 - 18:00",
     "planVisit": "Plan your visit",
     "address": "Address",
-    "addressLine": "Industrial Zone, Casablanca, Morocco",
-    "openingHours": "Opening hours",
-    "sundayClosed": "Sunday: Closed",
-    "contact": "Contact",
-    "schedule": "Schedule a visit"
+      "addressLine": "35.77568193917511, -5.796048432226565",
+      "openingHours": "Opening hours",
+      "sundayClosed": "Sunday: Closed",
+      "contact": "Contact",
+      "schedule": "Schedule a visit",
+      "openInMaps": "Open in Google Maps",
+      "mapTitle": "SAKI TRAILER 29 showroom location on Google Maps",
+      "visitForm": {
+      "title": "Schedule a showroom visit",
+      "description": "Send us your preferred visit date and contact details. The SAKI TRAILER 29 team will confirm your appointment quickly.",
+        "dateLabel": "Preferred visit date",
+        "defaultMessage": "Hello, I would like to schedule a showroom visit and discuss the available vehicles and services.",
+        "submit": "Send visit request",
+        "googleCalendar": "Open Google Calendar",
+        "calendarTitle": "Showroom visit - SAKI TRAILER 29",
+        "calendarIntro": "Planned showroom visit request submitted from the website.",
+        "calendarNote": "Please wait for confirmation from the SAKI TRAILER 29 team before finalizing your travel.",
+        "submitting": "Sending request...",
+        "success": "Your visit request has been sent successfully.",
+        "error": "We could not send your visit request. Please try again.",
+        "validation": {
+          "preferredDate": "Please choose your preferred visit date."
+      }
+    }
   },
   "stickyContact": {
     "call": "Call",

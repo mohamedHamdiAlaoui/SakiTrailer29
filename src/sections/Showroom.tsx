@@ -2,8 +2,8 @@ import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { MapPin, Clock, Phone, Calendar } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { MapPin, Clock, Phone } from 'lucide-react';
+import VisitRequestDialog from '@/components/VisitRequestDialog';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -12,6 +12,9 @@ export default function Showroom() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
+  const showroomCoordinates = '35.77568193917511, -5.796048432226565';
+  const googleMapsEmbedUrl = `https://www.google.com/maps?q=${encodeURIComponent(showroomCoordinates)}&z=16&output=embed`;
+  const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(showroomCoordinates)}`;
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -66,19 +69,19 @@ export default function Showroom() {
   }, []);
 
   return (
-    <section ref={sectionRef} id="about" className="relative min-h-[980px] overflow-hidden py-14 lg:h-[700px] lg:min-h-0 lg:py-0">
+    <section ref={sectionRef} id="about" className="relative overflow-hidden py-14 lg:py-20">
       <div ref={imageRef} className="absolute inset-0 -top-[10%] h-[120%] w-full">
         <img src="/showroom-aerial.jpg" alt={t('showroom.title')} className="h-full w-full object-cover" loading="lazy" />
         <div className="absolute inset-0 bg-brand-blue/40" />
       </div>
 
-      <div className="relative z-10 flex h-full items-start lg:items-center">
+      <div className="relative z-10">
         <div className="container mx-auto px-4">
-          <div className="grid w-full gap-8 lg:grid-cols-2">
-            <div className="text-white">
+          <div className="grid w-full items-start gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(360px,540px)] lg:gap-12">
+            <div className="max-w-2xl text-white">
               <p className="mb-2 font-semibold text-brand-gold">{t('showroom.subtitle')}</p>
-              <h2 className="mb-6 font-display text-4xl font-bold md:text-5xl lg:text-6xl">{t('showroom.title')}</h2>
-              <p className="mb-8 max-w-lg text-lg text-white/80">{t('showroom.description')}</p>
+              <h2 className="mb-6 font-display text-4xl font-bold leading-tight md:text-5xl lg:text-6xl">{t('showroom.title')}</h2>
+              <p className="mb-8 max-w-xl text-lg leading-relaxed text-white/80">{t('showroom.description')}</p>
 
               <div className="flex flex-wrap gap-4">
                 <div className="flex items-center gap-2 text-white/80">
@@ -92,8 +95,8 @@ export default function Showroom() {
               </div>
             </div>
 
-            <div className="flex justify-end">
-              <div ref={cardRef} className="w-full max-w-md rounded-2xl border border-white/20 bg-white/10 p-8 backdrop-blur-xl">
+            <div className="flex w-full justify-end">
+              <div ref={cardRef} className="w-full max-w-xl rounded-2xl border border-white/20 bg-white/10 p-6 backdrop-blur-xl sm:p-8">
                 <h3 className="mb-6 font-display text-2xl font-bold text-white">{t('showroom.planVisit')}</h3>
 
                 <div className="mb-8 space-y-4">
@@ -104,6 +107,14 @@ export default function Showroom() {
                     <div>
                       <p className="font-semibold text-white">{t('showroom.address')}</p>
                       <p className="text-sm text-white/70">{t('showroom.addressLine')}</p>
+                      <a
+                        href={googleMapsUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-2 inline-flex text-sm font-medium text-brand-gold transition hover:text-brand-gold-light"
+                      >
+                        {t('showroom.openInMaps')}
+                      </a>
                     </div>
                   </div>
 
@@ -130,11 +141,18 @@ export default function Showroom() {
                   </div>
                 </div>
 
+                <div className="mb-6 overflow-hidden rounded-2xl border border-white/10 shadow-lg">
+                  <iframe
+                    title={t('showroom.mapTitle')}
+                    src={googleMapsEmbedUrl}
+                    className="h-64 w-full border-0"
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
+                </div>
+
                 <div className="space-y-3">
-                  <Button size="lg" className="w-full bg-brand-gold font-bold text-brand-blue hover:bg-brand-gold-light">
-                    <Calendar className="mr-2 h-5 w-5" />
-                    {t('showroom.schedule')}
-                  </Button>
+                  <VisitRequestDialog />
                 </div>
               </div>
             </div>

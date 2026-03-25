@@ -2,6 +2,7 @@ import 'dotenv/config';
 import cors from 'cors';
 import express from 'express';
 import admin from 'firebase-admin';
+import multer from 'multer';
 import { randomUUID, scryptSync, timingSafeEqual } from 'node:crypto';
 import { mkdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
@@ -17,6 +18,9 @@ const allowedOrigins = (process.env.AUTH_API_ALLOWED_ORIGIN || 'http://localhost
   .map((origin) => origin.trim())
   .filter(Boolean);
 const databasePath = process.env.PRODUCTS_DB_PATH || path.join(__dirname, 'data', 'sakitrailer29.sqlite');
+const uploadsRoot = path.join(path.dirname(databasePath), 'uploads');
+const imageUploadsDirectory = path.join(uploadsRoot, 'images');
+const catalogueUploadsDirectory = path.join(uploadsRoot, 'catalogues');
 
 const adminSeedEmail = process.env.ADMIN_SEED_EMAIL?.trim().toLowerCase();
 const adminSeedPassword = process.env.ADMIN_SEED_PASSWORD?.trim();
@@ -37,6 +41,40 @@ const leadPreferredContacts = new Set(['phone', 'whatsapp', 'email']);
 const productTransmissionTypes = new Set(['manual', 'automatic', 'semi-automatic']);
 
 mkdirSync(path.dirname(databasePath), { recursive: true });
+mkdirSync(imageUploadsDirectory, { recursive: true });
+mkdirSync(catalogueUploadsDirectory, { recursive: true });
+
+const imageUpload = multer({
+  storage: multer.diskStorage({
+    destination: (_request, _file, callback) => callback(null, imageUploadsDirectory),
+    filename: (_request, file, callback) => {
+      const extension = path.extname(file.originalname || '').toLowerCase() || '.jpg';
+      callback(null, `${Date.now()}-${randomUUID()}${extension}`);
+    },
+  }),
+  limits: { fileSize: 10 * 1024 * 1024 },
+  fileFilter: (_request, file, callback) => {
+    const extension = path.extname(file.originalname || '').toLowerCase();
+    const allowedExtensions = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif', '.avif']);
+    const isImage = file.mimetype.startsWith('image/') || allowedExtensions.has(extension);
+    callback(null, isImage);
+  },
+});
+
+const catalogueUpload = multer({
+  storage: multer.diskStorage({
+    destination: (_request, _file, callback) => callback(null, catalogueUploadsDirectory),
+    filename: (_request, file, callback) => {
+      const extension = path.extname(file.originalname || '').toLowerCase() || '.pdf';
+      callback(null, `${Date.now()}-${randomUUID()}${extension}`);
+    },
+  }),
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter: (_request, file, callback) => {
+    const isPdf = file.mimetype === 'application/pdf' || path.extname(file.originalname || '').toLowerCase() === '.pdf';
+    callback(null, isPdf);
+  },
+});
 
 const database = new DatabaseSync(databasePath);
 database.exec(`
@@ -649,6 +687,8 @@ ensureAdminSeedUser();
 const firebase = initializeFirebaseAdmin();
 const app = express();
 
+app.set('trust proxy', true);
+
 app.use(
   cors({
     origin(origin, callback) {
@@ -663,7 +703,12 @@ app.use(
     credentials: true,
   })
 );
+app.use('/uploads', express.static(uploadsRoot));
 app.use(express.json({ limit: '50mb' }));
+
+function buildAbsoluteUrl(request, pathname) {
+  return `${request.protocol}://${request.get('host')}${pathname}`;
+}
 
 app.get('/api/health', (_request, response) => {
   response.json({
@@ -818,6 +863,90 @@ app.post('/api/leads', (request, response) => {
     },
   });
 });
+
+app.post(
+  '/api/uploads/images',
+  (request, response, next) => {
+    const authContext = requireAdmin(request, response);
+    if (!authContext) {
+      return;
+    }
+
+    next();
+  },
+  (request, response, next) => {
+    imageUpload.single('image')(request, response, (error) => {
+      if (!error) {
+        next();
+        return;
+      }
+
+      if (error instanceof multer.MulterError && error.code === 'LIMIT_FILE_SIZE') {
+        response.status(400).json({ success: false, error: 'image_too_large' });
+        return;
+      }
+
+      response.status(400).json({ success: false, error: 'image_upload_failed' });
+    });
+  },
+  (request, response) => {
+    if (!request.file) {
+      response.status(400).json({ success: false, error: 'missing_image_file' });
+      return;
+    }
+
+    const publicPath = `/uploads/images/${request.file.filename}`;
+    response.status(201).json({
+      success: true,
+      file: {
+        name: request.file.originalname,
+        url: buildAbsoluteUrl(request, publicPath),
+      },
+    });
+  }
+);
+
+app.post(
+  '/api/uploads/catalogues',
+  (request, response, next) => {
+    const authContext = requireAdmin(request, response);
+    if (!authContext) {
+      return;
+    }
+
+    next();
+  },
+  (request, response, next) => {
+    catalogueUpload.single('catalogue')(request, response, (error) => {
+      if (!error) {
+        next();
+        return;
+      }
+
+      if (error instanceof multer.MulterError && error.code === 'LIMIT_FILE_SIZE') {
+        response.status(400).json({ success: false, error: 'catalogue_too_large' });
+        return;
+      }
+
+      response.status(400).json({ success: false, error: 'catalogue_upload_failed' });
+    });
+  },
+  (request, response) => {
+    if (!request.file) {
+      response.status(400).json({ success: false, error: 'missing_catalogue_file' });
+      return;
+    }
+
+    const publicPath = `/uploads/catalogues/${request.file.filename}`;
+    response.status(201).json({
+      success: true,
+      file: {
+        name: request.file.originalname,
+        url: buildAbsoluteUrl(request, publicPath),
+      },
+    });
+  }
+);
 
 app.get('/api/users', (request, response) => {
   const authContext = requireAdmin(request, response);

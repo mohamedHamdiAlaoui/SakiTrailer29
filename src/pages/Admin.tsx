@@ -12,6 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Textarea } from '@/components/ui/textarea';
@@ -21,6 +22,7 @@ import { useSeo } from '@/hooks/use-seo';
 import { fetchUsersFromApi, type AuthUser } from '@/lib/auth-api';
 import { createApiHeaders, getApiEndpoint } from '@/lib/api';
 import { fetchLeadsFromApi } from '@/lib/leads-api';
+import { uploadCatalogueInApi, uploadImageInApi } from '@/lib/products-api';
 import { getAbsoluteSiteUrl } from '@/lib/site';
 import type { Lead } from '@/types/lead';
 import type { Order } from '@/types/order';
@@ -280,6 +282,10 @@ export default function Admin() {
   const [editingOrder, setEditingOrder] = useState<Order | null>(null);
   const [customerUsers, setCustomerUsers] = useState<AuthUser[]>([]);
   const [leads, setLeads] = useState<Lead[]>([]);
+  const [isUploadingImages, setIsUploadingImages] = useState(false);
+  const [imageUploadProgress, setImageUploadProgress] = useState(0);
+  const [isUploadingCatalogues, setIsUploadingCatalogues] = useState(false);
+  const [catalogueUploadProgress, setCatalogueUploadProgress] = useState(0);
   const productSchema = useMemo(() => createProductSchema(t), [t]);
   const orderSchema = useMemo(() => createOrderSchema(t), [t]);
   const [analytics, setAnalytics] = useState<{
@@ -536,23 +542,66 @@ export default function Admin() {
     const files = event.target.files;
     if (!files || files.length === 0) return;
 
-    const nextLines = await Promise.all(
-      Array.from(files).map(
-        (file) =>
-          new Promise<string>((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(String(reader.result));
-            reader.onerror = () => reject(new Error('file_read_error'));
-            reader.readAsDataURL(file);
-          })
-      )
-    );
+    let oversizeCount = 0;
+    const validFiles: File[] = [];
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      if (file.size > 10 * 1024 * 1024) {
+        oversizeCount++;
+      } else {
+        validFiles.push(file);
+      }
+    }
+
+    if (oversizeCount > 0) {
+      toast.error(t('admin.form.imageSizeError'));
+    }
+
+    if (validFiles.length === 0) {
+      event.currentTarget.value = '';
+      return;
+    }
 
     const currentLines = parseImageEntries(form.getValues('imagesText'));
+    const totalBytes = validFiles.reduce((sum, file) => sum + file.size, 0) || 1;
+    let uploadedBytes = 0;
 
-    const normalizedImages = [...new Set([...currentLines, ...nextLines])];
-    form.setValue('imagesText', normalizedImages.join('\n'), { shouldValidate: true });
-    event.currentTarget.value = '';
+    setIsUploadingImages(true);
+    setImageUploadProgress(0);
+
+    try {
+      const uploadedImages: string[] = [];
+
+      for (const file of validFiles) {
+        const uploadedImage = await uploadImageInApi(file, ({ loaded, total }) => {
+          const currentFileBytes = Math.min(loaded, total || file.size);
+          const progress = Math.round(((uploadedBytes + currentFileBytes) / totalBytes) * 100);
+          setImageUploadProgress(Math.min(progress, 99));
+        });
+
+        uploadedBytes += file.size;
+        setImageUploadProgress(Math.round((uploadedBytes / totalBytes) * 100));
+        uploadedImages.push(uploadedImage.url);
+      }
+
+      const normalizedImages = [...new Set([...currentLines, ...uploadedImages])];
+      form.setValue('imagesText', normalizedImages.join('\n'), { shouldValidate: true });
+      toast.success(t('admin.form.imagesUploaded'));
+    } catch (error) {
+      const errorCode = error instanceof Error ? error.message : 'image_upload_failed';
+      const message =
+        errorCode === 'image_too_large'
+          ? t('admin.form.imageSizeError')
+          : errorCode === 'backend_unreachable' || errorCode === 'image_upload_failed'
+            ? t('admin.toasts.backendUnavailable')
+            : t('admin.toasts.createFailed');
+      toast.error(message);
+    } finally {
+      setIsUploadingImages(false);
+      setImageUploadProgress(0);
+      event.currentTarget.value = '';
+    }
   };
 
   const handleCatalogueUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -576,21 +625,47 @@ export default function Admin() {
     }
 
     const currentCatalogues = form.getValues('catalogues') ?? [];
+    if (validFiles.length === 0) {
+      event.currentTarget.value = '';
+      return;
+    }
 
-    const newCatalogues = await Promise.all(
-      validFiles.map(
-        (file) =>
-          new Promise<{ name: string; url: string }>((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve({ name: file.name, url: String(reader.result) });
-            reader.onerror = () => reject(new Error('file_read_error'));
-            reader.readAsDataURL(file);
-          })
-      )
-    );
+    setIsUploadingCatalogues(true);
+    setCatalogueUploadProgress(0);
 
-    form.setValue('catalogues', [...currentCatalogues, ...newCatalogues], { shouldValidate: true });
-    event.currentTarget.value = '';
+    try {
+      const totalBytes = validFiles.reduce((sum, file) => sum + file.size, 0) || 1;
+      let uploadedBytes = 0;
+      const newCatalogues = [];
+
+      for (const file of validFiles) {
+        const uploadedCatalogue = await uploadCatalogueInApi(file, ({ loaded, total }) => {
+          const currentFileBytes = Math.min(loaded, total || file.size);
+          const progress = Math.round(((uploadedBytes + currentFileBytes) / totalBytes) * 100);
+          setCatalogueUploadProgress(Math.min(progress, 99));
+        });
+
+        uploadedBytes += file.size;
+        setCatalogueUploadProgress(Math.round((uploadedBytes / totalBytes) * 100));
+        newCatalogues.push(uploadedCatalogue);
+      }
+
+      form.setValue('catalogues', [...currentCatalogues, ...newCatalogues], { shouldValidate: true });
+      toast.success(t('admin.form.catalogueUploaded'));
+    } catch (error) {
+      const errorCode = error instanceof Error ? error.message : 'catalogue_upload_failed';
+      const message =
+        errorCode === 'catalogue_too_large'
+          ? t('admin.form.catalogueSizeError')
+          : errorCode === 'backend_unreachable' || errorCode === 'catalogue_upload_failed'
+            ? t('admin.toasts.backendUnavailable')
+            : t('admin.toasts.createFailed');
+      toast.error(message);
+    } finally {
+      setIsUploadingCatalogues(false);
+      setCatalogueUploadProgress(0);
+      event.currentTarget.value = '';
+    }
   };
 
   const handleRemoveImageAt = (index: number) => {
@@ -797,7 +872,16 @@ export default function Admin() {
         <div className="space-y-2 md:col-span-2 xl:col-span-2">
           <Label htmlFor="imagesText">{t('admin.form.images')}</Label>
           <Textarea id="imagesText" rows={4} {...form.register('imagesText')} placeholder={t('admin.form.imagesPlaceholder')} />
-          <Input id="imageUpload" type="file" accept="image/*" multiple onChange={handleImageUpload} />
+          <Input id="imageUpload" type="file" accept="image/*" multiple onChange={handleImageUpload} disabled={isUploadingImages} />
+          {isUploadingImages ? (
+            <div className="space-y-2 rounded-lg border bg-slate-50 p-3">
+              <div className="flex items-center justify-between text-sm text-slate-600">
+                <p>{t('admin.form.imageUploading')}</p>
+                <p>{imageUploadProgress}%</p>
+              </div>
+              <Progress value={imageUploadProgress} />
+            </div>
+          ) : null}
           <div className="flex items-center justify-between text-xs text-slate-500">
             <p>{t('admin.form.imagesUploadHelp')}</p>
             <p>{t('admin.form.imagesCount', { count: previewImages.length })}</p>
@@ -826,7 +910,16 @@ export default function Admin() {
 
         <div className="space-y-2 md:col-span-2 xl:col-span-2">
           <Label htmlFor="catalogueUpload">{t('admin.form.catalogue')}</Label>
-          <Input id="catalogueUpload" type="file" accept="application/pdf" multiple onChange={handleCatalogueUpload} />
+          <Input id="catalogueUpload" type="file" accept="application/pdf" multiple onChange={handleCatalogueUpload} disabled={isUploadingCatalogues} />
+          {isUploadingCatalogues ? (
+            <div className="space-y-2 rounded-lg border bg-slate-50 p-3">
+              <div className="flex items-center justify-between text-sm text-slate-600">
+                <p>{t('admin.form.catalogueUploading')}</p>
+                <p>{catalogueUploadProgress}%</p>
+              </div>
+              <Progress value={catalogueUploadProgress} />
+            </div>
+          ) : null}
 
           {form.watch('catalogues') && form.watch('catalogues')!.length > 0 && (
             <div className="mt-3 space-y-2 rounded-xl border bg-slate-50 p-3">

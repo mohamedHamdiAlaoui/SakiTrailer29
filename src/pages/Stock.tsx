@@ -33,17 +33,6 @@ export default function Stock() {
   const { t } = useTranslation();
   const description = t('stockUsedPage.description');
 
-  useSeo(t('stockUsedPage.seoTitle'), t('stockUsedPage.seoDescription'), {
-    keywords: 'used vehicles morocco, used trailers, used trucks, dealership stock',
-    canonical: getAbsoluteSiteUrl('/stock/used'),
-    og: {
-      title: t('stockUsedPage.seoTitle'),
-      description: t('stockUsedPage.seoDescription'),
-      type: 'website',
-      url: getAbsoluteSiteUrl('/stock/used'),
-    },
-  });
-
   const { products } = useProductStore();
   const [searchParams, setSearchParams] = useSearchParams();
   const [filters, setFilters] = useState<UsedProductFilters>(() => getFiltersFromSearchParams(searchParams));
@@ -118,6 +107,45 @@ export default function Stock() {
       (left, right) => new Date(right.createdAt).getTime() - new Date(left.createdAt).getTime()
     );
   }, [filters, usedProducts]);
+
+  const structuredData = useMemo(
+    () => [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'CollectionPage',
+        name: t('stockUsedPage.seoTitle'),
+        description: t('stockUsedPage.seoDescription'),
+        url: getAbsoluteSiteUrl('/stock/used'),
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        name: t('stockUsedPage.title'),
+        numberOfItems: filteredProducts.length,
+        itemListElement: filteredProducts.slice(0, 12).map((product, index) => ({
+          '@type': 'ListItem',
+          position: index + 1,
+          url: getAbsoluteSiteUrl(`/product/${encodeURIComponent(product.id)}`),
+          name: product.title,
+        })),
+      },
+    ],
+    [filteredProducts, t]
+  );
+
+  const keywords = t('stockUsedPage.seoKeywords');
+
+  useSeo(t('stockUsedPage.seoTitle'), t('stockUsedPage.seoDescription'), {
+    keywords,
+    canonical: getAbsoluteSiteUrl('/stock/used'),
+    og: {
+      title: t('stockUsedPage.seoTitle'),
+      description: t('stockUsedPage.seoDescription'),
+      type: 'website',
+      url: getAbsoluteSiteUrl('/stock/used'),
+    },
+    structuredData,
+  });
 
   return (
     <section className="min-h-screen bg-slate-50 pt-32">

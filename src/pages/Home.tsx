@@ -10,37 +10,62 @@ import ProductCard from '@/components/products/ProductCard';
 import { Button } from '@/components/ui/button';
 import { useProductStore } from '@/context/ProductStoreContext';
 import { useSeo } from '@/hooks/use-seo';
-import { getAbsoluteSiteUrl } from '@/lib/site';
+import { BUSINESS_EMAIL, BUSINESS_PHONE, getAbsoluteSiteUrl, SHOWROOM_COORDINATES } from '@/lib/site';
 
 export default function Home() {
   const { t } = useTranslation();
   const ogImage = 'https://lecitrailer.es/banners/a54dc1b60206b7776046588bea59d2e4.jpg';
 
   const structuredData = useMemo(
-    () => ({
-      '@context': 'https://schema.org',
-      '@type': 'AutoDealer',
-      name: 'SAKI TRAILER 29',
-      url: 'https://www.sakitrailer29.com/',
-      image: ogImage,
-      description: t('home.seoDescription'),
-      telephone: '+212 666 206 141',
-      priceRange: '$$',
-      address: {
-        '@type': 'PostalAddress',
-        addressLocality: 'Casablanca',
-        addressCountry: 'MA',
+    () => [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'AutoDealer',
+        name: 'SAKI TRAILER 29',
+        alternateName: 'Lecitrailer Morocco',
+        url: getAbsoluteSiteUrl('/'),
+        image: ogImage,
+        description: t('home.seoDescription'),
+        telephone: BUSINESS_PHONE,
+        email: BUSINESS_EMAIL,
+        priceRange: '$$',
+        areaServed: {
+          '@type': 'Country',
+          name: 'Morocco',
+        },
+        address: {
+          '@type': 'PostalAddress',
+          addressCountry: 'MA',
+        },
+        geo: {
+          '@type': 'GeoCoordinates',
+          latitude: SHOWROOM_COORDINATES.latitude,
+          longitude: SHOWROOM_COORDINATES.longitude,
+        },
+        knowsAbout: [
+          'Lecitrailer Morocco',
+          'new trailers',
+          'semi-trailers',
+          'reefers',
+          'curtainsiders',
+          'used tractor heads',
+          'international transport services',
+        ],
       },
-      areaServed: {
-        '@type': 'Country',
-        name: 'Morocco',
+      {
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: 'SAKI TRAILER 29',
+        alternateName: 'Lecitrailer Morocco',
+        url: getAbsoluteSiteUrl('/'),
+        inLanguage: ['fr', 'en', 'es'],
       },
-    }),
+    ],
     [ogImage, t]
   );
 
   useSeo(t('home.seoTitle'), t('home.seoDescription'), {
-    keywords: 'lecitrailer morocco, official lecitrailer representative morocco, used tractor heads morocco, trailers morocco, international transport services',
+    keywords: t('home.seoKeywords'),
     canonical: getAbsoluteSiteUrl('/'),
     og: {
       title: t('home.seoTitle'),

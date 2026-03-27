@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { useProductStore } from '@/context/ProductStoreContext';
 import { useSeo } from '@/hooks/use-seo';
-import { getAbsoluteSiteUrl } from '@/lib/site';
+import { BUSINESS_EMAIL, BUSINESS_PHONE, getAbsoluteSiteUrl, SHOWROOM_COORDINATES } from '@/lib/site';
 import type { ProductTransmissionType } from '@/types/product';
 import { formatCurrency, formatMileage } from '@/utils/format';
 import {
@@ -84,6 +84,17 @@ export default function ProductDetail() {
   const stockPath = product?.stockType === 'new' ? '/stock/new' : '/stock/used';
   const canonicalUrl = product ? getAbsoluteSiteUrl(`/product/${encodeURIComponent(product.id)}`) : getAbsoluteSiteUrl('/');
   const isUsedProduct = product?.stockType === 'used';
+  const seoKeywords = product
+    ? t('productDetailPage.seoKeywords', {
+        title: localizedTitle,
+        brand: product.brand,
+        category: getProductCategoryLabel(product, t),
+        stockKeyword:
+          product.stockType === 'new'
+            ? t('productDetailPage.seoStockKeywordNew')
+            : t('productDetailPage.seoStockKeywordUsed'),
+      })
+    : t('productDetailPage.fallbackSeoKeywords');
 
   useSeo(
     product ? t('productDetailPage.seoTitle', { title: localizedTitle, brand: product.brand }) : t('productDetailPage.fallbackSeoTitle'),
@@ -91,7 +102,7 @@ export default function ProductDetail() {
       ? t('productDetailPage.seoDescription', { title: localizedTitle, brand: product.brand })
       : t('productDetailPage.fallbackSeoDescription'),
     {
-      keywords: 'vehicle details morocco, trailer dealership, used and new stock',
+      keywords: seoKeywords,
       canonical: canonicalUrl,
       og: {
         title: product ? t('productDetailPage.seoTitle', { title: localizedTitle, brand: product.brand }) : t('productDetailPage.fallbackSeoTitle'),
@@ -103,30 +114,68 @@ export default function ProductDetail() {
         url: canonicalUrl,
       },
       structuredData: product
-        ? {
-            '@context': 'https://schema.org',
-            '@type': 'Product',
-            name: localizedTitle,
-            description: localizedDescription,
-            image: product.images,
-            sku: product.id,
-            category: getProductCategoryLabel(product, t),
-            brand: {
-              '@type': 'Brand',
-              name: product.brand,
+        ? [
+            {
+              '@context': 'https://schema.org',
+              '@type': 'Product',
+              name: localizedTitle,
+              description: localizedDescription,
+              image: product.images,
+              sku: product.id,
+              category: getProductCategoryLabel(product, t),
+              brand: {
+                '@type': 'Brand',
+                name: product.brand,
+              },
+              offers: {
+                '@type': 'Offer',
+                priceCurrency: 'EUR',
+                price: product.price,
+                availability: getSchemaAvailability(product.status),
+                url: canonicalUrl,
+                seller: {
+                  '@type': 'AutoDealer',
+                  name: 'SAKI TRAILER 29',
+                  url: getAbsoluteSiteUrl('/'),
+                  telephone: BUSINESS_PHONE,
+                  email: BUSINESS_EMAIL,
+                  geo: {
+                    '@type': 'GeoCoordinates',
+                    latitude: SHOWROOM_COORDINATES.latitude,
+                    longitude: SHOWROOM_COORDINATES.longitude,
+                  },
+                },
+                itemCondition:
+                  product.stockType === 'new'
+                    ? 'https://schema.org/NewCondition'
+                    : 'https://schema.org/UsedCondition',
+              },
             },
-            offers: {
-              '@type': 'Offer',
-              priceCurrency: 'EUR',
-              price: product.price,
-              availability: getSchemaAvailability(product.status),
-              url: canonicalUrl,
-              itemCondition:
-                product.stockType === 'new'
-                  ? 'https://schema.org/NewCondition'
-                  : 'https://schema.org/UsedCondition',
+            {
+              '@context': 'https://schema.org',
+              '@type': 'BreadcrumbList',
+              itemListElement: [
+                {
+                  '@type': 'ListItem',
+                  position: 1,
+                  name: t('common.home'),
+                  item: getAbsoluteSiteUrl('/'),
+                },
+                {
+                  '@type': 'ListItem',
+                  position: 2,
+                  name: t('common.stock'),
+                  item: getAbsoluteSiteUrl(stockPath),
+                },
+                {
+                  '@type': 'ListItem',
+                  position: 3,
+                  name: localizedTitle,
+                  item: canonicalUrl,
+                },
+              ],
             },
-          }
+          ]
         : undefined,
     }
   );

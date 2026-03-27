@@ -50,8 +50,9 @@
     "vehicleType": "Vehicle type"
   },
   "home": {
-    "seoTitle": "SAKI TRAILER 29",
-    "seoDescription": "SAKI TRAILER 29 SARL is the only representative of Lecitrailer in Morocco, offering new Lecitrailer products, used tractor heads, and support linked to international transport services.",
+    "seoTitle": "Lecitrailer Morocco | SAKI TRAILER 29",
+    "seoDescription": "SAKI TRAILER 29 is the official Lecitrailer representative in Morocco for new trailers, semi-trailers, reefers, curtainsiders, used tractor heads, and transport support services.",
+    "seoKeywords": "lecitrailer morocco, official lecitrailer representative morocco, new trailers morocco, used tractor heads morocco, trailers morocco, international transport services",
     "inventoryEyebrow": "Representative stock",
     "inventoryTitle": "New Lecitrailer products and used tractor heads",
     "inventoryDescription": "Browse new Lecitrailer trailers, semi-trailers, reefers, curtainsiders, rigids, and more, alongside selected used tractor heads and commercial vehicles available in Morocco.",
@@ -70,8 +71,9 @@
     "noResultsDescription": "Reset the controls to see the entire product inventory again."
   },
   "stockUsedPage": {
-    "seoTitle": "Used Vehicles in Morocco | SakiTrailer29",
-    "seoDescription": "Browse used trailers, trucks, vans, and tractor heads in Morocco with filters for vehicle type, brand, and customs status.",
+    "seoTitle": "Used Tractor Heads, Trucks and Trailers in Morocco | SAKI TRAILER 29",
+    "seoDescription": "Browse used tractor heads, trucks, vans, and trailers in Morocco with filters for vehicle type, brand, transmission, mileage, and customs status.",
+    "seoKeywords": "used tractor heads morocco, used trucks morocco, used trailers morocco, used vans morocco, commercial vehicles morocco, sakitrailer29 used stock",
     "eyebrow": "Used stock",
     "title": "Used vehicles",
     "description": "",
@@ -80,8 +82,9 @@
     "noResultsDescription": "Clear one or more filters to restore matching used stock."
   },
   "stockNewPage": {
-    "seoTitle": "New Lecitrailer Products | SakiTrailer29 Morocco",
-    "seoDescription": "Discover new Lecitrailer products in Morocco with searchable stock and direct quote-ready listings.",
+    "seoTitle": "New Lecitrailer Trailers and Semi-Trailers in Morocco | SAKI TRAILER 29",
+    "seoDescription": "Discover new Lecitrailer semi-trailers, reefers, curtainsiders, rigids, and transport equipment in Morocco with searchable stock and quote-ready listings.",
+    "seoKeywords": "lecitrailer morocco, new trailers morocco, semi-trailers morocco, curtainsiders morocco, reefers morocco, new lecitrailer products",
     "eyebrow": "New stock",
     "title": "New products from Lecitrailer",
     "description": "",
@@ -174,8 +177,12 @@
   "productDetailPage": {
     "seoTitle": "{{title}} | {{brand}} - SakiTrailer29",
     "seoDescription": "Browse images, specifications, and request a quote for {{title}} from {{brand}}.",
+    "seoKeywords": "{{title}}, {{brand}}, {{category}}, {{stockKeyword}}, sakitrailer29, morocco",
+    "seoStockKeywordNew": "lecitrailer morocco",
+    "seoStockKeywordUsed": "used vehicles morocco",
     "fallbackSeoTitle": "Product | SakiTrailer29",
-    "fallbackSeoDescription": "Browse detailed vehicle information at SakiTrailer29."
+    "fallbackSeoDescription": "Browse detailed vehicle information at SakiTrailer29.",
+    "fallbackSeoKeywords": "sakitrailer29, morocco, commercial vehicles"
   },
   "leadForm": {
     "title": "Request a quote",

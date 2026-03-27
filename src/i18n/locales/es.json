@@ -50,8 +50,9 @@
     "vehicleType": "Tipo de vehiculo"
   },
   "home": {
-    "seoTitle": "SAKI TRAILER 29",
-    "seoDescription": "SAKI TRAILER 29 SARL es el unico representante de Lecitrailer en Marruecos, con productos Lecitrailer nuevos, cabezas tractoras usadas y apoyo relacionado con el transporte internacional.",
+    "seoTitle": "Lecitrailer Marruecos | SAKI TRAILER 29",
+    "seoDescription": "SAKI TRAILER 29 es el representante oficial de Lecitrailer en Marruecos para remolques, semirremolques, frigorificos, cortinas laterales, cabezas tractoras usadas y servicios de transporte.",
+    "seoKeywords": "lecitrailer marruecos, representante oficial lecitrailer marruecos, remolques nuevos marruecos, cabezas tractoras usadas marruecos, remolques marruecos, servicios de transporte internacional",
     "inventoryEyebrow": "Stock del representante",
     "inventoryTitle": "Productos Lecitrailer nuevos y cabezas tractoras usadas",
     "inventoryDescription": "Consulta remolques, semirremolques, frigorificos, cortinas laterales, rigidos y otros productos Lecitrailer, junto con una seleccion de cabezas tractoras usadas y vehiculos comerciales disponibles en Marruecos.",
@@ -70,8 +71,9 @@
     "noResultsDescription": "Reinicia los controles para volver a ver todo el inventario."
   },
   "stockUsedPage": {
-    "seoTitle": "Vehiculos usados en Marruecos | SakiTrailer29",
-    "seoDescription": "Consulta vehiculos usados, remolques y camiones en Marruecos con filtros por tipo, marca y dedouanee.",
+    "seoTitle": "Cabezas tractoras, camiones y remolques usados en Marruecos | SAKI TRAILER 29",
+    "seoDescription": "Consulta cabezas tractoras, camiones, vehiculos comerciales y remolques usados en Marruecos con filtros por tipo, marca, transmision, kilometraje y dedouanee.",
+    "seoKeywords": "cabezas tractoras usadas marruecos, camiones usados marruecos, remolques usados marruecos, furgonetas usadas marruecos, vehiculos comerciales marruecos, stock usado sakitrailer29",
     "eyebrow": "Stock usado",
     "title": "Vehiculos usados",
     "description": "",
@@ -80,8 +82,9 @@
     "noResultsDescription": "Limpia uno o mas filtros para recuperar coincidencias."
   },
   "stockNewPage": {
-    "seoTitle": "Productos Lecitrailer nuevos | SakiTrailer29 Marruecos",
-    "seoDescription": "Descubre productos Lecitrailer nuevos en Marruecos con busqueda y solicitudes rapidas.",
+    "seoTitle": "Remolques y semirremolques Lecitrailer nuevos en Marruecos | SAKI TRAILER 29",
+    "seoDescription": "Descubre semirremolques Lecitrailer, frigorificos, cortinas laterales, rigidos y equipamiento de transporte nuevo en Marruecos con busqueda y solicitudes rapidas.",
+    "seoKeywords": "lecitrailer marruecos, remolques nuevos marruecos, semirremolques marruecos, cortinas laterales marruecos, frigorificos marruecos, productos lecitrailer nuevos",
     "eyebrow": "Stock nuevo",
     "title": "Productos nuevos de Lecitrailer",
     "description": "",
@@ -174,8 +177,12 @@
   "productDetailPage": {
     "seoTitle": "{{title}} | {{brand}} - SakiTrailer29",
     "seoDescription": "Consulta imagenes, especificaciones y solicita presupuesto para {{title}} de {{brand}}.",
+    "seoKeywords": "{{title}}, {{brand}}, {{category}}, {{stockKeyword}}, sakitrailer29, marruecos",
+    "seoStockKeywordNew": "lecitrailer marruecos",
+    "seoStockKeywordUsed": "vehiculos usados marruecos",
     "fallbackSeoTitle": "Producto | SakiTrailer29",
-    "fallbackSeoDescription": "Consulta informacion detallada de vehiculos en SakiTrailer29."
+    "fallbackSeoDescription": "Consulta informacion detallada de vehiculos en SakiTrailer29.",
+    "fallbackSeoKeywords": "sakitrailer29, marruecos, vehiculos comerciales"
   },
   "leadForm": {
     "title": "Solicitar presupuesto",

@@ -32,17 +32,6 @@ export default function StockNew() {
   const { t } = useTranslation();
   const description = t('stockNewPage.description');
 
-  useSeo(t('stockNewPage.seoTitle'), t('stockNewPage.seoDescription'), {
-    keywords: 'new trailers morocco, lecitrailer, trailer dealership morocco, new stock',
-    canonical: getAbsoluteSiteUrl('/stock/new'),
-    og: {
-      title: t('stockNewPage.seoTitle'),
-      description: t('stockNewPage.seoDescription'),
-      type: 'website',
-      url: getAbsoluteSiteUrl('/stock/new'),
-    },
-  });
-
   const { products } = useProductStore();
   const [searchParams, setSearchParams] = useSearchParams();
   const [filters, setFilters] = useState<ProductFilters>(() => getFiltersFromSearchParams(searchParams));
@@ -114,6 +103,45 @@ export default function StockNew() {
     () => applyProductFilters(newProducts, filters, sort),
     [filters, newProducts, sort]
   );
+
+  const structuredData = useMemo(
+    () => [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'CollectionPage',
+        name: t('stockNewPage.seoTitle'),
+        description: t('stockNewPage.seoDescription'),
+        url: getAbsoluteSiteUrl('/stock/new'),
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        name: t('stockNewPage.title'),
+        numberOfItems: filteredProducts.length,
+        itemListElement: filteredProducts.slice(0, 12).map((product, index) => ({
+          '@type': 'ListItem',
+          position: index + 1,
+          url: getAbsoluteSiteUrl(`/product/${encodeURIComponent(product.id)}`),
+          name: product.title,
+        })),
+      },
+    ],
+    [filteredProducts, t]
+  );
+
+  const keywords = t('stockNewPage.seoKeywords');
+
+  useSeo(t('stockNewPage.seoTitle'), t('stockNewPage.seoDescription'), {
+    keywords,
+    canonical: getAbsoluteSiteUrl('/stock/new'),
+    og: {
+      title: t('stockNewPage.seoTitle'),
+      description: t('stockNewPage.seoDescription'),
+      type: 'website',
+      url: getAbsoluteSiteUrl('/stock/new'),
+    },
+    structuredData,
+  });
 
   return (
     <section className="min-h-screen bg-slate-50 pt-32">

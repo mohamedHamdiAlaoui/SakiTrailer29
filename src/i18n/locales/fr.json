@@ -133,6 +133,8 @@
     "viewDetails": "Voir les details",
     "relatedEyebrow": "Produits similaires",
     "relatedTitle": "Plus dans la meme categorie",
+    "priceOnRequest": "Prix sur demande",
+    "contactForPrice": "Demandez le prix par devis ou WhatsApp.",
     "quoteDefaultMessage": "Bonjour, je souhaite un devis pour {{title}} ({{id}}).",
     "whatsappMessage": "Bonjour, je souhaite plus d'informations sur {{title}} ({{id}}).",
     "specifications": {
@@ -141,6 +143,18 @@
       "transmission": "Transmission",
       "mileage": "Kilometrage",
       "location": "Localisation"
+    },
+    "usedDetails": {
+      "mainInformation": "Informations principales",
+      "condition": "Etat du materiel",
+      "transmission": "Boite de vitesse et transmission",
+      "additionalInformation": "Informations complementaires",
+      "reference": "Reference",
+      "brand": "Marque",
+      "category": "Categorie",
+      "availability": "Disponibilite",
+      "dedouanee": "Dedouanee",
+      "dedouaneeNotSpecified": "Non precise"
     },
     "catalogue": "Catalogue Produit",
     "catalogueNoPreview": "Votre navigateur ne supporte pas l'apercu PDF.",
@@ -418,6 +432,41 @@
         "product": "Produit",
         "preferredContact": "Contact prefere",
         "message": "Message"
+      }
+    },
+    "accounts": {
+      "title": "Comptes admin",
+      "count": "{{count}} comptes admin dans le backend.",
+      "empty": "Aucun compte admin trouve.",
+      "roleLabel": "Administrateur",
+      "currentAdmin": "Admin actuel",
+      "createTitle": "Ajouter un compte admin",
+      "createDescription": "Creez des comptes admin supplementaires pour les membres de confiance.",
+      "createAction": "Creer un admin",
+      "creating": "Creation...",
+      "deleting": "Suppression...",
+      "confirmDelete": "Supprimer le compte admin {{email}} ?",
+      "form": {
+        "fullName": "Nom complet",
+        "email": "Email",
+        "password": "Mot de passe",
+        "passwordHint": "Utilisez au moins 6 caracteres."
+      },
+      "table": {
+        "fullName": "Nom complet",
+        "email": "Email",
+        "role": "Role"
+      },
+      "toasts": {
+        "created": "Compte admin cree.",
+        "deleted": "Compte admin supprime.",
+        "emailExists": "Un compte avec cet email existe deja.",
+        "invalidPayload": "Indiquez un nom complet, un email et un mot de passe d'au moins 6 caracteres.",
+        "createFailed": "Impossible de creer le compte admin.",
+        "deleteFailed": "Impossible de supprimer le compte admin.",
+        "cannotDeleteCurrent": "Vous ne pouvez pas supprimer le compte admin actuellement utilise.",
+        "cannotDeleteSeed": "Ce compte admin protege ne peut pas etre supprime depuis le tableau de bord.",
+        "cannotDeleteLast": "Au moins un compte admin doit rester actif."
       }
     },
     "validation": {

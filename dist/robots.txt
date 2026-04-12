@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.sakitrailer29.com/sitemap.xml
+Sitemap: https://sakitrailer29.ma/sitemap.xml

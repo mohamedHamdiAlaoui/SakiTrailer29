@@ -39,7 +39,13 @@ export default function ProductCard({ product }: { product: Product }) {
             </Badge>
           </div>
           <div className="absolute bottom-4 left-4">
-            <p className="text-2xl font-bold text-white">{formatCurrency(product.price, i18n.language)}</p>
+            {isUsedProduct ? (
+              <p className="text-2xl font-bold text-white">{formatCurrency(product.price, i18n.language)}</p>
+            ) : (
+              <p className="rounded-full bg-white/90 px-4 py-2 text-sm font-semibold uppercase tracking-[0.18em] text-brand-blue">
+                {t('product.priceOnRequest')}
+              </p>
+            )}
           </div>
         </div>
       </Link>

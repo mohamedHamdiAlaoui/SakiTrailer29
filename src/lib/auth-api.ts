@@ -160,6 +160,35 @@ export async function fetchUsersFromApi(role?: 'admin' | 'user') {
   return payload.users;
 }
 
+export async function createAdminUserInApi(input: { fullName: string; email: string; password: string }) {
+  const response = await fetch(getApiEndpoint('/api/admin/users'), {
+    method: 'POST',
+    headers: createApiHeaders({ json: true, auth: true }),
+    body: JSON.stringify(input),
+  });
+
+  const payload = await parseAuthResponse(response);
+  if (!response.ok || !payload.success) {
+    throw new Error(payload.success ? 'admin_user_create_failed' : payload.error);
+  }
+
+  return payload.user;
+}
+
+export async function deleteAdminUserInApi(userId: string) {
+  const response = await fetch(getApiEndpoint(`/api/admin/users/${encodeURIComponent(userId)}`), {
+    method: 'DELETE',
+    headers: createApiHeaders({ auth: true }),
+  });
+
+  const payload = await parseAuthResponse(response);
+  if (!response.ok || !payload.success) {
+    throw new Error(payload.success ? 'admin_user_delete_failed' : payload.error);
+  }
+
+  return true;
+}
+
 export async function updateProfileInApi(input: { fullName: string; companyName?: string }) {
   const response = await fetch(getApiEndpoint('/api/users/profile'), {
     method: 'PUT',

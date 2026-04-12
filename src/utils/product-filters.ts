@@ -1,14 +1,12 @@
 import type { Product, ProductCategory, ProductStatus } from '@/types/product';
 
-export type ProductSortOption = 'newest' | 'price-asc' | 'price-desc' | 'year-desc' | 'mileage-asc';
+export type ProductSortOption = 'newest' | 'year-desc' | 'mileage-asc';
 
 export interface ProductFilters {
   search: string;
   category: ProductCategory | 'all';
   brand: string | 'all';
   status: ProductStatus | 'all';
-  minPrice: string;
-  maxPrice: string;
   minYear: string;
   maxYear: string;
 }
@@ -18,8 +16,6 @@ export const defaultProductFilters: ProductFilters = {
   category: 'all',
   brand: 'all',
   status: 'all',
-  minPrice: '',
-  maxPrice: '',
   minYear: '',
   maxYear: '',
 };
@@ -49,8 +45,6 @@ export function filterProductsByFilters(products: Product[], filters: ProductFil
     const matchesCategory = filters.category === 'all' || product.category === filters.category;
     const matchesBrand = filters.brand === 'all' || product.brand === filters.brand;
     const matchesStatus = filters.status === 'all' || product.status === filters.status;
-    const matchesMinPrice = filters.minPrice === '' || product.price >= Number(filters.minPrice);
-    const matchesMaxPrice = filters.maxPrice === '' || product.price <= Number(filters.maxPrice);
     const matchesMinYear = filters.minYear === '' || product.year >= Number(filters.minYear);
     const matchesMaxYear = filters.maxYear === '' || product.year <= Number(filters.maxYear);
 
@@ -59,8 +53,6 @@ export function filterProductsByFilters(products: Product[], filters: ProductFil
       matchesCategory &&
       matchesBrand &&
       matchesStatus &&
-      matchesMinPrice &&
-      matchesMaxPrice &&
       matchesMinYear &&
       matchesMaxYear
     );
@@ -88,10 +80,6 @@ export function applyProductFilters(products: Product[], filters: ProductFilters
 
   return filtered.sort((left, right) => {
     switch (sort) {
-      case 'price-asc':
-        return left.price - right.price;
-      case 'price-desc':
-        return right.price - left.price;
       case 'year-desc':
         return right.year - left.year;
       case 'mileage-asc':

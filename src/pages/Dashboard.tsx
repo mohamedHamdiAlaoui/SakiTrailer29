@@ -30,6 +30,7 @@ import { getLocalizedProductTitle } from '@/utils/localization';
 import { getProductCategoryLabel } from '@/utils/product-category';
 import { updateProfileInApi } from '@/lib/auth-api';
 import type { Order } from '@/types/order';
+import { formatCurrency } from '@/utils/format';
 
 const orderStatusClass: Record<Order['status'], string> = {
   created: 'bg-slate-200 text-slate-800',
@@ -354,10 +355,9 @@ export default function Dashboard() {
                               </p>
                               <p className="text-sm text-slate-500">{getProductCategoryLabel(product, t)}</p>
                               <p className="font-medium text-brand-blue">
-                                {new Intl.NumberFormat(i18n.language, {
-                                  style: 'currency',
-                                  currency: 'EUR',
-                                }).format(product.price)}
+                                {product.stockType !== 'new'
+                                  ? formatCurrency(product.price, i18n.language)
+                                  : t('product.priceOnRequest')}
                               </p>
                             </div>
                           </div>

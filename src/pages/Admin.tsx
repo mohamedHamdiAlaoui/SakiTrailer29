@@ -16,10 +16,11 @@ import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Textarea } from '@/components/ui/textarea';
+import { useAuth } from '@/context/AuthContext';
 import { useOrderStore } from '@/context/OrderContext';
 import { useProductStore } from '@/context/ProductStoreContext';
 import { useSeo } from '@/hooks/use-seo';
-import { fetchUsersFromApi, type AuthUser } from '@/lib/auth-api';
+import { createAdminUserInApi, deleteAdminUserInApi, fetchUsersFromApi, type AuthUser } from '@/lib/auth-api';
 import { createApiHeaders, getApiEndpoint } from '@/lib/api';
 import { fetchLeadsFromApi } from '@/lib/leads-api';
 import { uploadCatalogueInApi, uploadImageInApi } from '@/lib/products-api';
@@ -266,6 +267,7 @@ function orderToFormValues(order: Order): OrderFormInput {
 
 export default function Admin() {
   const { i18n, t } = useTranslation();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   useSeo(t('admin.seoTitle'), t('admin.seoDescription'), {
@@ -280,8 +282,14 @@ export default function Admin() {
   const [isOrderDialogOpen, setIsOrderDialogOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [editingOrder, setEditingOrder] = useState<Order | null>(null);
+  const [adminUsers, setAdminUsers] = useState<AuthUser[]>([]);
   const [customerUsers, setCustomerUsers] = useState<AuthUser[]>([]);
   const [leads, setLeads] = useState<Lead[]>([]);
+  const [newAdminFullName, setNewAdminFullName] = useState('');
+  const [newAdminEmail, setNewAdminEmail] = useState('');
+  const [newAdminPassword, setNewAdminPassword] = useState('');
+  const [isCreatingAdmin, setIsCreatingAdmin] = useState(false);
+  const [deletingAdminId, setDeletingAdminId] = useState<string | null>(null);
   const [isUploadingImages, setIsUploadingImages] = useState(false);
   const [imageUploadProgress, setImageUploadProgress] = useState(0);
   const [isUploadingCatalogues, setIsUploadingCatalogues] = useState(false);
@@ -297,10 +305,31 @@ export default function Admin() {
     totalLeads: number;
   } | null>(null);
 
+  const loadAdminUsers = async () => {
+    try {
+      const users = await fetchUsersFromApi('admin');
+      setAdminUsers(users);
+    } catch {
+      setAdminUsers([]);
+    }
+  };
+
   useEffect(() => {
     let isMounted = true;
+    const loadAdminUsersSafe = async () => {
+      try {
+        const users = await fetchUsersFromApi('admin');
+        if (isMounted) {
+          setAdminUsers(users);
+        }
+      } catch {
+        if (isMounted) {
+          setAdminUsers([]);
+        }
+      }
+    };
 
-    const loadCustomerUsers = async () => {
+    const loadCustomerUsersSafe = async () => {
       try {
         const users = await fetchUsersFromApi('user');
         if (isMounted) {
@@ -313,9 +342,7 @@ export default function Admin() {
       }
     };
 
-    void loadCustomerUsers();
-
-    const loadLeads = async () => {
+    const loadLeadsSafe = async () => {
       try {
         const nextLeads = await fetchLeadsFromApi();
         if (isMounted) {
@@ -328,7 +355,9 @@ export default function Admin() {
       }
     };
 
-    void loadLeads();
+    void loadAdminUsersSafe();
+    void loadCustomerUsersSafe();
+    void loadLeadsSafe();
 
     const loadAnalytics = async () => {
       try {
@@ -680,6 +709,73 @@ export default function Admin() {
   const handleRemoveCatalogue = (index: number) => {
     const nextCatalogues = (form.getValues('catalogues') ?? []).filter((_, catalogueIndex) => catalogueIndex !== index);
     form.setValue('catalogues', nextCatalogues, { shouldValidate: true });
+  };
+
+  const handleCreateAdmin = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const fullName = newAdminFullName.trim();
+    const email = newAdminEmail.trim();
+    const password = newAdminPassword;
+
+    if (!fullName || !email || password.length < 6) {
+      toast.error(t('admin.accounts.toasts.invalidPayload'));
+      return;
+    }
+
+    setIsCreatingAdmin(true);
+
+    try {
+      await createAdminUserInApi({ fullName, email, password });
+      await loadAdminUsers();
+      setNewAdminFullName('');
+      setNewAdminEmail('');
+      setNewAdminPassword('');
+      toast.success(t('admin.accounts.toasts.created'));
+    } catch (error) {
+      const errorCode = error instanceof Error ? error.message : 'admin_user_create_failed';
+      const message =
+        errorCode === 'email_exists'
+          ? t('admin.accounts.toasts.emailExists')
+          : errorCode === 'invalid_admin_payload'
+            ? t('admin.accounts.toasts.invalidPayload')
+            : errorCode === 'backend_unreachable'
+              ? t('admin.toasts.backendUnavailable')
+              : t('admin.accounts.toasts.createFailed');
+      toast.error(message);
+    } finally {
+      setIsCreatingAdmin(false);
+    }
+  };
+
+  const handleDeleteAdmin = async (adminUser: AuthUser) => {
+    const confirmed = window.confirm(t('admin.accounts.confirmDelete', { email: adminUser.email }));
+    if (!confirmed) {
+      return;
+    }
+
+    setDeletingAdminId(adminUser.id);
+
+    try {
+      await deleteAdminUserInApi(adminUser.id);
+      await loadAdminUsers();
+      toast.success(t('admin.accounts.toasts.deleted'));
+    } catch (error) {
+      const errorCode = error instanceof Error ? error.message : 'admin_user_delete_failed';
+      const message =
+        errorCode === 'cannot_delete_current_admin'
+          ? t('admin.accounts.toasts.cannotDeleteCurrent')
+          : errorCode === 'cannot_delete_seed_admin'
+            ? t('admin.accounts.toasts.cannotDeleteSeed')
+            : errorCode === 'cannot_delete_last_admin'
+              ? t('admin.accounts.toasts.cannotDeleteLast')
+              : errorCode === 'backend_unreachable'
+                ? t('admin.toasts.backendUnavailable')
+                : t('admin.accounts.toasts.deleteFailed');
+      toast.error(message);
+    } finally {
+      setDeletingAdminId(null);
+    }
   };
 
   const productEditorContent = (
@@ -1127,6 +1223,99 @@ export default function Admin() {
             ))}
           </div>
         )}
+
+        <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
+          <Card className="rounded-3xl border-0 shadow-xl">
+            <CardHeader>
+              <CardTitle>{t('admin.accounts.createTitle')}</CardTitle>
+              <CardDescription>{t('admin.accounts.createDescription')}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form className="space-y-4" onSubmit={handleCreateAdmin}>
+                <div className="space-y-2">
+                  <Label htmlFor="adminFullName">{t('admin.accounts.form.fullName')}</Label>
+                  <Input id="adminFullName" value={newAdminFullName} onChange={(event) => setNewAdminFullName(event.target.value)} />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="adminEmail">{t('admin.accounts.form.email')}</Label>
+                  <Input
+                    id="adminEmail"
+                    type="email"
+                    value={newAdminEmail}
+                    onChange={(event) => setNewAdminEmail(event.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="adminPassword">{t('admin.accounts.form.password')}</Label>
+                  <Input
+                    id="adminPassword"
+                    type="password"
+                    value={newAdminPassword}
+                    onChange={(event) => setNewAdminPassword(event.target.value)}
+                  />
+                  <p className="text-xs text-slate-500">{t('admin.accounts.form.passwordHint')}</p>
+                </div>
+                <Button type="submit" className="bg-brand-blue text-white hover:bg-brand-blue/90" disabled={isCreatingAdmin}>
+                  {isCreatingAdmin ? t('admin.accounts.creating') : t('admin.accounts.createAction')}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-3xl border-0 shadow-xl">
+            <CardHeader>
+              <CardTitle>{t('admin.accounts.title')}</CardTitle>
+              <CardDescription>{t('admin.accounts.count', { count: adminUsers.length })}</CardDescription>
+            </CardHeader>
+            <CardContent className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>{t('admin.accounts.table.fullName')}</TableHead>
+                    <TableHead>{t('admin.accounts.table.email')}</TableHead>
+                    <TableHead>{t('admin.accounts.table.role')}</TableHead>
+                    <TableHead className="text-right">{t('admin.table.actions')}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {adminUsers.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={4} className="py-8 text-center text-slate-500">
+                        {t('admin.accounts.empty')}
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    adminUsers.map((adminUser) => (
+                      <TableRow key={adminUser.id}>
+                        <TableCell className="font-medium text-slate-900">{adminUser.fullName}</TableCell>
+                        <TableCell>{adminUser.email}</TableCell>
+                        <TableCell>{t('admin.accounts.roleLabel')}</TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex justify-end gap-2">
+                            {adminUser.id === user?.id ? (
+                              <Button variant="outline" size="sm" disabled>
+                                {t('admin.accounts.currentAdmin')}
+                              </Button>
+                            ) : (
+                              <Button
+                                variant="destructive"
+                                size="sm"
+                                disabled={deletingAdminId === adminUser.id}
+                                onClick={() => handleDeleteAdmin(adminUser)}
+                              >
+                                {deletingAdminId === adminUser.id ? t('admin.accounts.deleting') : t('admin.delete')}
+                              </Button>
+                            )}
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </div>
 
         <Card className="rounded-3xl border-0 shadow-xl">
           <CardHeader>

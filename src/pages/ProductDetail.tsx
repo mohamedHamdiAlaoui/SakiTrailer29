@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
-import { ArrowLeft, CalendarDays, FileText, Gauge, Mail, MapPin, MessageCircle, Phone, Settings2 } from 'lucide-react';
+import { ArrowLeft, CalendarDays, FileText, Gauge, Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import ProductGallery from '@/components/products/ProductGallery';
 import LeadForm from '@/components/products/LeadForm';
@@ -38,6 +38,34 @@ function getSchemaAvailability(status: 'available' | 'reserved' | 'sold') {
     default:
       return 'https://schema.org/SoldOut';
   }
+}
+
+interface ProductDetailRow {
+  label: string;
+  value: string;
+}
+
+interface ProductDetailSection {
+  title: string;
+  rows: ProductDetailRow[];
+}
+
+function ProductDetailsSection({ title, rows }: ProductDetailSection) {
+  return (
+    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+      <div className="border-b border-slate-200 bg-slate-100 px-4 py-3">
+        <h3 className="text-sm font-semibold uppercase tracking-[0.16em] text-slate-900">{title}</h3>
+      </div>
+      <div>
+        {rows.map((row) => (
+          <div key={row.label} className="grid gap-2 border-b border-slate-100 px-4 py-3 text-sm last:border-b-0 sm:grid-cols-[190px_1fr]">
+            <p className="font-medium text-slate-500">{row.label}</p>
+            <p className="text-slate-950">{row.value}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export default function ProductDetail() {
@@ -127,29 +155,31 @@ export default function ProductDetail() {
                 '@type': 'Brand',
                 name: product.brand,
               },
-              offers: {
-                '@type': 'Offer',
-                priceCurrency: 'EUR',
-                price: product.price,
-                availability: getSchemaAvailability(product.status),
-                url: canonicalUrl,
-                seller: {
-                  '@type': 'AutoDealer',
-                  name: 'SAKI TRAILER 29',
-                  url: getAbsoluteSiteUrl('/'),
-                  telephone: BUSINESS_PHONE,
-                  email: BUSINESS_EMAIL,
-                  geo: {
-                    '@type': 'GeoCoordinates',
-                    latitude: SHOWROOM_COORDINATES.latitude,
-                    longitude: SHOWROOM_COORDINATES.longitude,
-                  },
-                },
-                itemCondition:
-                  product.stockType === 'new'
-                    ? 'https://schema.org/NewCondition'
-                    : 'https://schema.org/UsedCondition',
-              },
+              ...(isUsedProduct
+                ? {
+                    offers: {
+                      '@type': 'Offer',
+                      priceCurrency: 'EUR',
+                      price: product.price,
+                      availability: getSchemaAvailability(product.status),
+                      url: canonicalUrl,
+                      seller: {
+                        '@type': 'AutoDealer',
+                        name: 'SAKI TRAILER 29',
+                        url: getAbsoluteSiteUrl('/'),
+                        telephone: BUSINESS_PHONE,
+                        email: BUSINESS_EMAIL,
+                        geo: {
+                          '@type': 'GeoCoordinates',
+                          latitude: SHOWROOM_COORDINATES.latitude,
+                          longitude: SHOWROOM_COORDINATES.longitude,
+                        },
+                      },
+                      itemCondition: 'https://schema.org/UsedCondition',
+                    },
+                  }
+                : {}),
+              url: canonicalUrl,
             },
             {
               '@context': 'https://schema.org',
@@ -202,6 +232,51 @@ export default function ProductDetail() {
     return <Navigate to="/" replace />;
   }
 
+  const dedouaneeLabel =
+    product.dedouanee === true
+      ? t('usedFilters.dedouaneeYes')
+      : product.dedouanee === false
+        ? t('usedFilters.dedouaneeNo')
+        : t('product.usedDetails.dedouaneeNotSpecified');
+
+  const usedProductSections: ProductDetailSection[] = isUsedProduct
+    ? [
+        {
+          title: t('product.usedDetails.mainInformation'),
+          rows: [
+            { label: t('product.usedDetails.reference'), value: product.id },
+            { label: t('product.usedDetails.brand'), value: product.brand },
+            { label: t('product.usedDetails.category'), value: getProductCategoryLabel(product, t) },
+            { label: t('product.specifications.year'), value: String(product.year) },
+            { label: t('product.specifications.modelYear'), value: product.modelYear ? String(product.modelYear) : t('common.notAvailable') },
+            { label: t('product.specifications.location'), value: product.location ?? t('common.morocco') },
+          ],
+        },
+        {
+          title: t('product.usedDetails.condition'),
+          rows: [
+            { label: t('product.usedDetails.availability'), value: getLocalizedStatusName(product.status, t) },
+            { label: t('product.usedDetails.dedouanee'), value: dedouaneeLabel },
+          ],
+        },
+        {
+          title: t('product.usedDetails.transmission'),
+          rows: [
+            {
+              label: t('product.specifications.transmission'),
+              value: product.transmission
+                ? getLocalizedTransmissionName(product.transmission as ProductTransmissionType, t)
+                : t('common.notAvailable'),
+            },
+            {
+              label: t('product.specifications.mileage'),
+              value: formatMileage(product.mileageKm, i18n.language, t('common.notAvailable')),
+            },
+          ],
+        },
+      ]
+    : [];
+
   const relatedProducts = products
     .filter((item) => item.id !== product.id && getProductCategoryFilterValue(item) === getProductCategoryFilterValue(product))
     .slice(0, 3);
@@ -237,7 +312,19 @@ export default function ProductDetail() {
           <div className="space-y-8">
             <ProductGallery images={product.images} title={localizedTitle} />
 
-            {catalogueBlobUrl && product.catalogues ? (
+            {isUsedProduct ? (
+              <Card className="overflow-hidden rounded-3xl border-0 shadow-xl">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 border-b bg-white pb-4">
+                  <div className="flex items-center gap-2">
+                    <FileText className="size-5 text-brand-blue" />
+                    <h2 className="text-xl font-semibold text-slate-950">{t('product.usedDetails.additionalInformation')}</h2>
+                  </div>
+                </CardHeader>
+                <CardContent className="bg-white px-6 py-5">
+                  <div className="whitespace-pre-line text-sm leading-7 text-slate-700">{localizedDescription}</div>
+                </CardContent>
+              </Card>
+            ) : catalogueBlobUrl && product.catalogues ? (
               <Card className="overflow-hidden rounded-3xl border-0 shadow-xl">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 border-b bg-white pb-4">
                   <div className="flex items-center gap-2">
@@ -289,59 +376,52 @@ export default function ProductDetail() {
                 </div>
                 <div>
                   <h1 className="text-3xl font-bold text-slate-950">{localizedTitle}</h1>
-                  <p className="mt-3 text-slate-600">{localizedDescription}</p>
+                  {isUsedProduct ? null : <p className="mt-3 text-slate-600">{localizedDescription}</p>}
                 </div>
               </CardHeader>
               <CardContent className="space-y-6">
-                <p className="text-4xl font-bold text-brand-blue">{formatCurrency(product.price, i18n.language)}</p>
-
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-2xl bg-slate-100 p-4 text-sm text-slate-700">
-                    <p className="flex items-center gap-2 font-medium">
-                      <CalendarDays className="size-4 text-brand-blue" />
-                      {t('product.specifications.year')}
-                    </p>
-                    <p className="mt-2 text-lg font-semibold text-slate-950">{product.year}</p>
+                {isUsedProduct ? (
+                  <p className="text-4xl font-bold text-brand-blue">{formatCurrency(product.price, i18n.language)}</p>
+                ) : (
+                  <div className="space-y-1">
+                    <p className="text-3xl font-bold uppercase tracking-[0.18em] text-brand-blue">{t('product.priceOnRequest')}</p>
+                    <p className="text-sm text-slate-600">{t('product.contactForPrice')}</p>
                   </div>
-                  {isUsedProduct ? (
+                )}
+
+                {isUsedProduct ? (
+                  <div className="space-y-4">
+                    {usedProductSections.map((section) => (
+                      <ProductDetailsSection key={section.title} title={section.title} rows={section.rows} />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="grid gap-3 sm:grid-cols-2">
                     <div className="rounded-2xl bg-slate-100 p-4 text-sm text-slate-700">
                       <p className="flex items-center gap-2 font-medium">
                         <CalendarDays className="size-4 text-brand-blue" />
-                        {t('product.specifications.modelYear')}
+                        {t('product.specifications.year')}
                       </p>
-                      <p className="mt-2 text-lg font-semibold text-slate-950">{product.modelYear ?? t('common.notAvailable')}</p>
+                      <p className="mt-2 text-lg font-semibold text-slate-950">{product.year}</p>
                     </div>
-                  ) : null}
-                  <div className="rounded-2xl bg-slate-100 p-4 text-sm text-slate-700">
-                    <p className="flex items-center gap-2 font-medium">
-                      <Gauge className="size-4 text-brand-blue" />
-                      {t('product.specifications.mileage')}
-                    </p>
-                    <p className="mt-2 text-lg font-semibold text-slate-950">
-                      {formatMileage(product.mileageKm, i18n.language, t('common.notAvailable'))}
-                    </p>
-                  </div>
-                  {isUsedProduct ? (
                     <div className="rounded-2xl bg-slate-100 p-4 text-sm text-slate-700">
                       <p className="flex items-center gap-2 font-medium">
-                        <Settings2 className="size-4 text-brand-blue" />
-                        {t('product.specifications.transmission')}
+                        <Gauge className="size-4 text-brand-blue" />
+                        {t('product.specifications.mileage')}
                       </p>
                       <p className="mt-2 text-lg font-semibold text-slate-950">
-                        {product.transmission
-                          ? getLocalizedTransmissionName(product.transmission as ProductTransmissionType, t)
-                          : t('common.notAvailable')}
+                        {formatMileage(product.mileageKm, i18n.language, t('common.notAvailable'))}
                       </p>
                     </div>
-                  ) : null}
-                  <div className="rounded-2xl bg-slate-100 p-4 text-sm text-slate-700 sm:col-span-2">
-                    <p className="flex items-center gap-2 font-medium">
-                      <MapPin className="size-4 text-brand-blue" />
-                      {t('product.specifications.location')}
-                    </p>
-                    <p className="mt-2 text-lg font-semibold text-slate-950">{product.location ?? t('common.morocco')}</p>
+                    <div className="rounded-2xl bg-slate-100 p-4 text-sm text-slate-700 sm:col-span-2">
+                      <p className="flex items-center gap-2 font-medium">
+                        <MapPin className="size-4 text-brand-blue" />
+                        {t('product.specifications.location')}
+                      </p>
+                      <p className="mt-2 text-lg font-semibold text-slate-950">{product.location ?? t('common.morocco')}</p>
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <div className="grid gap-3 sm:grid-cols-2">
                   <a href={whatsappUrl} target="_blank" rel="noreferrer" className="sm:col-span-2">

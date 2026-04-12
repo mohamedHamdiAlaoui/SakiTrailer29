@@ -15,14 +15,20 @@ import {
   type ProductSortOption,
 } from '@/utils/product-filters';
 
+function normalizeProductSortOption(value: string | null): ProductSortOption {
+  if (value === 'year-desc' || value === 'mileage-asc' || value === 'newest') {
+    return value;
+  }
+
+  return 'newest';
+}
+
 function getFiltersFromSearchParams(searchParams: URLSearchParams): ProductFilters {
   return {
     search: searchParams.get('search') ?? '',
     category: (searchParams.get('category') as ProductFilters['category']) ?? 'all',
     brand: searchParams.get('brand') ?? 'all',
     status: (searchParams.get('status') as ProductFilters['status']) ?? 'all',
-    minPrice: searchParams.get('minPrice') ?? '',
-    maxPrice: searchParams.get('maxPrice') ?? '',
     minYear: searchParams.get('minYear') ?? '',
     maxYear: searchParams.get('maxYear') ?? '',
   };
@@ -35,7 +41,7 @@ export default function StockNew() {
   const { products } = useProductStore();
   const [searchParams, setSearchParams] = useSearchParams();
   const [filters, setFilters] = useState<ProductFilters>(() => getFiltersFromSearchParams(searchParams));
-  const [sort, setSort] = useState<ProductSortOption>((searchParams.get('sort') as ProductSortOption) ?? 'newest');
+  const [sort, setSort] = useState<ProductSortOption>(() => normalizeProductSortOption(searchParams.get('sort')));
 
   const newProducts = useMemo(
     () => products.filter((product) => product.stockType === 'new' && product.source === 'lecitrailer'),
@@ -49,7 +55,7 @@ export default function StockNew() {
 
   useEffect(() => {
     setFilters(getFiltersFromSearchParams(searchParams));
-    setSort((searchParams.get('sort') as ProductSortOption) ?? 'newest');
+    setSort(normalizeProductSortOption(searchParams.get('sort')));
   }, [searchParams]);
 
   useEffect(() => {
@@ -88,8 +94,6 @@ export default function StockNew() {
     if (filters.category !== 'all') nextParams.set('category', filters.category);
     if (filters.brand !== 'all') nextParams.set('brand', filters.brand);
     if (filters.status !== 'all') nextParams.set('status', filters.status);
-    if (filters.minPrice) nextParams.set('minPrice', filters.minPrice);
-    if (filters.maxPrice) nextParams.set('maxPrice', filters.maxPrice);
     if (filters.minYear) nextParams.set('minYear', filters.minYear);
     if (filters.maxYear) nextParams.set('maxYear', filters.maxYear);
     nextParams.set('sort', sort);

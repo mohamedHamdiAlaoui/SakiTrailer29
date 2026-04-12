@@ -33,8 +33,6 @@ export default function ProductFiltersPanel({
 
   const sortOptions: Array<{ value: ProductSortOption; label: string }> = [
     { value: 'newest', label: t('filters.sortNewest') },
-    { value: 'price-asc', label: t('filters.sortPriceAsc') },
-    { value: 'price-desc', label: t('filters.sortPriceDesc') },
     { value: 'year-desc', label: t('filters.sortYearDesc') },
     { value: 'mileage-asc', label: t('filters.sortMileageAsc') },
   ];
@@ -109,17 +107,6 @@ export default function ProductFiltersPanel({
             </SelectContent>
           </Select>
         </div>
-
-        <div>
-          <label className="mb-2 block text-sm font-medium text-slate-700">{t('filters.minPriceLabel')}</label>
-          <Input type="number" value={filters.minPrice} onChange={(event) => updateField('minPrice', event.target.value)} placeholder="0" />
-        </div>
-
-        <div>
-          <label className="mb-2 block text-sm font-medium text-slate-700">{t('filters.maxPriceLabel')}</label>
-          <Input type="number" value={filters.maxPrice} onChange={(event) => updateField('maxPrice', event.target.value)} placeholder="1000000" />
-        </div>
-
         <div>
           <label className="mb-2 block text-sm font-medium text-slate-700">{t('filters.minYearLabel')}</label>
           <Input type="number" value={filters.minYear} onChange={(event) => updateField('minYear', event.target.value)} placeholder="2018" />

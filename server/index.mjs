@@ -213,6 +213,15 @@ const insertUserStatement = database.prepare(`
   INSERT INTO users (id, full_name, company_name, email, password_hash, role, auth_provider, created_at, updated_at)
   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
 `);
+const deleteUserStatement = database.prepare(`
+  DELETE FROM users
+  WHERE id = ?;
+`);
+const countAdminsStatement = database.prepare(`
+  SELECT COUNT(*) AS count
+  FROM users
+  WHERE role = 'admin';
+`);
 const updateUserProfileStatement = database.prepare(`
   UPDATE users
   SET full_name = ?, company_name = ?, auth_provider = ?, updated_at = ?
@@ -960,6 +969,82 @@ app.get('/api/users', (request, response) => {
     success: true,
     users: userRows.map((userRow) => toPublicUser(userRow)).filter(Boolean),
   });
+});
+
+app.post('/api/admin/users', (request, response) => {
+  const authContext = requireAdmin(request, response);
+  if (!authContext) {
+    return;
+  }
+
+  const fullName = typeof request.body?.fullName === 'string' ? request.body.fullName.trim() : '';
+  const email = normalizeEmail(request.body?.email);
+  const password = typeof request.body?.password === 'string' ? request.body.password : '';
+
+  if (!fullName || !email || password.length < 6) {
+    response.status(400).json({ success: false, error: 'invalid_admin_payload' });
+    return;
+  }
+
+  const existingUser = getUserByEmailStatement.get(email);
+  if (existingUser) {
+    response.status(409).json({ success: false, error: 'email_exists' });
+    return;
+  }
+
+  const userRow = createUser({
+    fullName,
+    companyName: null,
+    email,
+    password,
+    role: 'admin',
+    authProvider: 'credentials',
+  });
+
+  response.status(201).json({ success: true, user: toPublicUser(userRow) });
+});
+
+app.delete('/api/admin/users/:userId', (request, response) => {
+  const authContext = requireAdmin(request, response);
+  if (!authContext) {
+    return;
+  }
+
+  const userId = typeof request.params.userId === 'string' ? request.params.userId.trim() : '';
+  if (!userId) {
+    response.status(400).json({ success: false, error: 'invalid_user_id' });
+    return;
+  }
+
+  if (userId === authContext.user.id) {
+    response.status(400).json({ success: false, error: 'cannot_delete_current_admin' });
+    return;
+  }
+
+  const userRow = getUserByIdStatement.get(userId);
+  if (!userRow) {
+    response.status(404).json({ success: false, error: 'user_not_found' });
+    return;
+  }
+
+  if (userRow.role !== 'admin') {
+    response.status(400).json({ success: false, error: 'user_not_admin' });
+    return;
+  }
+
+  if (adminSeedUser && (userRow.id === adminSeedUser.id || userRow.email === adminSeedUser.email)) {
+    response.status(400).json({ success: false, error: 'cannot_delete_seed_admin' });
+    return;
+  }
+
+  const adminCount = countAdminsStatement.get();
+  if ((adminCount?.count ?? 0) <= 1) {
+    response.status(400).json({ success: false, error: 'cannot_delete_last_admin' });
+    return;
+  }
+
+  deleteUserStatement.run(userId);
+  response.json({ success: true });
 });
 
 app.put('/api/users/profile', (request, response) => {

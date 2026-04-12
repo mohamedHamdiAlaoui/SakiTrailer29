@@ -133,6 +133,8 @@
     "viewDetails": "View details",
     "relatedEyebrow": "Related products",
     "relatedTitle": "More in the same category",
+    "priceOnRequest": "Price on request",
+    "contactForPrice": "Ask for the price by quote or WhatsApp.",
     "quoteDefaultMessage": "Hello, I would like a quote for {{title}} ({{id}}).",
     "whatsappMessage": "Hello, I would like more information about {{title}} ({{id}}).",
     "specifications": {
@@ -141,6 +143,18 @@
       "transmission": "Transmission",
       "mileage": "Mileage",
       "location": "Location"
+    },
+    "usedDetails": {
+      "mainInformation": "Main information",
+      "condition": "Equipment condition",
+      "transmission": "Gearbox and transmission",
+      "additionalInformation": "Additional information",
+      "reference": "Reference",
+      "brand": "Brand",
+      "category": "Category",
+      "availability": "Availability",
+      "dedouanee": "Dedouanee",
+      "dedouaneeNotSpecified": "Not specified"
     },
     "catalogue": "Product Catalogue",
     "catalogueNoPreview": "Your browser does not support PDF preview.",
@@ -418,6 +432,41 @@
         "product": "Product",
         "preferredContact": "Preferred contact",
         "message": "Message"
+      }
+    },
+    "accounts": {
+      "title": "Admin accounts",
+      "count": "{{count}} admin accounts in backend storage.",
+      "empty": "No admin accounts found.",
+      "roleLabel": "Administrator",
+      "currentAdmin": "Current admin",
+      "createTitle": "Add admin account",
+      "createDescription": "Create additional admin accounts for trusted staff members.",
+      "createAction": "Create admin",
+      "creating": "Creating...",
+      "deleting": "Deleting...",
+      "confirmDelete": "Delete admin account {{email}}?",
+      "form": {
+        "fullName": "Full name",
+        "email": "Email",
+        "password": "Password",
+        "passwordHint": "Use at least 6 characters."
+      },
+      "table": {
+        "fullName": "Full name",
+        "email": "Email",
+        "role": "Role"
+      },
+      "toasts": {
+        "created": "Admin account created.",
+        "deleted": "Admin account deleted.",
+        "emailExists": "An account with this email already exists.",
+        "invalidPayload": "Provide a full name, email, and password with at least 6 characters.",
+        "createFailed": "Unable to create the admin account.",
+        "deleteFailed": "Unable to delete the admin account.",
+        "cannotDeleteCurrent": "You cannot delete the admin account you are currently using.",
+        "cannotDeleteSeed": "This protected admin account cannot be deleted from the dashboard.",
+        "cannotDeleteLast": "At least one admin account must remain active."
       }
     },
     "validation": {

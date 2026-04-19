@@ -44,12 +44,11 @@ export default function Home() {
         },
         knowsAbout: [
           'Lecitrailer Morocco',
-          'new trailers',
+          'new lecitrailer vehicles',
           'semi-trailers',
           'reefers',
           'curtainsiders',
-          'used tractor heads',
-          'international transport services',
+          'used vehicles',
         ],
       },
       {

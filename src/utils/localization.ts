@@ -1,5 +1,6 @@
 import type { TFunction } from 'i18next';
 import type { Product, ProductCategory, ProductStatus, ProductTransmissionType } from '@/types/product';
+import { stripRichText } from '@/utils/rich-text';
 
 export type AppLanguage = 'en' | 'fr' | 'es';
 
@@ -46,6 +47,10 @@ export function getLocalizedProductDescription(product: Product, language?: stri
     default:
       return product.description;
   }
+}
+
+export function getLocalizedProductDescriptionText(product: Product, language?: string) {
+  return stripRichText(getLocalizedProductDescription(product, language));
 }
 
 export function getLocalizedCategoryName(category: ProductCategory, t: TFunction) {

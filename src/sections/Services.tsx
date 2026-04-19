@@ -3,9 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Link } from 'react-router-dom';
-import { Sparkles, Wrench, ArrowRight, Clock, TrendingDown, Globe, Shield, RotateCcw } from 'lucide-react';
+import { Sparkles, ArrowRight, Clock, TrendingDown, Shield, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { buildHomeSectionLink } from '@/lib/links';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -40,18 +39,6 @@ export default function Services() {
       features: t('services.usedVehicles.features', { returnObjects: true }) as string[],
       cta: t('services.usedVehicles.cta'),
       stats: { label: t('services.stats.usedVehicles'), value: '1600+' },
-    },
-    {
-      id: 'afterSales',
-      title: t('services.afterSales.title'),
-      subtitle: t('services.afterSales.subtitle'),
-      description: t('services.afterSales.description'),
-      icon: Wrench,
-      image: '/lecitrailer/rigids.jpg',
-      href: buildHomeSectionLink('contact'),
-      features: t('services.afterSales.features', { returnObjects: true }) as string[],
-      cta: t('services.afterSales.cta'),
-      stats: { label: t('services.stats.workshops'), value: '5' },
     },
   ];
 
@@ -208,7 +195,7 @@ export default function Services() {
         </div>
 
         {/* Bottom Info Bar */}
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2">
           <div className="flex items-center gap-4 p-4 bg-white/5 rounded-xl">
             <div className="w-12 h-12 rounded-full bg-brand-gold/20 flex items-center justify-center">
               <Clock className="w-6 h-6 text-brand-gold" />
@@ -225,15 +212,6 @@ export default function Services() {
             <div>
               <p className="font-display text-xl font-bold text-white">{t('services.bestPrices')}</p>
               <p className="text-gray-400 text-sm">{t('services.bestPricesDesc')}</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-4 p-4 bg-white/5 rounded-xl">
-            <div className="w-12 h-12 rounded-full bg-brand-gold/20 flex items-center justify-center">
-              <Globe className="w-6 h-6 text-brand-gold" />
-            </div>
-            <div>
-              <p className="font-display text-xl font-bold text-white">{t('services.delivery')}</p>
-              <p className="text-gray-400 text-sm">{t('services.deliveryDesc')}</p>
             </div>
           </div>
         </div>

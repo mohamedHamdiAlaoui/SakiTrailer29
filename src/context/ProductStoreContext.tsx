@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { Product } from '@/types/product';
 import {
@@ -8,7 +8,7 @@ import {
   fetchProductsFromApi,
   updateProductInApi,
 } from '@/lib/products-api';
-import { seedProducts } from '@/data/products';
+import { getInitialProductCatalog, saveCachedProducts } from '@/utils/storage';
 
 interface ProductStoreActionResult {
   success: boolean;
@@ -41,24 +41,31 @@ interface ProductStoreContextValue {
 const ProductStoreContext = createContext<ProductStoreContextValue | null>(null);
 
 export function ProductStoreProvider({ children }: { children: ReactNode }) {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const initialProducts = useMemo(() => getInitialProductCatalog(), []);
+  const [products, setProducts] = useState<Product[]>(initialProducts);
+  const [isLoading, setIsLoading] = useState(initialProducts.length === 0);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const hasProductsRef = useRef(initialProducts.length > 0);
 
-  const refreshProducts = async () => {
-    setIsLoading(true);
+  useEffect(() => {
+    hasProductsRef.current = products.length > 0;
+  }, [products.length]);
+
+  const refreshProducts = useCallback(async () => {
+    setIsLoading((currentIsLoading) => currentIsLoading || !hasProductsRef.current);
     setLoadError(null);
 
     try {
       const remoteProducts = await fetchProductsFromApi();
 
       if (remoteProducts.length > 0) {
-        setProducts(remoteProducts);
+        const cachedProducts = saveCachedProducts(remoteProducts);
+        setProducts(cachedProducts);
         setIsLoading(false);
         return;
       }
 
-      const seededProducts = seedProducts;
+      const seededProducts = initialProducts;
       if (seededProducts.length === 0) {
         setProducts([]);
         setIsLoading(false);
@@ -66,19 +73,22 @@ export function ProductStoreProvider({ children }: { children: ReactNode }) {
       }
 
       const bootstrappedProducts = await bootstrapProductsInApi(seededProducts);
-      setProducts(bootstrappedProducts.length > 0 ? bootstrappedProducts : seededProducts);
+      const nextProducts = bootstrappedProducts.length > 0 ? bootstrappedProducts : seededProducts;
+      setProducts(saveCachedProducts(nextProducts));
     } catch (error) {
       const errorCode = error instanceof Error ? error.message : 'products_load_failed';
-      setLoadError(errorCode);
-      setProducts([]);
+      if (!hasProductsRef.current) {
+        setLoadError(errorCode);
+        setProducts(initialProducts);
+      }
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [initialProducts]);
 
   useEffect(() => {
     void refreshProducts();
-  }, []);
+  }, [refreshProducts]);
 
   const value = useMemo<ProductStoreContextValue>(
     () => ({
@@ -89,7 +99,11 @@ export function ProductStoreProvider({ children }: { children: ReactNode }) {
       async addProduct(product) {
         try {
           const createdProduct = await createProductInApi(product);
-          setProducts((currentProducts) => [createdProduct, ...currentProducts]);
+          setProducts((currentProducts) => {
+            const nextProducts = [createdProduct, ...currentProducts];
+            saveCachedProducts(nextProducts);
+            return nextProducts;
+          });
           return { success: true };
         } catch (error) {
           return { success: false, error: normalizeProductStoreError(error, 'products_create_failed') };
@@ -98,11 +112,13 @@ export function ProductStoreProvider({ children }: { children: ReactNode }) {
       async updateProduct(product) {
         try {
           const updatedProduct = await updateProductInApi(product);
-          setProducts((currentProducts) =>
-            currentProducts.map((currentProduct) =>
+          setProducts((currentProducts) => {
+            const nextProducts = currentProducts.map((currentProduct) =>
               currentProduct.id === updatedProduct.id ? updatedProduct : currentProduct
-            )
-          );
+            );
+            saveCachedProducts(nextProducts);
+            return nextProducts;
+          });
           return { success: true };
         } catch (error) {
           return { success: false, error: normalizeProductStoreError(error, 'products_update_failed') };
@@ -111,14 +127,18 @@ export function ProductStoreProvider({ children }: { children: ReactNode }) {
       async deleteProduct(productId) {
         try {
           await deleteProductInApi(productId);
-          setProducts((currentProducts) => currentProducts.filter((product) => product.id !== productId));
+          setProducts((currentProducts) => {
+            const nextProducts = currentProducts.filter((product) => product.id !== productId);
+            saveCachedProducts(nextProducts);
+            return nextProducts;
+          });
           return { success: true };
         } catch (error) {
           return { success: false, error: normalizeProductStoreError(error, 'products_delete_failed') };
         }
       },
     }),
-    [isLoading, loadError, products]
+    [isLoading, loadError, products, refreshProducts]
   );
 
   return <ProductStoreContext.Provider value={value}>{children}</ProductStoreContext.Provider>;

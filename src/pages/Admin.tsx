@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
 import { CheckCircle } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import type { TFunction } from 'i18next';
+import RichTextTextarea from '@/components/admin/RichTextTextarea';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -50,7 +51,10 @@ import {
   getLocalizedTransmissionName,
 } from '@/utils/localization';
 import { getProductCategoryLabel, normalizeCustomCategoryName } from '@/utils/product-category';
+import { stripRichText } from '@/utils/rich-text';
 import { createId } from '@/utils/storage';
+
+const preloadAdminProductEdit = () => import('@/pages/AdminProductEdit');
 
 function createProductSchema(t: TFunction) {
   return z
@@ -304,6 +308,15 @@ export default function Admin() {
     availableProducts: number;
     totalLeads: number;
   } | null>(null);
+  const standaloneMode = searchParams.get('mode');
+  const standaloneProductId = searchParams.get('id');
+  const isStandaloneCreate = standaloneMode === 'new-product';
+  const isStandaloneEdit = standaloneMode === 'edit-product';
+  const isStandaloneEditor = isStandaloneCreate || isStandaloneEdit;
+
+  useEffect(() => {
+    void preloadAdminProductEdit();
+  }, []);
 
   const loadAdminUsers = async () => {
     try {
@@ -355,27 +368,29 @@ export default function Admin() {
       }
     };
 
-    void loadAdminUsersSafe();
-    void loadCustomerUsersSafe();
-    void loadLeadsSafe();
+    if (!isStandaloneEditor) {
+      void loadAdminUsersSafe();
+      void loadCustomerUsersSafe();
+      void loadLeadsSafe();
 
-    const loadAnalytics = async () => {
-      try {
-        const res = await fetch(getApiEndpoint('/api/admin/analytics'), {
-          headers: createApiHeaders({ auth: true }),
-        });
-        const data = await res.json();
-        if (data.success && isMounted) setAnalytics(data.analytics);
-      } catch {
-        // silently ignore
-      }
-    };
-    void loadAnalytics();
+      const loadAnalytics = async () => {
+        try {
+          const res = await fetch(getApiEndpoint('/api/admin/analytics'), {
+            headers: createApiHeaders({ auth: true }),
+          });
+          const data = await res.json();
+          if (data.success && isMounted) setAnalytics(data.analytics);
+        } catch {
+          // silently ignore
+        }
+      };
+      void loadAnalytics();
+    }
 
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [isStandaloneEditor]);
 
   const sortedProducts = useMemo(
     () => [...products].sort((left, right) => new Date(right.createdAt).getTime() - new Date(left.createdAt).getTime()),
@@ -400,7 +415,9 @@ export default function Admin() {
     resolver: zodResolver(orderSchema),
     defaultValues: emptyOrderValues,
   });
-  const watchedValues = form.watch();
+  const watchedValues = useWatch({ control: form.control }) ?? emptyValues;
+  const watchedOrderUserId = useWatch({ control: orderForm.control, name: 'userId' }) ?? 'unassigned';
+  const watchedOrderStatus = useWatch({ control: orderForm.control, name: 'status' }) ?? 'created';
 
   const previewImages = useMemo(
     () => parseImageEntries(watchedValues.imagesText ?? ''),
@@ -413,19 +430,29 @@ export default function Admin() {
   const previewDedouanee = watchedValues.dedouanee ?? 'not-specified';
   const previewTransmission = watchedValues.transmission ?? 'not-specified';
   const selectedCategory = watchedValues.category ?? PRODUCT_CATEGORY_OPTIONS[0];
+  const previewCatalogues = watchedValues.catalogues ?? [];
+  const previewDescription = watchedValues.description ?? '';
+  const previewDescriptionFr = watchedValues.descriptionFr ?? '';
+  const previewDescriptionEs = watchedValues.descriptionEs ?? '';
+  const previewStatus = watchedValues.status ?? 'available';
   const isUsedProductForm = previewStockType === 'used';
   const isCustomCategorySelected = isUsedProductForm && selectedCategory === 'other';
-  const standaloneMode = searchParams.get('mode');
-  const standaloneProductId = searchParams.get('id');
-  const isStandaloneCreate = standaloneMode === 'new-product';
-  const isStandaloneEdit = standaloneMode === 'edit-product';
-  const isStandaloneEditor = isStandaloneCreate || isStandaloneEdit;
   const standaloneEditingProduct = isStandaloneEdit
     ? products.find((product) => product.id === standaloneProductId) ?? null
     : null;
 
+  const openCreateProductDialog = () => {
+    setEditingProduct(null);
+    form.reset({
+      ...emptyValues,
+      id: createId('saki').toUpperCase(),
+    });
+    setIsDialogOpen(true);
+  };
+
   const openEditDialog = (product: Product) => {
-    window.open(`/admin?mode=edit-product&id=${encodeURIComponent(product.id)}`, '_blank', 'noopener,noreferrer');
+    void preloadAdminProductEdit();
+    navigate(`/admin/products/${encodeURIComponent(product.id)}/edit`);
   };
 
   const openCreateOrderDialog = () => {
@@ -462,7 +489,7 @@ export default function Admin() {
     if (!isStandaloneEditor) return;
 
     setEditingProduct(null);
-  }, [form, isStandaloneCreate, isStandaloneEdit, standaloneEditingProduct]);
+  }, [form, isStandaloneCreate, isStandaloneEdit, isStandaloneEditor, standaloneEditingProduct]);
 
   useEffect(() => {
     if (!isStandaloneEdit || isLoading) return;
@@ -885,7 +912,7 @@ export default function Admin() {
 
         <div className="space-y-2">
           <Label>{t('admin.form.source')}</Label>
-          <Select value={form.watch('source')} onValueChange={(value) => form.setValue('source', value as ProductSource)}>
+          <Select value={previewSource} onValueChange={(value) => form.setValue('source', value as ProductSource)}>
             <SelectTrigger className="w-full">
               <SelectValue />
             </SelectTrigger>
@@ -902,7 +929,7 @@ export default function Admin() {
         <div className="space-y-2">
           <Label>{t('admin.form.dedouanee')}</Label>
           <Select
-            value={form.watch('dedouanee')}
+            value={previewDedouanee}
             onValueChange={(value) => form.setValue('dedouanee', value as ProductFormInput['dedouanee'])}
             disabled={!isUsedProductForm}
           >
@@ -938,7 +965,7 @@ export default function Admin() {
         <div className="space-y-2">
           <Label>{t('admin.form.transmission')}</Label>
           <Select
-            value={form.watch('transmission')}
+            value={previewTransmission}
             onValueChange={(value) => form.setValue('transmission', value as ProductFormInput['transmission'])}
             disabled={!isUsedProductForm}
           >
@@ -1017,10 +1044,10 @@ export default function Admin() {
             </div>
           ) : null}
 
-          {form.watch('catalogues') && form.watch('catalogues')!.length > 0 && (
+          {previewCatalogues.length > 0 && (
             <div className="mt-3 space-y-2 rounded-xl border bg-slate-50 p-3">
               <div className="flex items-center justify-between">
-                <p className="text-sm font-medium text-slate-700">{t('admin.form.cataloguesCount', { count: form.watch('catalogues')!.length })}</p>
+                <p className="text-sm font-medium text-slate-700">{t('admin.form.cataloguesCount', { count: previewCatalogues.length })}</p>
                 <Button
                   type="button"
                   variant="outline"
@@ -1031,7 +1058,7 @@ export default function Admin() {
                 </Button>
               </div>
               <div className="space-y-2">
-                {form.watch('catalogues')!.map((cat, idx) => (
+                {previewCatalogues.map((cat, idx) => (
                   <div key={idx} className="flex items-center justify-between rounded-md border bg-white p-2 text-sm shadow-sm">
                     <div className="flex items-center gap-2 truncate">
                       <CheckCircle className="size-4 shrink-0 text-emerald-600" />
@@ -1054,24 +1081,45 @@ export default function Admin() {
         </div>
 
         <div className="space-y-2 md:col-span-2 xl:col-span-2">
-          <Label htmlFor="description">{t('admin.form.description')}</Label>
-          <Textarea id="description" rows={5} {...form.register('description')} />
-          {form.formState.errors.description ? <p className="text-sm text-red-500">{form.formState.errors.description.message}</p> : null}
+          <RichTextTextarea
+            id="description"
+            name={form.register('description').name}
+            label={t('admin.form.description')}
+            rows={5}
+            value={previewDescription}
+            onBlur={form.register('description').onBlur}
+            onChange={(value) => form.setValue('description', value, { shouldDirty: true, shouldValidate: true })}
+            error={form.formState.errors.description?.message}
+          />
         </div>
 
         <div className="space-y-2 md:col-span-2 xl:col-span-2">
-          <Label htmlFor="descriptionFr">{t('admin.form.descriptionFr')}</Label>
-          <Textarea id="descriptionFr" rows={4} {...form.register('descriptionFr')} />
+          <RichTextTextarea
+            id="descriptionFr"
+            name={form.register('descriptionFr').name}
+            label={t('admin.form.descriptionFr')}
+            rows={4}
+            value={previewDescriptionFr}
+            onBlur={form.register('descriptionFr').onBlur}
+            onChange={(value) => form.setValue('descriptionFr', value, { shouldDirty: true, shouldValidate: true })}
+          />
         </div>
 
         <div className="space-y-2 md:col-span-2 xl:col-span-2">
-          <Label htmlFor="descriptionEs">{t('admin.form.descriptionEs')}</Label>
-          <Textarea id="descriptionEs" rows={4} {...form.register('descriptionEs')} />
+          <RichTextTextarea
+            id="descriptionEs"
+            name={form.register('descriptionEs').name}
+            label={t('admin.form.descriptionEs')}
+            rows={4}
+            value={previewDescriptionEs}
+            onBlur={form.register('descriptionEs').onBlur}
+            onChange={(value) => form.setValue('descriptionEs', value, { shouldDirty: true, shouldValidate: true })}
+          />
         </div>
 
         <div className="space-y-2">
           <Label>{t('admin.form.status')}</Label>
-          <Select value={form.watch('status')} onValueChange={(value) => form.setValue('status', value as Product['status'])}>
+          <Select value={previewStatus} onValueChange={(value) => form.setValue('status', value as Product['status'])}>
             <SelectTrigger className="w-full">
               <SelectValue />
             </SelectTrigger>
@@ -1102,7 +1150,7 @@ export default function Admin() {
                   : '-'}
               </p>
               <h4 className="text-xl font-semibold text-slate-950">{watchedValues.title || '-'}</h4>
-              <p className="line-clamp-3 text-sm text-slate-600">{watchedValues.description || '-'}</p>
+              <p className="line-clamp-3 text-sm text-slate-600">{stripRichText(watchedValues.description || '') || '-'}</p>
               <div className="grid gap-2 text-sm text-slate-600 sm:grid-cols-2">
                 <p>{t('admin.form.brand')}: {watchedValues.brand || '-'}</p>
                 <p>{t('admin.form.price')}: {watchedValues.price ? formatCurrency(Number(watchedValues.price), i18n.language) : '-'}</p>
@@ -1196,10 +1244,7 @@ export default function Admin() {
             <Button variant="outline" onClick={openCreateOrderDialog}>
               {t('admin.orders.addOrder')}
             </Button>
-            <Button
-              className="bg-brand-blue text-white hover:bg-brand-blue/90"
-              onClick={() => window.open('/admin?mode=new-product', '_blank', 'noopener,noreferrer')}
-            >
+            <Button className="bg-brand-blue text-white hover:bg-brand-blue/90" onClick={openCreateProductDialog}>
               {t('admin.addProduct')}
             </Button>
           </div>
@@ -1370,7 +1415,7 @@ export default function Admin() {
                     <TableCell>{getLocalizedStatusName(product.status, t)}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        <Button variant="outline" size="sm" onClick={() => openEditDialog(product)}>
+                        <Button variant="outline" size="sm" onMouseEnter={preloadAdminProductEdit} onFocus={preloadAdminProductEdit} onClick={() => openEditDialog(product)}>
                           {t('admin.edit')}
                         </Button>
                         <Button variant="destructive" size="sm" onClick={() => handleDelete(product.id)}>
@@ -1508,7 +1553,7 @@ export default function Admin() {
 
             <div className="space-y-2">
               <Label>{t('admin.orders.form.user')}</Label>
-              <Select value={orderForm.watch('userId')} onValueChange={(value) => orderForm.setValue('userId', value)}>
+              <Select value={watchedOrderUserId} onValueChange={(value) => orderForm.setValue('userId', value)}>
                 <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>
@@ -1531,7 +1576,7 @@ export default function Admin() {
             <div className="space-y-2">
               <Label>{t('admin.orders.form.status')}</Label>
               <Select
-                value={orderForm.watch('status')}
+                value={watchedOrderStatus}
                 onValueChange={(value) => orderForm.setValue('status', value as Order['status'])}
               >
                 <SelectTrigger className="w-full">

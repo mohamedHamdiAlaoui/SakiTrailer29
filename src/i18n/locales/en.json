@@ -29,7 +29,7 @@
   "hero": {
     "title1": "Lecitrailer in Morocco",
     "title2": "Official Representative",
-    "subtitle": "SAKI TRAILER 29 SARL is the only representative of Lecitrailer in Morocco, supplying trailers, semi-trailers, reefers, curtainsiders, rigids, and other Lecitrailer products across the country, while also selling used tractor heads and supporting international transport services.",
+    "subtitle": "SAKI TRAILER 29 SARL is the only representative of Lecitrailer in Morocco, supplying trailers, semi-trailers, reefers, curtainsiders, rigids, and other Lecitrailer vehicles across the country, while also selling used vehicles and supporting transport operations.",
     "viewStock": "View stock",
     "contactUs": "Contact us",
     "delivery": "National delivery support",
@@ -51,11 +51,11 @@
   },
   "home": {
     "seoTitle": "Lecitrailer Morocco | SAKI TRAILER 29",
-    "seoDescription": "SAKI TRAILER 29 is the official Lecitrailer representative in Morocco for new trailers, semi-trailers, reefers, curtainsiders, used tractor heads, and transport support services.",
-    "seoKeywords": "lecitrailer morocco, official lecitrailer representative morocco, new trailers morocco, used tractor heads morocco, trailers morocco, international transport services",
+    "seoDescription": "SAKI TRAILER 29 is the official Lecitrailer representative in Morocco for new Lecitrailer vehicles, used vehicles, and transport support.",
+    "seoKeywords": "lecitrailer morocco, official lecitrailer representative morocco, new lecitrailer vehicles morocco, used vehicles morocco, trailers morocco",
     "inventoryEyebrow": "Representative stock",
-    "inventoryTitle": "New Lecitrailer products and used tractor heads",
-    "inventoryDescription": "Browse new Lecitrailer trailers, semi-trailers, reefers, curtainsiders, rigids, and more, alongside selected used tractor heads and commercial vehicles available in Morocco.",
+    "inventoryTitle": "New Lecitrailer vehicles and used vehicles",
+    "inventoryDescription": "Browse new Lecitrailer trailers, semi-trailers, reefers, curtainsiders, rigids, and more, alongside selected used vehicles and commercial vehicles available in Morocco.",
     "fullStockCta": "Go to full stock",
     "noResultsTitle": "No results found",
     "noResultsDescription": "No products are available at the moment."
@@ -72,8 +72,8 @@
   },
   "stockUsedPage": {
     "seoTitle": "Used Tractor Heads, Trucks and Trailers in Morocco | SAKI TRAILER 29",
-    "seoDescription": "Browse used tractor heads, trucks, vans, and trailers in Morocco with filters for vehicle type, brand, transmission, mileage, and customs status.",
-    "seoKeywords": "used tractor heads morocco, used trucks morocco, used trailers morocco, used vans morocco, commercial vehicles morocco, sakitrailer29 used stock",
+    "seoDescription": "Browse used vehicles, trucks, vans, and trailers in Morocco with filters for vehicle type, brand, transmission, mileage, and customs status.",
+    "seoKeywords": "used vehicles morocco, used trucks morocco, used trailers morocco, used vans morocco, commercial vehicles morocco, sakitrailer29 used stock",
     "eyebrow": "Used stock",
     "title": "Used vehicles",
     "description": "",
@@ -84,9 +84,9 @@
   "stockNewPage": {
     "seoTitle": "New Lecitrailer Trailers and Semi-Trailers in Morocco | SAKI TRAILER 29",
     "seoDescription": "Discover new Lecitrailer semi-trailers, reefers, curtainsiders, rigids, and transport equipment in Morocco with searchable stock and quote-ready listings.",
-    "seoKeywords": "lecitrailer morocco, new trailers morocco, semi-trailers morocco, curtainsiders morocco, reefers morocco, new lecitrailer products",
+    "seoKeywords": "lecitrailer morocco, new lecitrailer vehicles, semi-trailers morocco, curtainsiders morocco, reefers morocco, new trailers morocco",
     "eyebrow": "New stock",
-    "title": "New products from Lecitrailer",
+    "title": "New Lecitrailer vehicles",
     "description": "",
     "showing": "Showing {{filtered}} of {{total}} new products",
     "noResultsTitle": "No new products match the current filters",
@@ -396,6 +396,20 @@
       "description": "Description (EN)",
       "descriptionFr": "Description (FR)",
       "descriptionEs": "Description (ES)",
+      "richText": {
+        "toolbar": "Formatting",
+        "help": "Basic tools: bold, italic, underline, bullet list, numbered list, and paragraph blocks.",
+        "bold": "Bold",
+        "italic": "Italic",
+        "underline": "Underline",
+        "bulletList": "Bullet list",
+        "numberedList": "Numbered list",
+        "paragraph": "Paragraph",
+        "boldPlaceholder": "bold text",
+        "italicPlaceholder": "italic text",
+        "underlinePlaceholder": "underlined text",
+        "paragraphPlaceholder": "Paragraph text"
+      },
       "previewTitle": "Product preview",
       "status": "Status"
     },
@@ -555,7 +569,7 @@
     "support": "Official Lecitrailer guidance",
     "supportDesc": "Direct support from the only Lecitrailer representative in Morocco for product selection, quotations, and delivery planning.",
     "bestPrices": "Used tractor heads available",
-    "bestPricesDesc": "Selected used tractor heads and related transport equipment ready for operators and fleet buyers.",
+    "bestPricesDesc": "Selected used vehicles and related transport equipment ready for operators and fleet buyers.",
     "delivery": "International transport support",
     "deliveryDesc": "We assist with sourcing, delivery coordination, and related services for transport activity in Morocco and beyond.",
     "stats": {
@@ -564,7 +578,7 @@
       "workshops": "Transport support"
     },
     "newVehicles": {
-      "title": "New Lecitrailer products",
+      "title": "New Lecitrailer vehicles",
       "subtitle": "Official Lecitrailer supply in Morocco",
       "description": "Explore new Lecitrailer trailers, semi-trailers, reefers, curtainsiders, rigids, container chassis, and tailor-made transport solutions for Moroccan fleets.",
       "features": [
@@ -576,11 +590,11 @@
       "cta": "Explore Lecitrailer stock"
     },
     "usedVehicles": {
-      "title": "Used tractor heads",
+      "title": "Used vehicles",
       "subtitle": "Selected stock for immediate operation",
-      "description": "Browse used tractor heads and related commercial vehicles chosen for transport operators seeking faster availability and practical fleet solutions.",
+      "description": "Browse used vehicles and related commercial vehicles chosen for transport operators seeking faster availability and practical fleet solutions.",
       "features": [
-        "Used tractor heads",
+        "Used vehicles",
         "Fast stock visibility",
         "Transport-focused selection",
         "Quote support"
@@ -664,18 +678,28 @@
   "showroom": {
     "subtitle": "Showroom",
     "title": "Visit the official Lecitrailer representative in Morocco",
-    "description": "Meet the SAKI TRAILER 29 SARL team in Casablanca to review new Lecitrailer products, discuss used tractor heads, and plan solutions for transport operations.",
-      "location": "35.77568193917511, -5.796048432226565",
+    "description": "Meet the SAKI TRAILER 29 SARL team in Casablanca to review new Lecitrailer vehicles, discuss used vehicles, and plan solutions for transport operations.",
+      "location": "Tangier office | Casablanca showroom",
     "hours": "Mon-Sat: 9:00 - 18:00",
     "planVisit": "Plan your visit",
     "address": "Address",
       "addressLine": "35.77568193917511, -5.796048432226565",
+      "locationLabel": "Location {{index}}",
       "openingHours": "Opening hours",
       "sundayClosed": "Sunday: Closed",
       "contact": "Contact",
       "schedule": "Schedule a visit",
       "openInMaps": "Open in Google Maps",
+      "openBothLocations": "Open both locations",
       "mapTitle": "SAKI TRAILER 29 showroom location on Google Maps",
+      "locations": {
+      "location1": {
+        "name": "Tangier office"
+      },
+      "location2": {
+        "name": "Casablanca showroom"
+      }
+    },
       "visitForm": {
       "title": "Schedule a showroom visit",
       "description": "Send us your preferred visit date and contact details. The SAKI TRAILER 29 team will confirm your appointment quickly.",
@@ -700,7 +724,7 @@
     "quote": "Quote"
   },
   "footer": {
-    "description": "SAKI TRAILER 29 SARL is the only representative of Lecitrailer in Morocco, supplying new Lecitrailer products, selected used tractor heads, and support linked to international transport services.",
+    "description": "SAKI TRAILER 29 SARL is the only representative of Lecitrailer in Morocco, supplying new Lecitrailer vehicles, selected used vehicles, and transport support.",
     "phone": "Phone: +212 666 206 141",
     "email": "Email: contact@sakitrailer29.com",
     "location": "Location: Casablanca, Morocco",

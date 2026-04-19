@@ -29,7 +29,7 @@
   "hero": {
     "title1": "Lecitrailer en Marruecos",
     "title2": "Representante oficial",
-    "subtitle": "SAKI TRAILER 29 SARL es el unico representante de Lecitrailer en Marruecos. La empresa suministra remolques, semirremolques, frigorificos, cortinas laterales, rigidos y otros productos Lecitrailer en todo el pais, y tambien vende cabezas tractoras usadas y servicios relacionados con el transporte internacional.",
+    "subtitle": "SAKI TRAILER 29 SARL es el unico representante de Lecitrailer en Marruecos. La empresa suministra remolques, semirremolques, frigorificos, cortinas laterales, rigidos y otros vehiculos Lecitrailer en todo el pais, y tambien vende vehiculos usados y apoyo para las operaciones de transporte.",
     "viewStock": "Ver stock",
     "contactUs": "Contactar",
     "delivery": "Soporte de entrega nacional",
@@ -51,11 +51,11 @@
   },
   "home": {
     "seoTitle": "Lecitrailer Marruecos | SAKI TRAILER 29",
-    "seoDescription": "SAKI TRAILER 29 es el representante oficial de Lecitrailer en Marruecos para remolques, semirremolques, frigorificos, cortinas laterales, cabezas tractoras usadas y servicios de transporte.",
-    "seoKeywords": "lecitrailer marruecos, representante oficial lecitrailer marruecos, remolques nuevos marruecos, cabezas tractoras usadas marruecos, remolques marruecos, servicios de transporte internacional",
+    "seoDescription": "SAKI TRAILER 29 es el representante oficial de Lecitrailer en Marruecos para vehiculos Lecitrailer nuevos, vehiculos usados y apoyo al transporte.",
+    "seoKeywords": "lecitrailer marruecos, representante oficial lecitrailer marruecos, vehiculos lecitrailer nuevos marruecos, vehiculos usados marruecos, remolques marruecos",
     "inventoryEyebrow": "Stock del representante",
-    "inventoryTitle": "Productos Lecitrailer nuevos y cabezas tractoras usadas",
-    "inventoryDescription": "Consulta remolques, semirremolques, frigorificos, cortinas laterales, rigidos y otros productos Lecitrailer, junto con una seleccion de cabezas tractoras usadas y vehiculos comerciales disponibles en Marruecos.",
+    "inventoryTitle": "Vehiculos Lecitrailer nuevos y vehiculos usados",
+    "inventoryDescription": "Consulta remolques, semirremolques, frigorificos, cortinas laterales, rigidos y otros vehiculos Lecitrailer, junto con una seleccion de vehiculos usados y vehiculos comerciales disponibles en Marruecos.",
     "fullStockCta": "Ir al stock completo",
     "noResultsTitle": "No se encontraron resultados",
     "noResultsDescription": "No hay productos disponibles en este momento."
@@ -72,8 +72,8 @@
   },
   "stockUsedPage": {
     "seoTitle": "Cabezas tractoras, camiones y remolques usados en Marruecos | SAKI TRAILER 29",
-    "seoDescription": "Consulta cabezas tractoras, camiones, vehiculos comerciales y remolques usados en Marruecos con filtros por tipo, marca, transmision, kilometraje y dedouanee.",
-    "seoKeywords": "cabezas tractoras usadas marruecos, camiones usados marruecos, remolques usados marruecos, furgonetas usadas marruecos, vehiculos comerciales marruecos, stock usado sakitrailer29",
+    "seoDescription": "Consulta vehiculos, camiones, vehiculos comerciales y remolques usados en Marruecos con filtros por tipo, marca, transmision, kilometraje y dedouanee.",
+    "seoKeywords": "vehiculos usados marruecos, camiones usados marruecos, remolques usados marruecos, furgonetas usadas marruecos, vehiculos comerciales marruecos, stock usado sakitrailer29",
     "eyebrow": "Stock usado",
     "title": "Vehiculos usados",
     "description": "",
@@ -84,9 +84,9 @@
   "stockNewPage": {
     "seoTitle": "Remolques y semirremolques Lecitrailer nuevos en Marruecos | SAKI TRAILER 29",
     "seoDescription": "Descubre semirremolques Lecitrailer, frigorificos, cortinas laterales, rigidos y equipamiento de transporte nuevo en Marruecos con busqueda y solicitudes rapidas.",
-    "seoKeywords": "lecitrailer marruecos, remolques nuevos marruecos, semirremolques marruecos, cortinas laterales marruecos, frigorificos marruecos, productos lecitrailer nuevos",
+    "seoKeywords": "lecitrailer marruecos, vehiculos lecitrailer nuevos, remolques nuevos marruecos, semirremolques marruecos, cortinas laterales marruecos, frigorificos marruecos",
     "eyebrow": "Stock nuevo",
-    "title": "Productos nuevos de Lecitrailer",
+    "title": "Vehiculos Lecitrailer nuevos",
     "description": "",
     "showing": "Mostrando {{filtered}} de {{total}} productos nuevos",
     "noResultsTitle": "Ningun producto nuevo coincide con los filtros actuales",
@@ -396,6 +396,20 @@
       "description": "Descripcion (EN)",
       "descriptionFr": "Descripcion (FR)",
       "descriptionEs": "Descripcion (ES)",
+      "richText": {
+        "toolbar": "Formato",
+        "help": "Herramientas basicas: negrita, cursiva, subrayado, lista con puntos, lista numerada y parrafos.",
+        "bold": "Negrita",
+        "italic": "Cursiva",
+        "underline": "Subrayado",
+        "bulletList": "Lista con puntos",
+        "numberedList": "Lista numerada",
+        "paragraph": "Parrafo",
+        "boldPlaceholder": "texto en negrita",
+        "italicPlaceholder": "texto en cursiva",
+        "underlinePlaceholder": "texto subrayado",
+        "paragraphPlaceholder": "Texto del parrafo"
+      },
       "previewTitle": "Vista previa del producto",
       "status": "Estado"
     },
@@ -555,7 +569,7 @@
     "support": "Asesoramiento oficial Lecitrailer",
     "supportDesc": "Acompanamiento directo del unico representante de Lecitrailer en Marruecos para elegir productos, preparar presupuestos y organizar entregas.",
     "bestPrices": "Cabezas tractoras usadas disponibles",
-    "bestPricesDesc": "Seleccion de cabezas tractoras usadas y equipos de transporte listos para operadores y compradores de flota.",
+    "bestPricesDesc": "Seleccion de vehiculos usados y equipos de transporte listos para operadores y compradores de flota.",
     "delivery": "Soporte para transporte internacional",
     "deliveryDesc": "Ayudamos con el sourcing, la coordinacion de entrega y los servicios relacionados con la actividad de transporte en Marruecos y mas alla.",
     "stats": {
@@ -564,7 +578,7 @@
       "workshops": "Soporte transporte"
     },
     "newVehicles": {
-      "title": "Productos Lecitrailer nuevos",
+      "title": "Vehiculos Lecitrailer nuevos",
       "subtitle": "Suministro oficial Lecitrailer en Marruecos",
       "description": "Explora remolques, semirremolques, frigorificos, cortinas laterales, rigidos, chasis portacontenedores y soluciones Lecitrailer a medida para flotas marroquies.",
       "features": [
@@ -576,11 +590,11 @@
       "cta": "Explorar stock Lecitrailer"
     },
     "usedVehicles": {
-      "title": "Cabezas tractoras usadas",
+      "title": "Vehiculos usados",
       "subtitle": "Seleccion para trabajar de inmediato",
-      "description": "Consulta cabezas tractoras usadas y vehiculos comerciales seleccionados para transportistas que buscan disponibilidad rapida y soluciones practicas de flota.",
+      "description": "Consulta vehiculos usados y vehiculos comerciales seleccionados para transportistas que buscan disponibilidad rapida y soluciones practicas de flota.",
       "features": [
-        "Cabezas tractoras usadas",
+        "Vehiculos usados",
         "Visibilidad rapida del stock",
         "Seleccion orientada al transporte",
         "Apoyo para presupuestos"
@@ -664,18 +678,28 @@
   "showroom": {
     "subtitle": "Showroom",
     "title": "Visita al representante oficial de Lecitrailer en Marruecos",
-    "description": "Conoce al equipo de SAKI TRAILER 29 SARL en Casablanca para revisar productos Lecitrailer nuevos, hablar de cabezas tractoras usadas y preparar soluciones para tus operaciones de transporte.",
-      "location": "35.77568193917511, -5.796048432226565",
+    "description": "Conoce al equipo de SAKI TRAILER 29 SARL en Casablanca para revisar vehiculos Lecitrailer nuevos, hablar de vehiculos usados y preparar soluciones para tus operaciones de transporte.",
+      "location": "Oficina de Tanger | Showroom de Casablanca",
     "hours": "Lun-Sab: 9:00 - 18:00",
     "planVisit": "Planifica tu visita",
     "address": "Direccion",
       "addressLine": "35.77568193917511, -5.796048432226565",
+      "locationLabel": "Ubicacion {{index}}",
       "openingHours": "Horario",
       "sundayClosed": "Domingo: cerrado",
       "contact": "Contacto",
       "schedule": "Programar visita",
       "openInMaps": "Abrir en Google Maps",
+      "openBothLocations": "Abrir ambas ubicaciones",
       "mapTitle": "Ubicacion del showroom SAKI TRAILER 29 en Google Maps",
+      "locations": {
+      "location1": {
+        "name": "Oficina de Tanger"
+      },
+      "location2": {
+        "name": "Showroom de Casablanca"
+      }
+    },
       "visitForm": {
       "title": "Programar una visita al showroom",
       "description": "Envianos tu fecha preferida y tus datos de contacto. El equipo de SAKI TRAILER 29 confirmara tu visita rapidamente.",
@@ -700,7 +724,7 @@
     "quote": "Presupuesto"
   },
   "footer": {
-    "description": "SAKI TRAILER 29 SARL es el unico representante de Lecitrailer en Marruecos, con productos Lecitrailer nuevos, cabezas tractoras usadas seleccionadas y apoyo relacionado con el transporte internacional.",
+    "description": "SAKI TRAILER 29 SARL es el unico representante de Lecitrailer en Marruecos, con vehiculos Lecitrailer nuevos, vehiculos usados seleccionados y apoyo al transporte.",
     "phone": "Telefono: +212 666 206 141",
     "email": "Correo: contact@sakitrailer29.com",
     "location": "Ubicacion: Casablanca, Marruecos",

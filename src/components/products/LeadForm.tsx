@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMemo } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -43,6 +43,7 @@ export default function LeadForm({ product }: { product: Product }) {
       preferredContact: 'phone',
     },
   });
+  const preferredContact = useWatch({ control: form.control, name: 'preferredContact' }) ?? 'phone';
 
   const onSubmit = async (values: LeadFormValues) => {
     const lead: CreateLeadInput = {
@@ -100,7 +101,7 @@ export default function LeadForm({ product }: { product: Product }) {
 
         <div className="space-y-2">
           <Label>{t('leadForm.preferredContact')}</Label>
-          <Select value={form.watch('preferredContact')} onValueChange={(value) => form.setValue('preferredContact', value as LeadPreferredContact)}>
+          <Select value={preferredContact} onValueChange={(value) => form.setValue('preferredContact', value as LeadPreferredContact)}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder={t('leadForm.preferredContactPlaceholder')} />
             </SelectTrigger>

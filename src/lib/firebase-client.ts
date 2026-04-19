@@ -11,6 +11,7 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
+  type User,
   updatePassword as firebaseUpdatePassword,
 } from 'firebase/auth';
 
@@ -140,7 +141,7 @@ export async function signUpWithEmailFirebase(email: string, password: string) {
   }
 }
 
-export async function sendVerificationEmailFirebase(user: any) {
+export async function sendVerificationEmailFirebase(user: User) {
   try {
     await firebaseSendEmailVerification(user);
     return true;

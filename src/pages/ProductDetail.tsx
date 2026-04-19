@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { ArrowLeft, CalendarDays, FileText, Gauge, Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { RichTextContent } from '@/components/ui/rich-text-content';
 import { useProductStore } from '@/context/ProductStoreContext';
 import { useSeo } from '@/hooks/use-seo';
 import { BUSINESS_EMAIL, BUSINESS_PHONE, getAbsoluteSiteUrl, SHOWROOM_COORDINATES } from '@/lib/site';
@@ -16,6 +17,7 @@ import type { ProductTransmissionType } from '@/types/product';
 import { formatCurrency, formatMileage } from '@/utils/format';
 import {
   getLocalizedProductDescription,
+  getLocalizedProductDescriptionText,
   getLocalizedProductTitle,
   getLocalizedStatusName,
   getLocalizedTransmissionName,
@@ -74,41 +76,11 @@ export default function ProductDetail() {
   const { products, isLoading } = useProductStore();
   const product = products.find((item) => item.id === id);
   const [activeCatalogueIndex, setActiveCatalogueIndex] = useState(0);
-  const [catalogueBlobUrl, setCatalogueBlobUrl] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!product?.catalogues?.length || !product.catalogues[activeCatalogueIndex]) {
-      setCatalogueBlobUrl(null);
-      return;
-    }
-
-    const currentCatalogueUrl = product.catalogues[activeCatalogueIndex].url;
-
-    if (currentCatalogueUrl && currentCatalogueUrl.startsWith('data:application/pdf;base64,')) {
-      try {
-        const base64Data = currentCatalogueUrl.split(',')[1];
-        const byteCharacters = atob(base64Data);
-        const byteNumbers = new Array(byteCharacters.length);
-        for (let index = 0; index < byteCharacters.length; index++) {
-          byteNumbers[index] = byteCharacters.charCodeAt(index);
-        }
-        const byteArray = new Uint8Array(byteNumbers);
-        const blob = new Blob([byteArray], { type: 'application/pdf' });
-        const blobUrl = URL.createObjectURL(blob);
-        setCatalogueBlobUrl(blobUrl);
-
-        return () => URL.revokeObjectURL(blobUrl);
-      } catch (error) {
-        console.error('Failed to parse catalogue PDF base64:', error);
-        setCatalogueBlobUrl(currentCatalogueUrl);
-      }
-    }
-
-    setCatalogueBlobUrl(currentCatalogueUrl);
-  }, [activeCatalogueIndex, product?.catalogues]);
+  const activeCatalogueUrl = product?.catalogues?.[activeCatalogueIndex]?.url ?? null;
 
   const localizedTitle = product ? getLocalizedProductTitle(product, i18n.language) : t('common.product');
   const localizedDescription = product ? getLocalizedProductDescription(product, i18n.language) : '';
+  const localizedDescriptionText = product ? getLocalizedProductDescriptionText(product, i18n.language) : '';
   const stockPath = product?.stockType === 'new' ? '/stock/new' : '/stock/used';
   const canonicalUrl = product ? getAbsoluteSiteUrl(`/product/${encodeURIComponent(product.id)}`) : getAbsoluteSiteUrl('/');
   const isUsedProduct = product?.stockType === 'used';
@@ -147,7 +119,7 @@ export default function ProductDetail() {
               '@context': 'https://schema.org',
               '@type': 'Product',
               name: localizedTitle,
-              description: localizedDescription,
+              description: localizedDescriptionText,
               image: product.images,
               sku: product.id,
               category: getProductCategoryLabel(product, t),
@@ -321,10 +293,10 @@ export default function ProductDetail() {
                   </div>
                 </CardHeader>
                 <CardContent className="bg-white px-6 py-5">
-                  <div className="whitespace-pre-line text-sm leading-7 text-slate-700">{localizedDescription}</div>
+                  <RichTextContent html={localizedDescription} />
                 </CardContent>
               </Card>
-            ) : catalogueBlobUrl && product.catalogues ? (
+            ) : activeCatalogueUrl && product.catalogues ? (
               <Card className="overflow-hidden rounded-3xl border-0 shadow-xl">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 border-b bg-white pb-4">
                   <div className="flex items-center gap-2">
@@ -349,11 +321,11 @@ export default function ProductDetail() {
                   ) : null}
                 </CardHeader>
                 <CardContent className="h-[600px] bg-slate-100 p-0">
-                  <object data={catalogueBlobUrl} type="application/pdf" className="h-full w-full">
+                  <object data={activeCatalogueUrl} type="application/pdf" className="h-full w-full">
                     <div className="flex h-full flex-col items-center justify-center p-8 text-center text-slate-500">
                       <p className="mb-4">{t('product.catalogueNoPreview')}</p>
                       <a
-                        href={catalogueBlobUrl}
+                        href={activeCatalogueUrl}
                         download={product.catalogues[activeCatalogueIndex]?.name || 'catalogue.pdf'}
                         className="text-brand-blue hover:underline"
                       >
@@ -376,7 +348,7 @@ export default function ProductDetail() {
                 </div>
                 <div>
                   <h1 className="text-3xl font-bold text-slate-950">{localizedTitle}</h1>
-                  {isUsedProduct ? null : <p className="mt-3 text-slate-600">{localizedDescription}</p>}
+                  {isUsedProduct ? null : <RichTextContent html={localizedDescription} className="mt-3" />}
                 </div>
               </CardHeader>
               <CardContent className="space-y-6">

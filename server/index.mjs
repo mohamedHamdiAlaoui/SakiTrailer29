@@ -3,6 +3,7 @@ import cors from 'cors';
 import express from 'express';
 import admin from 'firebase-admin';
 import multer from 'multer';
+import nodemailer from 'nodemailer';
 import { randomUUID, scryptSync, timingSafeEqual } from 'node:crypto';
 import { mkdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
@@ -21,6 +22,21 @@ const databasePath = process.env.PRODUCTS_DB_PATH || path.join(__dirname, 'data'
 const uploadsRoot = path.join(path.dirname(databasePath), 'uploads');
 const imageUploadsDirectory = path.join(uploadsRoot, 'images');
 const catalogueUploadsDirectory = path.join(uploadsRoot, 'catalogues');
+const leadNotificationTo = process.env.LEAD_NOTIFICATION_TO?.trim() || 'contact@sakitrailer29.com';
+const leadNotificationFrom = process.env.LEAD_NOTIFICATION_FROM?.trim() || leadNotificationTo;
+const leadNotificationSmtpHost = process.env.LEAD_NOTIFICATION_SMTP_HOST?.trim();
+const leadNotificationSmtpPort = Number(process.env.LEAD_NOTIFICATION_SMTP_PORT || 587);
+const leadNotificationSmtpSecure = process.env.LEAD_NOTIFICATION_SMTP_SECURE === 'true';
+const leadNotificationSmtpUser = process.env.LEAD_NOTIFICATION_SMTP_USER?.trim();
+const leadNotificationSmtpPassword = process.env.LEAD_NOTIFICATION_SMTP_PASSWORD?.trim();
+const isLeadNotificationConfigured = Boolean(
+  leadNotificationSmtpHost &&
+    leadNotificationSmtpPort &&
+    leadNotificationTo &&
+    leadNotificationFrom &&
+    leadNotificationSmtpUser &&
+    leadNotificationSmtpPassword
+);
 
 const adminSeedEmail = process.env.ADMIN_SEED_EMAIL?.trim().toLowerCase();
 const adminSeedPassword = process.env.ADMIN_SEED_PASSWORD?.trim();
@@ -302,6 +318,11 @@ const updateOrderStatement = database.prepare(`
   SET order_number = ?, user_id = ?, product_id = ?, notes = ?, status = ?, updated_at = ?
   WHERE id = ?;
 `);
+const unassignOrdersForUserStatement = database.prepare(`
+  UPDATE orders
+  SET user_id = NULL, updated_at = ?
+  WHERE user_id = ?;
+`);
 const getAllLeadsStatement = database.prepare(`
   SELECT id, product_id, full_name, phone, email, message, preferred_contact, language, page_url, created_at
   FROM leads
@@ -311,6 +332,18 @@ const insertLeadStatement = database.prepare(`
   INSERT INTO leads (id, product_id, full_name, phone, email, message, preferred_contact, language, page_url, created_at)
   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 `);
+
+const leadNotificationTransport = isLeadNotificationConfigured
+  ? nodemailer.createTransport({
+      host: leadNotificationSmtpHost,
+      port: leadNotificationSmtpPort,
+      secure: leadNotificationSmtpSecure,
+      auth: {
+        user: leadNotificationSmtpUser,
+        pass: leadNotificationSmtpPassword,
+      },
+    })
+  : null;
 
 function isNonEmptyString(value) {
   return typeof value === 'string' && value.trim().length > 0;
@@ -466,6 +499,83 @@ function parseLeadRow(row) {
     pageUrl: row.page_url ?? undefined,
     createdAt: row.created_at,
   };
+}
+
+function getLocalizedProductTitle(product, language) {
+  if (!product) {
+    return undefined;
+  }
+
+  if (language === 'fr' && isNonEmptyString(product.titleFr)) {
+    return product.titleFr.trim();
+  }
+
+  if (language === 'es' && isNonEmptyString(product.titleEs)) {
+    return product.titleEs.trim();
+  }
+
+  return isNonEmptyString(product.title) ? product.title.trim() : undefined;
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
+async function sendLeadNotification(lead) {
+  if (!leadNotificationTransport) {
+    return false;
+  }
+
+  const product = lead.productId ? parseProductRow(getProductByIdStatement.get(lead.productId)) : null;
+  const productTitle = getLocalizedProductTitle(product, lead.language) ?? lead.productId ?? 'General lead';
+  const subjectPrefix = lead.productId ? 'New quote request' : 'New website lead';
+  const pageUrl = lead.pageUrl || 'Not provided';
+  const email = lead.email || 'Not provided';
+  const lines = [
+    `${subjectPrefix}`,
+    '',
+    `Product: ${productTitle}`,
+    `Product ID: ${lead.productId ?? 'Not provided'}`,
+    `Customer: ${lead.fullName}`,
+    `Phone: ${lead.phone}`,
+    `Email: ${email}`,
+    `Preferred contact: ${lead.preferredContact}`,
+    `Language: ${lead.language ?? 'Not provided'}`,
+    `Page URL: ${pageUrl}`,
+    `Created at: ${lead.createdAt}`,
+    '',
+    'Message:',
+    lead.message,
+  ];
+
+  await leadNotificationTransport.sendMail({
+    from: leadNotificationFrom,
+    to: leadNotificationTo,
+    replyTo: lead.email || undefined,
+    subject: `${subjectPrefix}: ${productTitle}`,
+    text: lines.join('\n'),
+    html: `
+      <h2>${escapeHtml(subjectPrefix)}</h2>
+      <p><strong>Product:</strong> ${escapeHtml(productTitle)}</p>
+      <p><strong>Product ID:</strong> ${escapeHtml(lead.productId ?? 'Not provided')}</p>
+      <p><strong>Customer:</strong> ${escapeHtml(lead.fullName)}</p>
+      <p><strong>Phone:</strong> ${escapeHtml(lead.phone)}</p>
+      <p><strong>Email:</strong> ${escapeHtml(email)}</p>
+      <p><strong>Preferred contact:</strong> ${escapeHtml(lead.preferredContact)}</p>
+      <p><strong>Language:</strong> ${escapeHtml(lead.language ?? 'Not provided')}</p>
+      <p><strong>Page URL:</strong> ${escapeHtml(pageUrl)}</p>
+      <p><strong>Created at:</strong> ${escapeHtml(lead.createdAt)}</p>
+      <p><strong>Message:</strong></p>
+      <pre style="white-space: pre-wrap; font-family: Arial, sans-serif;">${escapeHtml(lead.message)}</pre>
+    `,
+  });
+
+  return true;
 }
 
 function getAllProductsFromDatabase() {
@@ -826,7 +936,7 @@ app.get('/api/leads', (request, response) => {
   });
 });
 
-app.post('/api/leads', (request, response) => {
+app.post('/api/leads', async (request, response) => {
   const fullName = typeof request.body?.fullName === 'string' ? request.body.fullName.trim() : '';
   const phone = typeof request.body?.phone === 'string' ? request.body.phone.trim() : '';
   const email = normalizeOptionalString(request.body?.email);
@@ -856,20 +966,28 @@ app.post('/api/leads', (request, response) => {
     createdAt
   );
 
+  const lead = {
+    id: leadId,
+    productId,
+    fullName,
+    phone,
+    email,
+    message,
+    preferredContact,
+    language,
+    pageUrl,
+    createdAt,
+  };
+
+  try {
+    await sendLeadNotification(lead);
+  } catch (error) {
+    console.warn('[leads] Failed to send lead notification email:', error.message);
+  }
+
   response.status(201).json({
     success: true,
-    lead: {
-      id: leadId,
-      productId,
-      fullName,
-      phone,
-      email,
-      message,
-      preferredContact,
-      language,
-      pageUrl,
-      createdAt,
-    },
+    lead,
   });
 });
 
@@ -1083,7 +1201,7 @@ app.delete('/api/users/profile', (request, response) => {
     const userId = authContext.user.id;
     
     // Unassign orders assigned to this user instead of deleting the orders
-    database.exec(`UPDATE orders SET user_id = NULL WHERE user_id = '${userId}'`);
+    unassignOrdersForUserStatement.run(new Date().toISOString(), userId);
     
     // Delete the user (this cascades to sessions automatically due to schema)
     const stmt = database.prepare('DELETE FROM users WHERE id = ?');
@@ -1460,5 +1578,10 @@ app.listen(port, () => {
   }
   if (!firebase.auth) {
     console.warn('[api] Firebase Admin is not configured. Set FIREBASE_SERVICE_ACCOUNT_PATH or FIREBASE_* env vars.');
+  }
+  if (!leadNotificationTransport) {
+    console.warn(
+      '[api] Lead email notifications are disabled. Set LEAD_NOTIFICATION_SMTP_* plus LEAD_NOTIFICATION_TO/FROM to receive quote emails.'
+    );
   }
 });

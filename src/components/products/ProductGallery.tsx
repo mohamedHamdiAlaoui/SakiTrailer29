@@ -17,16 +17,18 @@ export default function ProductGallery({ images, title }: { images: string[]; ti
 
   const activeImage = galleryImages[activeIndex];
   const totalImages = galleryImages.length;
+  const setActiveImage = useCallback((nextIndex: number) => {
+    setActiveIndex(nextIndex);
+    setIsMagnifierVisible(false);
+  }, []);
 
   const goToPrev = useCallback(() => {
-    setActiveIndex((i) => (i - 1 + totalImages) % totalImages);
-    setIsMagnifierVisible(false);
-  }, [totalImages]);
+    setActiveImage((activeIndex - 1 + totalImages) % totalImages);
+  }, [activeIndex, setActiveImage, totalImages]);
 
   const goToNext = useCallback(() => {
-    setActiveIndex((i) => (i + 1) % totalImages);
-    setIsMagnifierVisible(false);
-  }, [totalImages]);
+    setActiveImage((activeIndex + 1) % totalImages);
+  }, [activeIndex, setActiveImage, totalImages]);
 
   // Keyboard navigation — only active when gallery is in view or fullscreen is open
   useEffect(() => {
@@ -38,11 +40,6 @@ export default function ProductGallery({ images, title }: { images: string[]; ti
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
   }, [goToPrev, goToNext, isPreviewOpen]);
-
-  // Reset magnifier when image changes
-  useEffect(() => {
-    setIsMagnifierVisible(false);
-  }, [activeIndex]);
 
   const updateMagnifierPosition = (clientX: number, clientY: number) => {
     const frame = imageFrameRef.current;
@@ -202,7 +199,7 @@ export default function ProductGallery({ images, title }: { images: string[]; ti
               <button
                 key={image}
                 type="button"
-                onClick={() => setActiveIndex(index)}
+                onClick={() => setActiveImage(index)}
                 className={`shrink-0 overflow-hidden rounded-2xl border-2 transition-all ${
                   activeIndex === index ? 'border-brand-blue ring-2 ring-brand-blue/30' : 'border-transparent hover:border-slate-300'
                 }`}

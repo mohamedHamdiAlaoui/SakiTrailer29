@@ -7,7 +7,7 @@ import type { ProductTransmissionType } from '@/types/product';
 import type { Product } from '@/types/product';
 import { formatCurrency, formatMileage } from '@/utils/format';
 import {
-  getLocalizedProductDescription,
+  getLocalizedProductDescriptionText,
   getLocalizedProductTitle,
   getLocalizedStatusName,
   getLocalizedTransmissionName,
@@ -23,7 +23,7 @@ const statusClasses: Record<Product['status'], string> = {
 export default function ProductCard({ product }: { product: Product }) {
   const { i18n, t } = useTranslation();
   const title = getLocalizedProductTitle(product, i18n.language);
-  const description = getLocalizedProductDescription(product, i18n.language);
+  const description = getLocalizedProductDescriptionText(product, i18n.language);
   const isUsedProduct = product.stockType === 'used';
 
   return (

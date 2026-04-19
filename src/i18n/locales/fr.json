@@ -29,7 +29,7 @@
   "hero": {
     "title1": "Lecitrailer au Maroc",
     "title2": "Representant officiel",
-    "subtitle": "SAKI TRAILER 29 SARL est l'unique representant de Lecitrailer au Maroc. L'entreprise fournit des remorques, semi-remorques, frigorifiques, rideaux coulissants, porteurs rigides et d'autres produits Lecitrailer dans tout le pays, tout en proposant aussi des tetes tractrices d'occasion et des services lies au transport international.",
+    "subtitle": "SAKI TRAILER 29 SARL est l'unique representant de Lecitrailer au Maroc. L'entreprise fournit des remorques, semi-remorques, frigorifiques, rideaux coulissants, porteurs rigides et d'autres vehicules Lecitrailer dans tout le pays, tout en proposant aussi des vehicules d'occasion et un accompagnement pour les operations transport.",
     "viewStock": "Voir le stock",
     "contactUs": "Nous contacter",
     "delivery": "Support de livraison national",
@@ -51,11 +51,11 @@
   },
   "home": {
     "seoTitle": "Lecitrailer Maroc | SAKI TRAILER 29",
-    "seoDescription": "SAKI TRAILER 29 est le representant officiel de Lecitrailer au Maroc pour les remorques, semi-remorques, frigorifiques, rideaux coulissants, tetes tractrices d'occasion et services lies au transport.",
-    "seoKeywords": "lecitrailer maroc, representant officiel lecitrailer maroc, remorques neuves maroc, tetes tractrices d'occasion maroc, remorques maroc, services de transport international",
+    "seoDescription": "SAKI TRAILER 29 est le representant officiel de Lecitrailer au Maroc pour les vehicules Lecitrailer neufs, les vehicules d'occasion et l'accompagnement transport.",
+    "seoKeywords": "lecitrailer maroc, representant officiel lecitrailer maroc, vehicules lecitrailer neufs maroc, vehicules d'occasion maroc, remorques maroc",
     "inventoryEyebrow": "Stock du representant",
-    "inventoryTitle": "Produits Lecitrailer neufs et tetes tractrices d'occasion",
-    "inventoryDescription": "Parcourez des remorques, semi-remorques, frigorifiques, rideaux coulissants, porteurs rigides et autres produits Lecitrailer, ainsi qu'une selection de tetes tractrices d'occasion et de vehicules utilitaires disponibles au Maroc.",
+    "inventoryTitle": "Vehicules Lecitrailer neufs et vehicules d'occasion",
+    "inventoryDescription": "Parcourez des remorques, semi-remorques, frigorifiques, rideaux coulissants, porteurs rigides et autres vehicules Lecitrailer, ainsi qu'une selection de vehicules d'occasion et de vehicules utilitaires disponibles au Maroc.",
     "fullStockCta": "Aller au stock complet",
     "noResultsTitle": "Aucun resultat",
     "noResultsDescription": "Aucun produit n'est disponible pour le moment."
@@ -72,8 +72,8 @@
   },
   "stockUsedPage": {
     "seoTitle": "Tetes tractrices, camions et remorques d'occasion au Maroc | SAKI TRAILER 29",
-    "seoDescription": "Parcourez les tetes tractrices, camions, utilitaires et remorques d'occasion au Maroc avec filtres par type, marque, transmission, kilometrage et dedouanee.",
-    "seoKeywords": "tetes tractrices d'occasion maroc, camions d'occasion maroc, remorques d'occasion maroc, utilitaires d'occasion maroc, vehicules utilitaires maroc, stock occasion sakitrailer29",
+    "seoDescription": "Parcourez les vehicules, camions, utilitaires et remorques d'occasion au Maroc avec filtres par type, marque, transmission, kilometrage et dedouanee.",
+    "seoKeywords": "vehicules d'occasion maroc, camions d'occasion maroc, remorques d'occasion maroc, utilitaires d'occasion maroc, vehicules utilitaires maroc, stock occasion sakitrailer29",
     "eyebrow": "Stock occasion",
     "title": "Vehicules d'occasion",
     "description": "",
@@ -84,9 +84,9 @@
   "stockNewPage": {
     "seoTitle": "Remorques et semi-remorques Lecitrailer neuves au Maroc | SAKI TRAILER 29",
     "seoDescription": "Decouvrez les semi-remorques Lecitrailer, frigorifiques, rideaux coulissants, porteurs et equipements de transport neufs au Maroc avec recherche et demandes rapides.",
-    "seoKeywords": "lecitrailer maroc, remorques neuves maroc, semi-remorques maroc, rideaux coulissants maroc, frigorifiques maroc, produits lecitrailer neufs",
+    "seoKeywords": "lecitrailer maroc, vehicules lecitrailer neufs, remorques neuves maroc, semi-remorques maroc, rideaux coulissants maroc, frigorifiques maroc",
     "eyebrow": "Stock neuf",
-    "title": "Produits neufs Lecitrailer",
+    "title": "Vehicules Lecitrailer neufs",
     "description": "",
     "showing": "{{filtered}} produits neufs affiches sur {{total}}",
     "noResultsTitle": "Aucun produit neuf ne correspond aux filtres",
@@ -396,6 +396,20 @@
       "description": "Description (EN)",
       "descriptionFr": "Description (FR)",
       "descriptionEs": "Description (ES)",
+      "richText": {
+        "toolbar": "Mise en forme",
+        "help": "Outils de base : gras, italique, souligne, liste a puces, liste numerotee et paragraphes.",
+        "bold": "Gras",
+        "italic": "Italique",
+        "underline": "Souligne",
+        "bulletList": "Liste a puces",
+        "numberedList": "Liste numerotee",
+        "paragraph": "Paragraphe",
+        "boldPlaceholder": "texte en gras",
+        "italicPlaceholder": "texte en italique",
+        "underlinePlaceholder": "texte souligne",
+        "paragraphPlaceholder": "Texte du paragraphe"
+      },
       "previewTitle": "Apercu du produit",
       "status": "Statut"
     },
@@ -555,7 +569,7 @@
     "support": "Accompagnement officiel Lecitrailer",
     "supportDesc": "Un accompagnement direct du seul representant Lecitrailer au Maroc pour le choix des produits, les devis et la planification de livraison.",
     "bestPrices": "Tetes tractrices d'occasion disponibles",
-    "bestPricesDesc": "Une selection de tetes tractrices d'occasion et d'equipements transport prets pour les exploitants et acheteurs de flottes.",
+    "bestPricesDesc": "Une selection de vehicules d'occasion et d'equipements transport prets pour les exploitants et acheteurs de flottes.",
     "delivery": "Support pour le transport international",
     "deliveryDesc": "Nous accompagnons le sourcing, la coordination de livraison et les services lies a l'activite transport au Maroc et au-dela.",
     "stats": {
@@ -564,7 +578,7 @@
       "workshops": "Support transport"
     },
     "newVehicles": {
-      "title": "Produits Lecitrailer neufs",
+      "title": "Vehicules Lecitrailer neufs",
       "subtitle": "Approvisionnement officiel Lecitrailer au Maroc",
       "description": "Decouvrez des remorques, semi-remorques, frigorifiques, rideaux coulissants, porteurs rigides, chassis porte-conteneurs et solutions sur mesure Lecitrailer pour les flottes marocaines.",
       "features": [
@@ -576,11 +590,11 @@
       "cta": "Explorer le stock Lecitrailer"
     },
     "usedVehicles": {
-      "title": "Tetes tractrices d'occasion",
+      "title": "Vehicules d'occasion",
       "subtitle": "Une selection pour travailler rapidement",
-      "description": "Parcourez des tetes tractrices d'occasion et des vehicules utilitaires selectionnes pour les transporteurs recherchant une disponibilite rapide et des solutions concretes de flotte.",
+      "description": "Parcourez des vehicules d'occasion et des vehicules utilitaires selectionnes pour les transporteurs recherchant une disponibilite rapide et des solutions concretes de flotte.",
       "features": [
-        "Tetes tractrices d'occasion",
+        "Vehicules d'occasion",
         "Visibilite rapide du stock",
         "Selection orientee transport",
         "Support pour les devis"
@@ -664,18 +678,28 @@
   "showroom": {
     "subtitle": "Showroom",
     "title": "Visitez le representant officiel Lecitrailer au Maroc",
-    "description": "Rencontrez l'equipe SAKI TRAILER 29 SARL a Casablanca pour examiner les produits Lecitrailer neufs, discuter des tetes tractrices d'occasion et preparer vos solutions transport.",
-      "location": "35.77568193917511, -5.796048432226565",
+    "description": "Rencontrez l'equipe SAKI TRAILER 29 SARL a Casablanca pour examiner les vehicules Lecitrailer neufs, discuter des vehicules d'occasion et preparer vos solutions transport.",
+      "location": "Bureau de Tanger | Showroom de Casablanca",
     "hours": "Lun-Sam : 9:00 - 18:00",
     "planVisit": "Planifier votre visite",
     "address": "Adresse",
       "addressLine": "35.77568193917511, -5.796048432226565",
+      "locationLabel": "Localisation {{index}}",
       "openingHours": "Horaires d'ouverture",
       "sundayClosed": "Dimanche : ferme",
       "contact": "Contact",
       "schedule": "Programmer une visite",
       "openInMaps": "Ouvrir dans Google Maps",
+      "openBothLocations": "Ouvrir les deux localisations",
       "mapTitle": "Localisation du showroom SAKI TRAILER 29 sur Google Maps",
+      "locations": {
+      "location1": {
+        "name": "Bureau de Tanger"
+      },
+      "location2": {
+        "name": "Showroom de Casablanca"
+      }
+    },
       "visitForm": {
       "title": "Programmer une visite du showroom",
       "description": "Envoyez-nous la date souhaitee et vos coordonnees. L'equipe SAKI TRAILER 29 confirmera votre visite rapidement.",
@@ -700,7 +724,7 @@
     "quote": "Devis"
   },
   "footer": {
-    "description": "SAKI TRAILER 29 SARL est l'unique representant de Lecitrailer au Maroc, avec des produits Lecitrailer neufs, des tetes tractrices d'occasion selectionnees et un accompagnement lie au transport international.",
+    "description": "SAKI TRAILER 29 SARL est l'unique representant de Lecitrailer au Maroc, avec des vehicules Lecitrailer neufs, des vehicules d'occasion selectionnes et un accompagnement transport.",
     "phone": "Telephone : +212 666 206 141",
     "email": "Email : contact@sakitrailer29.com",
     "location": "Localisation : Casablanca, Maroc",

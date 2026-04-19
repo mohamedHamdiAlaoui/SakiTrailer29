@@ -4,6 +4,8 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { MapPin, Clock, Phone } from 'lucide-react';
 import VisitRequestDialog from '@/components/VisitRequestDialog';
+import ShowroomMap from '@/components/ShowroomMap';
+import { SHOWROOM_LOCATIONS } from '@/lib/site';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -12,9 +14,15 @@ export default function Showroom() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
-  const showroomCoordinates = '35.77568193917511, -5.796048432226565';
-  const googleMapsEmbedUrl = `https://www.google.com/maps?q=${encodeURIComponent(showroomCoordinates)}&z=16&output=embed`;
-  const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(showroomCoordinates)}`;
+  const showroomLocations = SHOWROOM_LOCATIONS.map((location) => ({
+    ...location,
+    name: t(location.nameKey),
+    mapsUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${location.latitude},${location.longitude}`)}`,
+  }));
+  const locationSummary = showroomLocations.map((location) => location.name).join(' | ');
+  const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(
+    `${showroomLocations[0].latitude},${showroomLocations[0].longitude}`
+  )}&destination=${encodeURIComponent(`${showroomLocations[1].latitude},${showroomLocations[1].longitude}`)}`;
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -83,10 +91,10 @@ export default function Showroom() {
               <h2 className="mb-6 font-display text-4xl font-bold leading-tight md:text-5xl lg:text-6xl">{t('showroom.title')}</h2>
               <p className="mb-8 max-w-xl text-lg leading-relaxed text-white/80">{t('showroom.description')}</p>
 
-              <div className="flex flex-wrap gap-4">
-                <div className="flex items-center gap-2 text-white/80">
+                <div className="flex flex-wrap gap-4">
+                  <div className="flex items-center gap-2 text-white/80">
                   <MapPin className="h-5 w-5 text-brand-gold" />
-                  <span>{t('showroom.location')}</span>
+                  <span>{locationSummary}</span>
                 </div>
                 <div className="flex items-center gap-2 text-white/80">
                   <Clock className="h-5 w-5 text-brand-gold" />
@@ -106,14 +114,28 @@ export default function Showroom() {
                     </div>
                     <div>
                       <p className="font-semibold text-white">{t('showroom.address')}</p>
-                      <p className="text-sm text-white/70">{t('showroom.addressLine')}</p>
+                      <div className="space-y-2">
+                        {showroomLocations.map((location, index) => (
+                          <div key={location.id}>
+                            <p className="text-sm text-white/70">{t('showroom.locationLabel', { index: index + 1 })}: {location.name}</p>
+                            <a
+                              href={location.mapsUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="inline-flex text-sm font-medium text-brand-gold transition hover:text-brand-gold-light"
+                            >
+                              {t('showroom.openInMaps')}
+                            </a>
+                          </div>
+                        ))}
+                      </div>
                       <a
                         href={googleMapsUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="mt-2 inline-flex text-sm font-medium text-brand-gold transition hover:text-brand-gold-light"
+                        className="mt-3 inline-flex text-sm font-medium text-brand-gold transition hover:text-brand-gold-light"
                       >
-                        {t('showroom.openInMaps')}
+                        {t('showroom.openBothLocations')}
                       </a>
                     </div>
                   </div>
@@ -142,12 +164,13 @@ export default function Showroom() {
                 </div>
 
                 <div className="mb-6 overflow-hidden rounded-2xl border border-white/10 shadow-lg">
-                  <iframe
-                    title={t('showroom.mapTitle')}
-                    src={googleMapsEmbedUrl}
-                    className="h-64 w-full border-0"
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
+                  <ShowroomMap
+                    locations={showroomLocations.map((location) => ({
+                      id: location.id,
+                      name: location.name,
+                      latitude: location.latitude,
+                      longitude: location.longitude,
+                    }))}
                   />
                 </div>
 

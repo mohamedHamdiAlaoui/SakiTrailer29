@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -102,10 +102,11 @@ export default function VisitRequestDialog() {
       message: defaultMessage,
     },
   });
+  const watchedValues = useWatch({ control: form.control }) ?? {};
+  const preferredContact = useWatch({ control: form.control, name: 'preferredContact' }) ?? 'phone';
 
   const errors = form.formState.errors;
   const isSubmitting = form.formState.isSubmitting;
-  const watchedValues = form.watch();
   const googleCalendarUrl = buildGoogleCalendarUrl({
     fullName: watchedValues.fullName,
     preferredDate: watchedValues.preferredDate,
@@ -187,7 +188,7 @@ export default function VisitRequestDialog() {
 
               <div className="space-y-2">
                 <Label>{t('leadForm.preferredContact')}</Label>
-                <Select value={form.watch('preferredContact')} onValueChange={(value) => form.setValue('preferredContact', value as LeadPreferredContact)}>
+                <Select value={preferredContact} onValueChange={(value) => form.setValue('preferredContact', value as LeadPreferredContact)}>
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder={t('leadForm.preferredContactPlaceholder')} />
                   </SelectTrigger>

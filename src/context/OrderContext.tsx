@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { Order } from '@/types/order';
 import { createOrderInApi, fetchOrdersFromApi, updateOrderInApi, type CreateOrderInput, type UpdateOrderInput } from '@/lib/orders-api';
@@ -71,7 +71,7 @@ export function OrderProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
 
-  const refreshOrders = async () => {
+  const refreshOrders = useCallback(async () => {
     if (!user) {
       setOrders([]);
       setLoadError(null);
@@ -91,7 +91,7 @@ export function OrderProvider({ children }: { children: ReactNode }) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [user]);
 
   useEffect(() => {
     if (isAuthLoading) {
@@ -99,7 +99,7 @@ export function OrderProvider({ children }: { children: ReactNode }) {
     }
 
     void refreshOrders();
-  }, [isAuthLoading, user]);
+  }, [isAuthLoading, refreshOrders, user?.id]);
 
   const value = useMemo<OrderContextValue>(
     () => ({
@@ -141,7 +141,7 @@ export function OrderProvider({ children }: { children: ReactNode }) {
         return sortOrdersByUpdateDate(orders.filter((order) => order.userId === userId));
       },
     }),
-    [isLoading, loadError, orders]
+    [isLoading, loadError, orders, refreshOrders]
   );
 
   return <OrderContext.Provider value={value}>{children}</OrderContext.Provider>;

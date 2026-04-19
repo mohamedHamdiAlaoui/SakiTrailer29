@@ -38,10 +38,15 @@ export async function restoreAuthSessionFromApi() {
     return null;
   }
 
-  const response = await fetch(getApiEndpoint('/api/auth/session'), {
-    method: 'GET',
-    headers: createApiHeaders({ auth: true }),
-  });
+  let response: Response;
+  try {
+    response = await fetch(getApiEndpoint('/api/auth/session'), {
+      method: 'GET',
+      headers: createApiHeaders({ auth: true }),
+    });
+  } catch {
+    throw new Error('backend_unreachable');
+  }
 
   if (response.status === 401) {
     setSessionToken(null);

@@ -33,7 +33,7 @@ export default function Stock() {
   const { t } = useTranslation();
   const description = t('stockUsedPage.description');
 
-  const { products } = useProductStore();
+  const { products, loadError } = useProductStore();
   const [searchParams, setSearchParams] = useSearchParams();
   const [filters, setFilters] = useState<UsedProductFilters>(() => getFiltersFromSearchParams(searchParams));
 
@@ -157,6 +157,12 @@ export default function Stock() {
         </div>
 
         <div className="rounded-3xl border bg-white p-5 shadow-sm">
+          {loadError && (
+            <div className="mb-6 rounded-xl bg-red-50 p-4 text-red-600 ring-1 ring-red-200">
+              <h3 className="font-semibold">Error Loading Products</h3>
+              <p className="text-sm">{loadError}</p>
+            </div>
+          )}
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             <div>
               <label className="mb-2 block text-sm font-medium text-slate-700">{t('usedFilters.vehicleTypeLabel')}</label>

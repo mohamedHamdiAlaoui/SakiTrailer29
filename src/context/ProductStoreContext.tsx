@@ -8,7 +8,7 @@ import {
   fetchProductsFromApi,
   updateProductInApi,
 } from '@/lib/products-api';
-import { getInitialProductCatalog, saveCachedProducts } from '@/utils/storage';
+import { getCachedProducts, getInitialProductCatalog, saveCachedProducts, STORAGE_KEYS } from '@/utils/storage';
 
 interface ProductStoreActionResult {
   success: boolean;
@@ -48,6 +48,23 @@ export function ProductStoreProvider({ children }: { children: ReactNode }) {
   const hasProductsRef = useRef(initialProducts.length > 0);
 
   useEffect(() => {
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key !== STORAGE_KEYS.productsCache) {
+        return;
+      }
+
+      // Keep other tabs in sync when one tab mutates the catalog.
+      const cachedProducts = getCachedProducts();
+      setProducts(cachedProducts);
+    };
+
+    window.addEventListener('storage', handleStorage);
+    return () => {
+      window.removeEventListener('storage', handleStorage);
+    };
+  }, []);
+
+  useEffect(() => {
     hasProductsRef.current = products.length > 0;
   }, [products.length]);
 
@@ -77,8 +94,8 @@ export function ProductStoreProvider({ children }: { children: ReactNode }) {
       setProducts(saveCachedProducts(nextProducts));
     } catch (error) {
       const errorCode = error instanceof Error ? error.message : 'products_load_failed';
+      setLoadError(errorCode);
       if (!hasProductsRef.current) {
-        setLoadError(errorCode);
         setProducts(initialProducts);
       }
     } finally {

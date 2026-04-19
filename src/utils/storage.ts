@@ -72,7 +72,11 @@ export function getStorageItem<T>(key: string, fallback: T): T {
 
 export function setStorageItem<T>(key: string, value: T) {
   if (!isBrowser()) return;
-  window.localStorage.setItem(key, JSON.stringify(value));
+  try {
+    window.localStorage.setItem(key, JSON.stringify(value));
+  } catch (error) {
+    console.warn(`[storage] Failed to save to localStorage (${key}). Quota exceeded?`, error);
+  }
 }
 
 export function getCachedProducts() {

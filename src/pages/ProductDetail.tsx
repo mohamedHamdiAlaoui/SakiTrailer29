@@ -253,7 +253,7 @@ export default function ProductDetail() {
     .filter((item) => item.id !== product.id && getProductCategoryFilterValue(item) === getProductCategoryFilterValue(product))
     .slice(0, 3);
 
-  const whatsappUrl = `https://wa.me/212666206141?text=${encodeURIComponent(
+  const whatsappUrl = `https://wa.me/212666341519?text=${encodeURIComponent(
     t('product.whatsappMessage', { title: localizedTitle, id: product.id })
   )}`;
 
@@ -402,7 +402,7 @@ export default function ProductDetail() {
                       {t('product.actions.whatsapp')}
                     </Button>
                   </a>
-                  <a href="tel:+212666206141">
+                  <a href="tel:+212666341519">
                     <Button variant="outline" className="w-full">
                       <Phone className="size-4" />
                       {t('product.actions.call')}

@@ -328,7 +328,7 @@
     "seoDescription": "Gestiona productos, clientes y pedidos en el panel admin y exporta el catalogo en CSV.",
     "eyebrow": "Panel admin",
     "title": "Panel de catalogo y pedidos",
-    "description": "Los productos, usuarios y pedidos se gestionan mediante la API backend para que el frontend se centre en la navegacion y los flujos admin.",
+    "description": "",
     "exportCsv": "Exportar CSV",
     "addProduct": "Agregar producto",
     "productsTitle": "Productos",
@@ -352,7 +352,7 @@
     "dialog": {
       "addTitle": "Agregar producto",
       "editTitle": "Editar producto",
-      "description": "Los cambios se guardan en la API backend y actualizan el resto de la aplicacion al instante."
+      "description": ""
     },
     "form": {
       "title": "Titulo (EN)",
@@ -385,6 +385,8 @@
       "imageUploading": "Subiendo imagenes al servidor...",
       "imageSizeError": "Cada imagen debe ser menor a 10 MB.",
       "clearAllImages": "Borrar todo",
+      "setMainImage": "Establecer como principal",
+      "mainImage": "Imagen principal",
       "removeImage": "Eliminar",
       "catalogue": "Catalogos de Producto (PDF)",
       "cataloguesCount": "{{count}} catalogos cargados",
@@ -725,7 +727,7 @@
   },
   "footer": {
     "description": "SAKI TRAILER 29 SARL es el unico representante de Lecitrailer en Marruecos, con vehiculos Lecitrailer nuevos, vehiculos usados seleccionados y apoyo al transporte.",
-    "phone": "Telefono: +212 666 206 141",
+    "phone": "Telefono: +212 666-341519",
     "email": "Correo: contact@sakitrailer29.com",
     "location": "Ubicacion: Casablanca, Marruecos",
     "popularCategories": "Categorias populares",

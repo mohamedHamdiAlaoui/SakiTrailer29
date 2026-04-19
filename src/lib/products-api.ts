@@ -25,7 +25,7 @@ async function parseProductsResponse(response: Response): Promise<ProductsRespon
 }
 
 export async function fetchProductsFromApi() {
-  const response = await fetch(getApiEndpoint('/api/products'), { method: 'GET' });
+  const response = await fetch(getApiEndpoint('/api/products'), { method: 'GET', cache: 'no-store' });
   const payload = await parseProductsResponse(response);
   return payload.products ?? [];
 }

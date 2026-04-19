@@ -61,7 +61,7 @@ function createProductSchema(t: TFunction) {
         z.coerce.number().min(0, t('admin.validation.mileage')).optional()
       ),
       location: z.string().optional(),
-      imagesText: z.string().min(1, t('admin.validation.imagesText')),
+      imagesText: z.string().min(1, t('admin.validation.images')),
       catalogues: z.array(z.object({ name: z.string(), url: z.string() })).optional(),
       description: z.string().min(5, t('admin.validation.description')),
       descriptionFr: z.string().optional(),
@@ -403,6 +403,17 @@ export default function AdminProductEdit() {
     form.setValue('imagesText', nextImages.join('\n'), { shouldValidate: true, shouldDirty: true });
   };
 
+  const handleMakeImageMain = (index: number) => {
+    const images = parseImageEntries(form.getValues('imagesText'));
+    const selectedImage = images[index];
+    if (!selectedImage || index === 0) {
+      return;
+    }
+
+    const nextImages = [selectedImage, ...images.filter((_, imageIndex) => imageIndex !== index)];
+    form.setValue('imagesText', nextImages.join('\n'), { shouldValidate: true, shouldDirty: true });
+  };
+
   const handleClearImages = () => {
     form.setValue('imagesText', '', { shouldValidate: true, shouldDirty: true });
   };
@@ -474,17 +485,49 @@ export default function AdminProductEdit() {
         </div>
 
         <div className="mx-auto max-w-6xl">
-          <Card className="overflow-hidden rounded-[32px] border-0 shadow-2xl">
-            <div className="border-b border-white/10 bg-gradient-to-r from-brand-blue via-brand-blue to-slate-900 px-6 py-6 text-left text-white">
-              <h1 className="text-2xl font-semibold">{t('admin.dialog.editTitle')}</h1>
-              <p className="mt-2 max-w-3xl text-sm text-blue-50/90">{t('admin.dialog.description')}</p>
-            </div>
+            <Card className="overflow-hidden rounded-[32px] border-0 shadow-2xl">
+              <div className="border-b border-white/10 bg-gradient-to-r from-brand-blue via-brand-blue to-slate-900 px-6 py-6 text-left text-white">
+                <h1 className="text-2xl font-semibold">{t('admin.dialog.editTitle')}</h1>
+                {t('admin.dialog.description') ? (
+                  <p className="mt-2 max-w-3xl text-sm text-blue-50/90">{t('admin.dialog.description')}</p>
+                ) : null}
+              </div>
 
             <form className="grid content-start gap-4 p-6 md:grid-cols-2" onSubmit={form.handleSubmit(onSubmit)}>
               <div className="space-y-2">
                 <Label htmlFor="id">ID</Label>
                 <Input id="id" {...form.register('id')} />
                 {form.formState.errors.id ? <p className="text-sm text-red-500">{form.formState.errors.id.message}</p> : null}
+              </div>
+
+              <div className="space-y-2">
+                <Label>{t('admin.form.stockType')}</Label>
+                <Select
+                  value={watchedValues.stockType ?? 'new'}
+                  onValueChange={(value) => {
+                    form.setValue('stockType', value as ProductStockType, { shouldDirty: true });
+                    if (value === 'new') {
+                      form.setValue('dedouanee', 'not-specified', { shouldDirty: true });
+                      form.setValue('transmission', 'not-specified', { shouldDirty: true });
+                      form.setValue('modelYear', undefined, { shouldDirty: true });
+                      form.setValue('customCategoryName', '', { shouldValidate: true, shouldDirty: true });
+                      if (form.getValues('category') === 'other') {
+                        form.setValue('category', PRODUCT_CATEGORY_OPTIONS[0], { shouldValidate: true, shouldDirty: true });
+                      }
+                    }
+                  }}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {PRODUCT_STOCK_TYPE_OPTIONS.map((stockType) => (
+                      <SelectItem key={stockType} value={stockType}>
+                        {getStockTypeLabel(stockType, t)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="space-y-2">
@@ -532,36 +575,6 @@ export default function AdminProductEdit() {
                 <Label htmlFor="brand">{t('admin.form.brand')}</Label>
                 <Input id="brand" {...form.register('brand')} />
                 {form.formState.errors.brand ? <p className="text-sm text-red-500">{form.formState.errors.brand.message}</p> : null}
-              </div>
-
-              <div className="space-y-2">
-                <Label>{t('admin.form.stockType')}</Label>
-                <Select
-                  value={watchedValues.stockType ?? 'new'}
-                  onValueChange={(value) => {
-                    form.setValue('stockType', value as ProductStockType, { shouldDirty: true });
-                    if (value === 'new') {
-                      form.setValue('dedouanee', 'not-specified', { shouldDirty: true });
-                      form.setValue('transmission', 'not-specified', { shouldDirty: true });
-                      form.setValue('modelYear', undefined, { shouldDirty: true });
-                      form.setValue('customCategoryName', '', { shouldValidate: true, shouldDirty: true });
-                      if (form.getValues('category') === 'other') {
-                        form.setValue('category', PRODUCT_CATEGORY_OPTIONS[0], { shouldValidate: true, shouldDirty: true });
-                      }
-                    }
-                  }}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {PRODUCT_STOCK_TYPE_OPTIONS.map((stockType) => (
-                      <SelectItem key={stockType} value={stockType}>
-                        {getStockTypeLabel(stockType, t)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
               </div>
 
               {(watchedValues.stockType ?? 'new') === 'used' && watchedValues.category === 'other' ? (
@@ -695,6 +708,21 @@ export default function AdminProductEdit() {
                       {currentImages.map((image, index) => (
                         <div key={`${image}-${index}`} className="space-y-2 rounded-lg border bg-white p-2">
                           <img src={image} alt={`Preview ${index + 1}`} className="h-24 w-full rounded object-cover" loading="lazy" />
+                          {index === 0 ? (
+                            <p className="rounded-md bg-emerald-50 px-2 py-1 text-center text-xs font-semibold text-emerald-700">
+                              {t('admin.form.mainImage')}
+                            </p>
+                          ) : (
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              className="w-full"
+                              onClick={() => handleMakeImageMain(index)}
+                            >
+                              {t('admin.form.setMainImage')}
+                            </Button>
+                          )}
                           <Button type="button" variant="outline" size="sm" className="w-full" onClick={() => handleRemoveImageAt(index)}>
                             {t('admin.form.removeImage')}
                           </Button>

@@ -352,11 +352,6 @@ const catalogItems: CatalogItem[] = [
     title: 'Steel Scrappers',
     description: 'Heavy-duty open-top tipping trailer for steel scrap and industrial bulk waste.',
   },
-  {
-    category: 'special-vehicles-tailor-made',
-    title: 'Tailor Made Vehicles',
-    description: 'Fully customized special transport vehicles engineered for non-standard cargo challenges.',
-  },
 ];
 
 const baseTimestamp = Date.UTC(2026, 2, 7, 9, 0, 0);

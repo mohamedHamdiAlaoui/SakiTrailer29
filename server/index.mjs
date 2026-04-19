@@ -169,6 +169,15 @@ try {
   }
 }
 
+// Remove deprecated seed item (was shipped in older builds).
+try {
+  database
+    .prepare("DELETE FROM products WHERE json_extract(product_json, '$.title') = ?;")
+    .run('Tailor Made Vehicles');
+} catch {
+  // Ignore if JSON functions are unavailable or other transient issues.
+}
+
 const getAllProductsStatement = database.prepare(`
   SELECT id, product_json, created_at, updated_at
   FROM products
@@ -1215,6 +1224,7 @@ app.delete('/api/users/profile', (request, response) => {
 });
 
 app.get('/api/products', (_request, response) => {
+  response.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
   response.json({ success: true, products: getAllProductsFromDatabase() });
 });
 

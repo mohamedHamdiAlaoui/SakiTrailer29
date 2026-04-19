@@ -1,6 +1,6 @@
 export const SITE_URL = 'https://sakitrailer29.ma';
 
-export const BUSINESS_PHONE = '+212 666 206 141';
+export const BUSINESS_PHONE = '+212 666-341519';
 export const BUSINESS_EMAIL = 'contact@sakitrailer29.com';
 export const SHOWROOM_LOCATIONS = [
   {

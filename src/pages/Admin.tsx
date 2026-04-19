@@ -51,7 +51,6 @@ import {
   getLocalizedTransmissionName,
 } from '@/utils/localization';
 import { getProductCategoryLabel, normalizeCustomCategoryName } from '@/utils/product-category';
-import { stripRichText } from '@/utils/rich-text';
 import { createId } from '@/utils/storage';
 
 const preloadAdminProductEdit = () => import('@/pages/AdminProductEdit');
@@ -81,7 +80,7 @@ function createProductSchema(t: TFunction) {
         z.coerce.number().min(0, t('admin.validation.mileage')).optional()
       ),
       location: z.string().optional(),
-      imagesText: z.string().min(1, t('admin.validation.imagesText')),
+      imagesText: z.string().min(1, t('admin.validation.images')),
       catalogues: z.array(z.object({ name: z.string(), url: z.string() })).optional(),
       description: z.string().min(5, t('admin.validation.description')),
       descriptionFr: z.string().optional(),
@@ -269,7 +268,7 @@ function orderToFormValues(order: Order): OrderFormInput {
   };
 }
 
-export default function Admin() {
+export default function Admin({ standaloneModeOverride }: { standaloneModeOverride?: string } = {}) {
   const { i18n, t } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -280,7 +279,7 @@ export default function Admin() {
     noIndex: true,
   });
 
-  const { products, isLoading, addProduct, updateProduct, deleteProduct } = useProductStore();
+  const { products, isLoading, loadError, addProduct, updateProduct, deleteProduct } = useProductStore();
   const { orders, createOrder, updateOrder } = useOrderStore();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isOrderDialogOpen, setIsOrderDialogOpen] = useState(false);
@@ -308,7 +307,7 @@ export default function Admin() {
     availableProducts: number;
     totalLeads: number;
   } | null>(null);
-  const standaloneMode = searchParams.get('mode');
+  const standaloneMode = standaloneModeOverride ?? searchParams.get('mode');
   const standaloneProductId = searchParams.get('id');
   const isStandaloneCreate = standaloneMode === 'new-product';
   const isStandaloneEdit = standaloneMode === 'edit-product';
@@ -424,7 +423,6 @@ export default function Admin() {
     [watchedValues.imagesText]
   );
 
-  const previewPrimaryImage = previewImages[0] ?? '/hero-showroom.jpg';
   const previewStockType = watchedValues.stockType ?? 'new';
   const previewSource = watchedValues.source ?? 'lecitrailer';
   const previewDedouanee = watchedValues.dedouanee ?? 'not-specified';
@@ -442,12 +440,7 @@ export default function Admin() {
     : null;
 
   const openCreateProductDialog = () => {
-    setEditingProduct(null);
-    form.reset({
-      ...emptyValues,
-      id: createId('saki').toUpperCase(),
-    });
-    setIsDialogOpen(true);
+    navigate('/admin/products/new');
   };
 
   const openEditDialog = (product: Product) => {
@@ -729,6 +722,17 @@ export default function Admin() {
     form.setValue('imagesText', nextImages.join('\n'), { shouldValidate: true });
   };
 
+  const handleMakeImageMain = (index: number) => {
+    const images = parseImageEntries(form.getValues('imagesText'));
+    const selectedImage = images[index];
+    if (!selectedImage || index === 0) {
+      return;
+    }
+
+    const nextImages = [selectedImage, ...images.filter((_, imageIndex) => imageIndex !== index)];
+    form.setValue('imagesText', nextImages.join('\n'), { shouldValidate: true });
+  };
+
   const handleClearImages = () => {
     form.setValue('imagesText', '', { shouldValidate: true });
   };
@@ -809,14 +813,46 @@ export default function Admin() {
     <>
       <div className="border-b border-white/10 bg-gradient-to-r from-brand-blue via-brand-blue to-slate-900 px-6 py-6 text-left text-white">
         <h2 className="text-2xl font-semibold">{editingProduct ? t('admin.dialog.editTitle') : t('admin.dialog.addTitle')}</h2>
-        <p className="mt-2 max-w-3xl text-sm text-blue-50/90">{t('admin.dialog.description')}</p>
+        {t('admin.dialog.description') ? (
+          <p className="mt-2 max-w-3xl text-sm text-blue-50/90">{t('admin.dialog.description')}</p>
+        ) : null}
       </div>
 
-      <form className="grid min-h-0 content-start gap-4 overflow-y-auto p-6 md:grid-cols-2 xl:grid-cols-3" onSubmit={form.handleSubmit(onSubmit)}>
+      <form className="grid min-h-0 content-start gap-4 overflow-y-auto p-6 md:grid-cols-2" onSubmit={form.handleSubmit(onSubmit)}>
         <div className="space-y-2">
           <Label htmlFor="id">ID</Label>
           <Input id="id" {...form.register('id')} />
           {form.formState.errors.id ? <p className="text-sm text-red-500">{form.formState.errors.id.message}</p> : null}
+        </div>
+
+        <div className="space-y-2">
+          <Label>{t('admin.form.stockType')}</Label>
+          <Select
+            value={previewStockType}
+            onValueChange={(value) => {
+              form.setValue('stockType', value as ProductStockType);
+              if (value === 'new') {
+                form.setValue('dedouanee', 'not-specified');
+                form.setValue('transmission', 'not-specified');
+                form.setValue('modelYear', undefined);
+                form.setValue('customCategoryName', '', { shouldValidate: true });
+                if (form.getValues('category') === 'other') {
+                  form.setValue('category', PRODUCT_CATEGORY_OPTIONS[0], { shouldValidate: true });
+                }
+              }
+            }}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {PRODUCT_STOCK_TYPE_OPTIONS.map((stockType) => (
+                <SelectItem key={stockType} value={stockType}>
+                  {getStockTypeLabel(stockType, t)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="space-y-2">
@@ -866,36 +902,6 @@ export default function Admin() {
           {form.formState.errors.brand ? <p className="text-sm text-red-500">{form.formState.errors.brand.message}</p> : null}
         </div>
 
-        <div className="space-y-2">
-          <Label>{t('admin.form.stockType')}</Label>
-          <Select
-            value={previewStockType}
-            onValueChange={(value) => {
-              form.setValue('stockType', value as ProductStockType);
-              if (value === 'new') {
-                form.setValue('dedouanee', 'not-specified');
-                form.setValue('transmission', 'not-specified');
-                form.setValue('modelYear', undefined);
-                form.setValue('customCategoryName', '', { shouldValidate: true });
-                if (form.getValues('category') === 'other') {
-                  form.setValue('category', PRODUCT_CATEGORY_OPTIONS[0], { shouldValidate: true });
-                }
-              }
-            }}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {PRODUCT_STOCK_TYPE_OPTIONS.map((stockType) => (
-                <SelectItem key={stockType} value={stockType}>
-                  {getStockTypeLabel(stockType, t)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
         {isCustomCategorySelected ? (
           <div className="space-y-2">
             <Label htmlFor="customCategoryName">{t('admin.form.customCategoryName')}</Label>
@@ -926,23 +932,21 @@ export default function Admin() {
           </Select>
         </div>
 
-        <div className="space-y-2">
-          <Label>{t('admin.form.dedouanee')}</Label>
-          <Select
-            value={previewDedouanee}
-            onValueChange={(value) => form.setValue('dedouanee', value as ProductFormInput['dedouanee'])}
-            disabled={!isUsedProductForm}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="yes">{t('usedFilters.dedouaneeYes')}</SelectItem>
-              <SelectItem value="no">{t('usedFilters.dedouaneeNo')}</SelectItem>
-              <SelectItem value="not-specified">{t('admin.form.dedouaneeNotSpecified')}</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        {isUsedProductForm ? (
+          <div className="space-y-2">
+            <Label>{t('admin.form.dedouanee')}</Label>
+            <Select value={previewDedouanee} onValueChange={(value) => form.setValue('dedouanee', value as ProductFormInput['dedouanee'])}>
+              <SelectTrigger className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="yes">{t('usedFilters.dedouaneeYes')}</SelectItem>
+                <SelectItem value="no">{t('usedFilters.dedouaneeNo')}</SelectItem>
+                <SelectItem value="not-specified">{t('admin.form.dedouaneeNotSpecified')}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        ) : null}
 
         <div className="space-y-2">
           <Label htmlFor="price">{t('admin.form.price')}</Label>
@@ -956,30 +960,33 @@ export default function Admin() {
           {form.formState.errors.year ? <p className="text-sm text-red-500">{form.formState.errors.year.message}</p> : null}
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="modelYear">{t('admin.form.modelYear')}</Label>
-          <Input id="modelYear" type="number" {...form.register('modelYear')} disabled={!isUsedProductForm} />
-          {form.formState.errors.modelYear ? <p className="text-sm text-red-500">{form.formState.errors.modelYear.message}</p> : null}
-        </div>
+        {isUsedProductForm ? (
+          <div className="space-y-2">
+            <Label htmlFor="modelYear">{t('admin.form.modelYear')}</Label>
+            <Input id="modelYear" type="number" {...form.register('modelYear')} />
+            {form.formState.errors.modelYear ? <p className="text-sm text-red-500">{form.formState.errors.modelYear.message}</p> : null}
+          </div>
+        ) : null}
 
-        <div className="space-y-2">
-          <Label>{t('admin.form.transmission')}</Label>
-          <Select
-            value={previewTransmission}
-            onValueChange={(value) => form.setValue('transmission', value as ProductFormInput['transmission'])}
-            disabled={!isUsedProductForm}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="not-specified">{t('admin.form.transmissionNotSpecified')}</SelectItem>
-              <SelectItem value="manual">{t('admin.form.transmissionManual')}</SelectItem>
-              <SelectItem value="automatic">{t('admin.form.transmissionAutomatic')}</SelectItem>
-              <SelectItem value="semi-automatic">{t('admin.form.transmissionSemiAutomatic')}</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        {isUsedProductForm ? (
+          <div className="space-y-2">
+            <Label>{t('admin.form.transmission')}</Label>
+            <Select
+              value={previewTransmission}
+              onValueChange={(value) => form.setValue('transmission', value as ProductFormInput['transmission'])}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="not-specified">{t('admin.form.transmissionNotSpecified')}</SelectItem>
+                <SelectItem value="manual">{t('admin.form.transmissionManual')}</SelectItem>
+                <SelectItem value="automatic">{t('admin.form.transmissionAutomatic')}</SelectItem>
+                <SelectItem value="semi-automatic">{t('admin.form.transmissionSemiAutomatic')}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        ) : null}
 
         <div className="space-y-2">
           <Label htmlFor="mileageKm">{t('admin.form.mileage')}</Label>
@@ -992,7 +999,7 @@ export default function Admin() {
           <Input id="location" {...form.register('location')} />
         </div>
 
-        <div className="space-y-2 md:col-span-2 xl:col-span-2">
+        <div className="space-y-2 md:col-span-2">
           <Label htmlFor="imagesText">{t('admin.form.images')}</Label>
           <Textarea id="imagesText" rows={4} {...form.register('imagesText')} placeholder={t('admin.form.imagesPlaceholder')} />
           <Input id="imageUpload" type="file" accept="image/*" multiple onChange={handleImageUpload} disabled={isUploadingImages} />
@@ -1020,6 +1027,21 @@ export default function Admin() {
                 {previewImages.map((image, index) => (
                   <div key={`${image}-${index}`} className="space-y-2 rounded-lg border bg-white p-2">
                     <img src={image} alt={`Preview ${index + 1}`} className="h-24 w-full rounded object-cover" loading="lazy" />
+                    {index === 0 ? (
+                      <p className="rounded-md bg-emerald-50 px-2 py-1 text-center text-xs font-semibold text-emerald-700">
+                        {t('admin.form.mainImage')}
+                      </p>
+                    ) : (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="w-full"
+                        onClick={() => handleMakeImageMain(index)}
+                      >
+                        {t('admin.form.setMainImage')}
+                      </Button>
+                    )}
                     <Button type="button" variant="outline" size="sm" className="w-full" onClick={() => handleRemoveImageAt(index)}>
                       {t('admin.form.removeImage')}
                     </Button>
@@ -1031,7 +1053,7 @@ export default function Admin() {
           {form.formState.errors.imagesText ? <p className="text-sm text-red-500">{form.formState.errors.imagesText.message}</p> : null}
         </div>
 
-        <div className="space-y-2 md:col-span-2 xl:col-span-2">
+        <div className="space-y-2 md:col-span-2">
           <Label htmlFor="catalogueUpload">{t('admin.form.catalogue')}</Label>
           <Input id="catalogueUpload" type="file" accept="application/pdf" multiple onChange={handleCatalogueUpload} disabled={isUploadingCatalogues} />
           {isUploadingCatalogues ? (
@@ -1080,7 +1102,7 @@ export default function Admin() {
           )}
         </div>
 
-        <div className="space-y-2 md:col-span-2 xl:col-span-2">
+        <div className="space-y-2 md:col-span-2">
           <RichTextTextarea
             id="description"
             name={form.register('description').name}
@@ -1093,7 +1115,7 @@ export default function Admin() {
           />
         </div>
 
-        <div className="space-y-2 md:col-span-2 xl:col-span-2">
+        <div className="space-y-2 md:col-span-2">
           <RichTextTextarea
             id="descriptionFr"
             name={form.register('descriptionFr').name}
@@ -1105,7 +1127,7 @@ export default function Admin() {
           />
         </div>
 
-        <div className="space-y-2 md:col-span-2 xl:col-span-2">
+        <div className="space-y-2 md:col-span-2">
           <RichTextTextarea
             id="descriptionEs"
             name={form.register('descriptionEs').name}
@@ -1133,55 +1155,7 @@ export default function Admin() {
           </Select>
         </div>
 
-        <div className="space-y-4 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm md:col-span-2 xl:col-span-1 xl:row-span-3 xl:self-start">
-          <h3 className="text-lg font-semibold text-slate-900">{t('admin.form.previewTitle')}</h3>
-          <div className="grid gap-4 lg:grid-cols-[220px_1fr]">
-            <img src={previewPrimaryImage} alt={watchedValues.title || 'Preview'} className="h-44 w-full rounded-xl object-cover" />
-            <div className="space-y-2">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-blue">
-                {watchedValues.category
-                  ? getProductCategoryLabel(
-                      {
-                        category: watchedValues.category,
-                        customCategoryName: watchedValues.customCategoryName,
-                      },
-                      t
-                    )
-                  : '-'}
-              </p>
-              <h4 className="text-xl font-semibold text-slate-950">{watchedValues.title || '-'}</h4>
-              <p className="line-clamp-3 text-sm text-slate-600">{stripRichText(watchedValues.description || '') || '-'}</p>
-              <div className="grid gap-2 text-sm text-slate-600 sm:grid-cols-2">
-                <p>{t('admin.form.brand')}: {watchedValues.brand || '-'}</p>
-                <p>{t('admin.form.price')}: {watchedValues.price ? formatCurrency(Number(watchedValues.price), i18n.language) : '-'}</p>
-                <p>{t('admin.form.year')}: {watchedValues.year ? String(watchedValues.year) : '-'}</p>
-                <p>{t('admin.form.modelYear')}: {previewStockType === 'used' && watchedValues.modelYear ? String(watchedValues.modelYear) : '-'}</p>
-                <p>{t('admin.form.mileage')}: {watchedValues.mileageKm !== undefined ? String(watchedValues.mileageKm) : '-'}</p>
-                <p>{t('admin.form.stockType')}: {getStockTypeLabel(previewStockType, t)}</p>
-                <p>{t('admin.form.source')}: {getSourceLabel(previewSource, t)}</p>
-                <p>
-                  {t('admin.form.transmission')}:{' '}
-                  {previewStockType === 'used' && previewTransmission !== 'not-specified'
-                    ? getLocalizedTransmissionName(previewTransmission as ProductTransmissionType, t)
-                    : '-'}
-                </p>
-                <p>
-                  {t('admin.form.dedouanee')}:{' '}
-                  {previewStockType === 'new'
-                    ? '-'
-                    : previewDedouanee === 'yes'
-                      ? t('usedFilters.dedouaneeYes')
-                      : previewDedouanee === 'no'
-                        ? t('usedFilters.dedouaneeNo')
-                        : t('admin.form.dedouaneeNotSpecified')}
-                </p>
-                <p>{t('admin.form.status')}: {watchedValues.status ? getLocalizedStatusName(watchedValues.status, t) : '-'}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <DialogFooter className="border-t border-slate-200 pt-4 md:col-span-2 xl:col-span-3">
+        <DialogFooter className="border-t border-slate-200 pt-4 md:col-span-2">
           <Button
             type="button"
             variant="outline"
@@ -1215,7 +1189,9 @@ export default function Admin() {
               <h1 className="mt-2 text-4xl font-bold text-slate-950">
                 {isStandaloneEdit ? t('admin.dialog.editTitle') : t('admin.dialog.addTitle')}
               </h1>
-              <p className="mt-3 max-w-2xl text-slate-600">{t('admin.dialog.description')}</p>
+              {t('admin.dialog.description') ? (
+                <p className="mt-3 max-w-2xl text-slate-600">{t('admin.dialog.description')}</p>
+              ) : null}
             </div>
             <Button type="button" variant="outline" onClick={() => navigate('/admin', { replace: true })}>
               {t('admin.cancel')}
@@ -1235,7 +1211,7 @@ export default function Admin() {
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-blue">{t('admin.eyebrow')}</p>
             <h1 className="mt-2 text-4xl font-bold text-slate-950">{t('admin.title')}</h1>
-            <p className="mt-3 max-w-2xl text-slate-600">{t('admin.description')}</p>
+            {t('admin.description') ? <p className="mt-3 max-w-2xl text-slate-600">{t('admin.description')}</p> : null}
           </div>
           <div className="flex flex-wrap gap-3">
             <Button variant="outline" onClick={() => exportProductsToCsv(sortedProducts)}>
@@ -1249,6 +1225,13 @@ export default function Admin() {
             </Button>
           </div>
         </div>
+
+        {loadError && (
+          <div className="rounded-xl bg-red-50 p-4 text-red-600 ring-1 ring-red-200">
+            <h3 className="font-semibold">Error Loading Data</h3>
+            <p className="mt-1 text-sm">{loadError}</p>
+          </div>
+        )}
 
         {/* Analytics Stats */}
         {analytics && (

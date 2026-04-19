@@ -10,6 +10,7 @@ import {
   signupInApi,
   type AuthUser,
 } from '@/lib/auth-api';
+import { getSessionToken } from '@/lib/api';
 import {
   sendVerificationEmailFirebase,
   signInWithEmailFirebase,
@@ -47,6 +48,7 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 const isGoogleAuthDebugEnabled = import.meta.env.DEV;
+const SESSION_USER_STORAGE_KEY = 'sakitrailer29_session_user_v1';
 const legacyPasswordFallbackErrors = new Set([
   'firebase_not_configured',
   'auth/operation-not-allowed',
@@ -72,22 +74,76 @@ function logGoogleAuthDebug(message: string, details?: Record<string, unknown>) 
   console.info(`[auth][google] ${message}`);
 }
 
+function isBrowser() {
+  return typeof window !== 'undefined';
+}
+
+function getCachedSessionUser(): AuthUser | null {
+  if (!isBrowser()) {
+    return null;
+  }
+
+  const rawValue = window.localStorage.getItem(SESSION_USER_STORAGE_KEY);
+  if (!rawValue) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(rawValue) as AuthUser;
+  } catch {
+    return null;
+  }
+}
+
+function setCachedSessionUser(user: AuthUser | null) {
+  if (!isBrowser()) {
+    return;
+  }
+
+  if (!user) {
+    window.localStorage.removeItem(SESSION_USER_STORAGE_KEY);
+    return;
+  }
+
+  try {
+    window.localStorage.setItem(SESSION_USER_STORAGE_KEY, JSON.stringify(user));
+  } catch {
+    // Ignore quota errors.
+  }
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
+    const sessionToken = getSessionToken();
+    const cachedUser = sessionToken ? getCachedSessionUser() : null;
+
+    if (cachedUser) {
+      setUser(cachedUser);
+    } else if (!sessionToken) {
+      setCachedSessionUser(null);
+    }
 
     const restoreSession = async () => {
       try {
         const restoredUser = await restoreAuthSessionFromApi();
         if (isMounted) {
           setUser(restoredUser);
+          setCachedSessionUser(restoredUser);
         }
-      } catch {
+      } catch (error) {
+        const errorCode = error instanceof Error ? error.message : 'auth_session_restore_failed';
         if (isMounted) {
-          setUser(null);
+          if (errorCode === 'backend_unreachable' && cachedUser) {
+            // Keep the last known user if the backend is temporarily unreachable.
+            setUser(cachedUser);
+          } else {
+            setUser(null);
+            setCachedSessionUser(null);
+          }
         }
       } finally {
         if (isMounted) {
@@ -115,6 +171,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             const firebaseResult = await signInWithEmailFirebase(input.email, input.password);
             const nextUser = await createFirebaseSessionInApi(firebaseResult.idToken);
             setUser(nextUser);
+            setCachedSessionUser(nextUser);
             return { success: true };
           } catch (firebaseError) {
             if (firebaseError instanceof Error && firebaseError.message === 'email_not_verified') {
@@ -124,6 +181,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               // Fallback to legacy backend password auth
               const nextUser = await loginWithPasswordInApi(input);
               setUser(nextUser);
+              setCachedSessionUser(nextUser);
               return { success: true };
             }
             throw firebaseError;
@@ -175,6 +233,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             email: nextUser.email,
           });
           setUser(nextUser);
+          setCachedSessionUser(nextUser);
           return { success: true };
         } catch (error) {
           const errorCode = error instanceof Error ? error.message : 'google_auth_failed';
@@ -186,6 +245,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       },
       updateUser(updatedUser: AuthUser) {
         setUser(updatedUser);
+        setCachedSessionUser(updatedUser);
       },
       async updatePassword(newPassword: string) {
         try {
@@ -206,6 +266,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           
           // 3. Clear local state
           setUser(null);
+          setCachedSessionUser(null);
           return { success: true };
         } catch (error) {
           const errorCode = error instanceof Error ? error.message : 'auth_delete_account_failed';
@@ -214,6 +275,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       },
       async logout() {
         setUser(null);
+        setCachedSessionUser(null);
         try {
           await logoutFromApi();
         } finally {

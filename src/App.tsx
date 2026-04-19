@@ -17,6 +17,7 @@ const Stock = lazy(() => import('@/pages/Stock'));
 const StockNew = lazy(() => import('@/pages/StockNew'));
 const ProductDetail = lazy(() => import('@/pages/ProductDetail'));
 const Admin = lazy(() => import('@/pages/Admin'));
+const AdminProductCreate = lazy(() => import('@/pages/AdminProductCreate'));
 const AdminProductEdit = lazy(() => import('@/pages/AdminProductEdit'));
 const Dashboard = lazy(() => import('@/pages/Dashboard'));
 
@@ -82,6 +83,14 @@ function App() {
               <Route path="/stock" element={<Navigate to="/stock/new" replace />} />
               <Route path="/stock/used" element={<Stock />} />
               <Route path="/stock/new" element={<StockNew />} />
+              <Route
+                path="/admin/products/new"
+                element={
+                  <ProtectedRoute requireAdmin>
+                    <AdminProductCreate />
+                  </ProtectedRoute>
+                }
+              />
               <Route
                 path="/admin/products/:id/edit"
                 element={

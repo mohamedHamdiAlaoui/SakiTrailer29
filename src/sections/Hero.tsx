@@ -129,7 +129,7 @@ export default function Hero() {
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
             </Link>
-            <a href="tel:+212666206141">
+            <a href="tel:+212666341519">
               <Button 
                 size="lg" 
                 className="border border-white bg-white/12 text-white hover:bg-white hover:text-brand-blue font-semibold text-lg px-8 py-6 backdrop-blur-sm transition-all"

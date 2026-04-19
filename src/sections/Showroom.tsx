@@ -157,7 +157,7 @@ export default function Showroom() {
                     </div>
                     <div>
                       <p className="font-semibold text-white">{t('showroom.contact')}</p>
-                      <p className="text-sm text-white/70">+212 666 206 141</p>
+                      <p className="text-sm text-white/70">+212 666-341519</p>
                       <p className="text-sm text-white/70">contact@sakitrailer29.com</p>
                     </div>
                   </div>

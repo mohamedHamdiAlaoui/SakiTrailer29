@@ -5,11 +5,13 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Link } from 'react-router-dom';
 import { Sparkles, ArrowRight, Clock, TrendingDown, Shield, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { usePrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Services() {
   const { t } = useTranslation();
+  const prefersReducedMotion = usePrefersReducedMotion();
   const [activeService, setActiveService] = useState('new');
   const sectionRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -26,7 +28,7 @@ export default function Services() {
       href: '/stock/new',
       features: t('services.newVehicles.features', { returnObjects: true }) as string[],
       cta: t('services.newVehicles.cta'),
-      stats: { label: t('services.stats.newVehicles'), value: '800+' },
+      stats: { label: t('services.stats.newVehicles'), value: '+100' },
     },
     {
       id: 'used',
@@ -38,13 +40,17 @@ export default function Services() {
       href: '/stock/used',
       features: t('services.usedVehicles.features', { returnObjects: true }) as string[],
       cta: t('services.usedVehicles.cta'),
-      stats: { label: t('services.stats.usedVehicles'), value: '1600+' },
+      stats: { label: t('services.stats.usedVehicles'), value: '+50' },
     },
   ];
 
   const activeServiceData = services.find(s => s.id === activeService)!;
 
   useEffect(() => {
+    if (prefersReducedMotion) {
+      return;
+    }
+
     const ctx = gsap.context(() => {
       gsap.fromTo('.service-tab',
         { x: -30, opacity: 0 },
@@ -64,9 +70,13 @@ export default function Services() {
     }, sectionRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [prefersReducedMotion]);
 
   useEffect(() => {
+    if (prefersReducedMotion) {
+      return;
+    }
+
     if (contentRef.current && imageRef.current) {
       gsap.fromTo(contentRef.current,
         { x: 50, opacity: 0 },
@@ -77,13 +87,13 @@ export default function Services() {
         { scale: 1, opacity: 1, duration: 0.6, ease: 'power3.out' }
       );
     }
-  }, [activeService]);
+  }, [activeService, prefersReducedMotion]);
 
   return (
     <section ref={sectionRef} id="services" className="py-20 bg-brand-blue grain-overlay">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="mb-12 max-w-3xl">
           <p className="text-brand-gold font-semibold mb-2">{t('services.subtitle')}</p>
           <h2 className="font-display text-4xl md:text-5xl font-bold text-white">
             {t('services.title')}
@@ -97,42 +107,35 @@ export default function Services() {
               <button
                 key={service.id}
                 onClick={() => setActiveService(service.id)}
-                className={`service-tab w-full text-left p-6 rounded-xl transition-all duration-500 relative overflow-hidden group ${
-                  activeService === service.id
-                    ? 'bg-brand-gold text-brand-blue'
-                    : 'bg-white/5 text-white hover:bg-white/10'
-                }`}
+                aria-pressed={activeService === service.id}
+                className={`service-tab w-full rounded-2xl border p-6 text-left transition-all duration-500 group ${activeService === service.id
+                  ? 'border-brand-gold bg-brand-gold text-brand-blue shadow-xl shadow-black/15'
+                  : 'border-white/12 bg-white/5 text-white hover:border-white/30 hover:bg-white/10'
+                  }`}
               >
-                {/* Active Indicator */}
-                <div className={`absolute left-0 top-0 bottom-0 w-1 bg-brand-gold transition-all duration-300 ${
-                  activeService === service.id ? 'opacity-100' : 'opacity-0'
-                }`} />
-
                 <div className="flex items-start gap-4">
-                  <div className={`w-12 h-12 rounded-lg flex items-center justify-center transition-colors ${
-                    activeService === service.id ? 'bg-brand-blue/20' : 'bg-brand-gold/20'
-                  }`}>
+                  <div className={`w-12 h-12 rounded-lg flex items-center justify-center transition-colors ${activeService === service.id ? 'bg-brand-blue/20' : 'bg-brand-gold/20'
+                    }`}>
                     <service.icon className={`w-6 h-6 ${activeService === service.id ? 'text-brand-blue' : 'text-brand-gold'}`} />
                   </div>
                   <div className="flex-1">
                     <h3 className="font-display text-xl font-bold mb-1">{service.title}</h3>
-                    <p className={`text-sm ${activeService === service.id ? 'text-brand-blue/70' : 'text-gray-400'}`}>
+                    <p className={`text-sm ${activeService === service.id ? 'text-brand-blue/75' : 'text-white/68'}`}>
                       {service.subtitle}
                     </p>
                   </div>
-                  <ArrowRight className={`w-5 h-5 transition-all ${
-                    activeService === service.id 
-                      ? 'opacity-100 translate-x-0' 
-                      : 'opacity-0 -translate-x-2 group-hover:opacity-50 group-hover:translate-x-0'
-                  }`} />
+                  <ArrowRight className={`w-5 h-5 transition-all ${activeService === service.id
+                    ? 'opacity-100 translate-x-0'
+                    : 'opacity-0 -translate-x-2 group-hover:opacity-50 group-hover:translate-x-0'
+                    }`} />
                 </div>
 
                 {/* Stats Badge */}
-                <div className={`mt-4 flex items-center gap-2 transition-all duration-300 ${
-                  activeService === service.id ? 'opacity-100' : 'opacity-0'
-                }`}>
-                  <div className="px-3 py-1 bg-brand-blue/20 rounded-full text-sm font-semibold">
-                    {activeService === service.id ? activeServiceData.stats.value : service.stats.value} {activeService === service.id ? activeServiceData.stats.label : service.stats.label}
+                <div className={`mt-4 flex items-center gap-2 transition-all duration-300 ${activeService === service.id ? 'opacity-100' : 'opacity-75'
+                  }`}>
+                  <div className={`rounded-full px-3 py-1 text-sm font-semibold ${activeService === service.id ? 'bg-brand-blue/15 text-brand-blue' : 'bg-white/10 text-white/80'
+                    }`}>
+                    {service.stats.value} {service.stats.label}
                   </div>
                 </div>
               </button>
@@ -160,13 +163,13 @@ export default function Services() {
                   </div>
                 </Link>
               </div>
- 
+
               {/* Content */}
               <div ref={contentRef} className="p-6 lg:p-8">
                 <h3 className="font-display text-2xl lg:text-3xl font-bold text-white mb-4">
                   {activeServiceData.subtitle}
                 </h3>
-                <p className="text-gray-300 mb-6 leading-relaxed">
+                <p className="mb-6 leading-relaxed text-white/80">
                   {activeServiceData.description}
                 </p>
 
@@ -202,7 +205,7 @@ export default function Services() {
             </div>
             <div>
               <p className="font-display text-xl font-bold text-white">{t('services.support')}</p>
-              <p className="text-gray-400 text-sm">{t('services.supportDesc')}</p>
+              <p className="text-sm text-white">{t('services.supportDesc')}</p>
             </div>
           </div>
           <div className="flex items-center gap-4 p-4 bg-white/5 rounded-xl">
@@ -211,7 +214,7 @@ export default function Services() {
             </div>
             <div>
               <p className="font-display text-xl font-bold text-white">{t('services.bestPrices')}</p>
-              <p className="text-gray-400 text-sm">{t('services.bestPricesDesc')}</p>
+              <p className="text-sm text-white">{t('services.bestPricesDesc')}</p>
             </div>
           </div>
         </div>

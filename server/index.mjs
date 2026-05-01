@@ -22,8 +22,9 @@ const databasePath = process.env.PRODUCTS_DB_PATH || path.join(__dirname, 'data'
 const uploadsRoot = path.join(path.dirname(databasePath), 'uploads');
 const imageUploadsDirectory = path.join(uploadsRoot, 'images');
 const catalogueUploadsDirectory = path.join(uploadsRoot, 'catalogues');
-const leadNotificationTo = process.env.LEAD_NOTIFICATION_TO?.trim() || 'contact@sakitrailer29.com';
-const leadNotificationFrom = process.env.LEAD_NOTIFICATION_FROM?.trim() || leadNotificationTo;
+const leadNotificationTo = process.env.LEAD_NOTIFICATION_TO?.trim();
+const leadNotificationFrom =
+  process.env.LEAD_NOTIFICATION_FROM?.trim() || leadNotificationTo || 'commercial@sakitrailer29.com';
 const leadNotificationSmtpHost = process.env.LEAD_NOTIFICATION_SMTP_HOST?.trim();
 const leadNotificationSmtpPort = Number(process.env.LEAD_NOTIFICATION_SMTP_PORT || 587);
 const leadNotificationSmtpSecure = process.env.LEAD_NOTIFICATION_SMTP_SECURE === 'true';
@@ -32,7 +33,6 @@ const leadNotificationSmtpPassword = process.env.LEAD_NOTIFICATION_SMTP_PASSWORD
 const isLeadNotificationConfigured = Boolean(
   leadNotificationSmtpHost &&
     leadNotificationSmtpPort &&
-    leadNotificationTo &&
     leadNotificationFrom &&
     leadNotificationSmtpUser &&
     leadNotificationSmtpPassword
@@ -232,6 +232,12 @@ const getUsersByRoleStatement = database.prepare(`
 const getAllUsersStatement = database.prepare(`
   SELECT id, full_name, company_name, email, password_hash, role, auth_provider, created_at, updated_at
   FROM users
+  ORDER BY datetime(created_at) DESC;
+`);
+const getAdminNotificationEmailsStatement = database.prepare(`
+  SELECT email
+  FROM users
+  WHERE role = 'admin'
   ORDER BY datetime(created_at) DESC;
 `);
 const insertUserStatement = database.prepare(`
@@ -540,6 +546,18 @@ async function sendLeadNotification(lead) {
     return false;
   }
 
+  const adminRecipients =
+    leadNotificationTo ||
+    getAdminNotificationEmailsStatement
+      .all()
+      .map((row) => normalizeEmail(row.email))
+      .filter(Boolean)
+      .join(', ');
+
+  if (!adminRecipients) {
+    return false;
+  }
+
   const product = lead.productId ? parseProductRow(getProductByIdStatement.get(lead.productId)) : null;
   const productTitle = getLocalizedProductTitle(product, lead.language) ?? lead.productId ?? 'General lead';
   const subjectPrefix = lead.productId ? 'New quote request' : 'New website lead';
@@ -564,7 +582,7 @@ async function sendLeadNotification(lead) {
 
   await leadNotificationTransport.sendMail({
     from: leadNotificationFrom,
-    to: leadNotificationTo,
+    to: adminRecipients,
     replyTo: lead.email || undefined,
     subject: `${subjectPrefix}: ${productTitle}`,
     text: lines.join('\n'),

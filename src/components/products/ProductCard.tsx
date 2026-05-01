@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, MapPin, Gauge, CalendarDays, Settings2 } from 'lucide-react';
+import { ArrowRight, MapPin, Gauge, CalendarDays, Settings2, Lock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -25,24 +25,44 @@ export default function ProductCard({ product }: { product: Product }) {
   const title = getLocalizedProductTitle(product, i18n.language);
   const description = getLocalizedProductDescriptionText(product, i18n.language);
   const isUsedProduct = product.stockType === 'used';
+  const isSold = product.status === 'sold';
+  const isDedouanee = isUsedProduct && product.dedouanee === true;
+
+  // Rich alt text for SEO (#12)
+  const imageAlt = `${product.brand} ${title} ${product.year} — ${isUsedProduct ? t('common.used', 'occasion') : t('common.new', 'neuf')} Maroc`;
 
   return (
     <article className="overflow-hidden rounded-2xl border bg-white shadow-sm transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl">
       <Link to={`/product/${product.id}`} className="block">
         <div className="relative h-56 overflow-hidden">
-          <img src={product.images[0]} alt={title} className="h-full w-full object-cover transition-transform duration-300 hover:scale-105" loading="lazy" />
+          <img src={product.images[0]} alt={imageAlt} className="h-full w-full object-cover transition-transform duration-300 hover:scale-105" loading="lazy" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-          <div className="absolute left-4 top-4 flex items-center gap-2">
+
+          {/* Sold overlay (#1) */}
+          {isSold && (
+            <div className="absolute inset-0 flex items-center justify-center bg-slate-900/50">
+              <Lock className="size-10 text-white/80" />
+            </div>
+          )}
+
+          <div className="absolute left-4 top-4 flex items-center gap-2 flex-wrap">
             <Badge className={statusClasses[product.status]}>{getLocalizedStatusName(product.status, t)}</Badge>
             <Badge variant="secondary" className="bg-white/90 text-slate-900">
               {product.brand}
             </Badge>
+            {/* Dédouané badge (#2) */}
+            {isDedouanee && (
+              <Badge className="bg-emerald-600 text-white">✓ {t('usedFilters.dedouaneeYes', 'Dédouané')}</Badge>
+            )}
           </div>
+
           <div className="absolute bottom-4 left-4">
             {isUsedProduct ? (
-              <p className="text-2xl font-bold text-white">{formatCurrency(product.price, i18n.language)}</p>
+              <p className="rounded-full bg-white px-4 py-2 text-sm font-semibold uppercase tracking-[0.18em] text-brand-blue shadow">
+                {formatCurrency(product.price, i18n.language)}
+              </p>
             ) : (
-              <p className="rounded-full bg-white/90 px-4 py-2 text-sm font-semibold uppercase tracking-[0.18em] text-brand-blue">
+              <p className="rounded-full bg-white px-4 py-2 text-sm font-semibold uppercase tracking-[0.18em] text-brand-blue shadow">
                 {t('product.priceOnRequest')}
               </p>
             )}
@@ -52,8 +72,8 @@ export default function ProductCard({ product }: { product: Product }) {
 
       <div className="space-y-4 p-5">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-blue">{getProductCategoryLabel(product, t)}</p>
-          <h3 className="mt-2 text-xl font-semibold text-slate-950">{title}</h3>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-950">{getProductCategoryLabel(product, t)}</p>
+          <h3 className="mt-2 text-xl font-semibold text-black">{title}</h3>
           <p className="mt-2 line-clamp-3 text-sm text-slate-600">{description}</p>
         </div>
 
@@ -100,9 +120,12 @@ export default function ProductCard({ product }: { product: Product }) {
         )}
 
         <Link to={`/product/${product.id}`} className="block">
-          <Button className="w-full bg-brand-blue text-white hover:bg-brand-blue/90">
-            {t('product.viewDetails')}
-            <ArrowRight className="size-4" />
+          <Button
+            className="w-full bg-brand-blue text-white hover:bg-brand-blue/90"
+            disabled={isSold}
+          >
+            {isSold ? t('product.status.sold', 'Vendu') : t('product.viewDetails')}
+            {!isSold && <ArrowRight className="size-4" />}
           </Button>
         </Link>
       </div>

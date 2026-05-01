@@ -26,7 +26,6 @@ type LoginFormValues = z.infer<ReturnType<typeof createLoginSchema>>;
 export default function Login() {
   const { t } = useTranslation();
   const [authError, setAuthError] = useState('');
-  const isGoogleAuthDebugEnabled = import.meta.env.DEV;
 
   useSeo(t('auth.login.seoTitle'), t('auth.login.seoDescription'), {
     keywords: 'login trailer dealership morocco, account access, saki trailer',
@@ -70,18 +69,8 @@ export default function Login() {
   };
 
   const onGoogleLogin = async () => {
-    if (isGoogleAuthDebugEnabled) {
-      console.info('[auth][google][login] button clicked');
-    }
-
     const result = await loginWithGoogle();
     if (!result.success) {
-      if (isGoogleAuthDebugEnabled) {
-        console.info('[auth][google][login] flow finished with error', {
-          error: result.error,
-        });
-      }
-
       let message = t('auth.login.failed');
 
       if (result.error === 'firebase_not_configured') {
@@ -101,10 +90,6 @@ export default function Login() {
       setAuthError(message);
       toast.error(message);
       return;
-    }
-
-    if (isGoogleAuthDebugEnabled) {
-      console.info('[auth][google][login] flow completed successfully');
     }
 
     setAuthError('');

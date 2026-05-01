@@ -28,21 +28,6 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID as string | undefined,
 };
 
-const isGoogleAuthDebugEnabled = import.meta.env.DEV;
-
-function logGoogleAuthDebug(message: string, details?: Record<string, unknown>) {
-  if (!isGoogleAuthDebugEnabled) {
-    return;
-  }
-
-  if (details) {
-    console.info(`[auth][google] ${message}`, details);
-    return;
-  }
-
-  console.info(`[auth][google] ${message}`);
-}
-
 function getMissingFirebaseEnvKeys() {
   const missingKeys: string[] = [];
   if (!firebaseConfig.apiKey) missingKeys.push('VITE_FIREBASE_API_KEY');
@@ -82,14 +67,9 @@ function normalizeFirebaseError(error: unknown): Error {
 
 export async function signInWithGoogleFirebase(): Promise<GoogleSignInResult> {
   try {
-    logGoogleAuthDebug('starting popup flow');
     const app = getFirebaseApp();
     const auth = getAuth(app);
     await setPersistence(auth, browserLocalPersistence);
-    logGoogleAuthDebug('firebase client ready', {
-      authDomain: firebaseConfig.authDomain,
-      projectId: firebaseConfig.projectId,
-    });
 
     const provider = new GoogleAuthProvider();
     provider.setCustomParameters({ prompt: 'select_account' });
@@ -103,19 +83,10 @@ export async function signInWithGoogleFirebase(): Promise<GoogleSignInResult> {
 
     const idToken = await credential.user.getIdToken(true);
     const fullName = credential.user.displayName?.trim() || email.split('@')[0];
-    logGoogleAuthDebug('popup flow succeeded', {
-      email,
-      fullName,
-    });
 
     return { idToken, email, fullName };
   } catch (error) {
-    const normalizedError = normalizeFirebaseError(error);
-    logGoogleAuthDebug('popup flow failed', {
-      error: normalizedError.message,
-      rawErrorName: error instanceof Error ? error.name : 'unknown',
-    });
-    throw normalizedError;
+    throw normalizeFirebaseError(error);
   }
 }
 

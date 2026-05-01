@@ -338,7 +338,7 @@ export default function ProductDetail() {
             ) : null}
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-6 xl:sticky xl:top-28 xl:self-start">
             <Card className="rounded-3xl border-0 shadow-xl">
               <CardHeader className="space-y-4">
                 <div className="flex flex-wrap items-center gap-3">
@@ -353,7 +353,10 @@ export default function ProductDetail() {
               </CardHeader>
               <CardContent className="space-y-6">
                 {isUsedProduct ? (
-                  <p className="text-4xl font-bold text-brand-blue">{formatCurrency(product.price, i18n.language)}</p>
+                  <div className="space-y-1">
+                    <p className="text-4xl font-bold text-brand-blue">{formatCurrency(product.price, i18n.language)}</p>
+                    <p className="text-xs text-slate-500">{t('product.priceTTC', 'Prix TTC · Hors frais de livraison')}</p>
+                  </div>
                 ) : (
                   <div className="space-y-1">
                     <p className="text-3xl font-bold uppercase tracking-[0.18em] text-brand-blue">{t('product.priceOnRequest')}</p>
@@ -397,7 +400,7 @@ export default function ProductDetail() {
 
                 <div className="grid gap-3 sm:grid-cols-2">
                   <a href={whatsappUrl} target="_blank" rel="noreferrer" className="sm:col-span-2">
-                    <Button className="w-full bg-green-500 text-white hover:bg-green-600">
+                    <Button className="w-full bg-green-500 text-white hover:bg-green-600 animate-pulse-blue">
                       <MessageCircle className="size-4" />
                       {t('product.actions.whatsapp')}
                     </Button>
@@ -408,7 +411,7 @@ export default function ProductDetail() {
                       {t('product.actions.call')}
                     </Button>
                   </a>
-                  <a href="mailto:contact@sakitrailer29.com">
+                  <a href="mailto:commercial@sakitrailer29.com">
                     <Button variant="outline" className="w-full">
                       <Mail className="size-4" />
                       {t('product.actions.email')}

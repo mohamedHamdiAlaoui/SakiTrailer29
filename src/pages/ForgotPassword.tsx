@@ -14,15 +14,20 @@ import { useSeo } from '@/hooks/use-seo';
 import { sendPasswordResetEmailFirebase } from '@/lib/firebase-client';
 import { getAbsoluteSiteUrl } from '@/lib/site';
 
-const resetSchema = z.object({
-  email: z.string().email('Please enter a valid email address.'),
-});
+function createResetSchema(emailMessage: string) {
+  return z.object({
+    email: z.string().email(emailMessage),
+  });
+}
 
-type ResetFormValues = z.infer<typeof resetSchema>;
+type ResetFormValues = {
+  email: string;
+};
 
 export default function ForgotPassword() {
   const { t } = useTranslation();
   const [isSuccess, setIsSuccess] = useState(false);
+  const resetSchema = createResetSchema(t('auth.login.validation.email'));
 
   useSeo('Forgot password | SakiTrailer29', 'Reset your password to recover access to your SakiTrailer29 account.', {
     canonical: getAbsoluteSiteUrl('/forgot-password'),
@@ -78,7 +83,7 @@ export default function ForgotPassword() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-sm font-medium">
-                  {t('auth.login.fields.email')}
+                  {t('common.email')}
                 </Label>
                 <Input
                   id="email"

@@ -16,6 +16,24 @@ import {
   type UsedProductFilters,
 } from '@/utils/used-product-filters';
 
+type SortOption = 'recent' | 'price-asc' | 'price-desc';
+
+// Skeleton card for loading state (#3)
+function ProductCardSkeleton() {
+  return (
+    <div className="overflow-hidden rounded-2xl border bg-white shadow-sm animate-pulse">
+      <div className="h-56 bg-slate-200" />
+      <div className="space-y-3 p-5">
+        <div className="h-3 w-1/3 rounded bg-slate-200" />
+        <div className="h-5 w-2/3 rounded bg-slate-200" />
+        <div className="h-3 w-full rounded bg-slate-200" />
+        <div className="h-3 w-5/6 rounded bg-slate-200" />
+        <div className="mt-4 h-9 w-full rounded-lg bg-slate-200" />
+      </div>
+    </div>
+  );
+}
+
 function getFiltersFromSearchParams(searchParams: URLSearchParams): UsedProductFilters {
   return {
     vehicleType: (searchParams.get('vehicleType') as UsedProductFilters['vehicleType']) ?? 'all',
@@ -33,9 +51,10 @@ export default function Stock() {
   const { t } = useTranslation();
   const description = t('stockUsedPage.description');
 
-  const { products, loadError } = useProductStore();
+  const { products, loadError, isLoading } = useProductStore();
   const [searchParams, setSearchParams] = useSearchParams();
   const [filters, setFilters] = useState<UsedProductFilters>(() => getFiltersFromSearchParams(searchParams));
+  const [sortOption, setSortOption] = useState<SortOption>('recent');
 
   const usedProducts = useMemo(
     () => products.filter((product) => product.stockType !== 'new'),
@@ -103,10 +122,27 @@ export default function Stock() {
 
   const filteredProducts = useMemo(() => {
     const nextProducts = applyUsedProductFilters(usedProducts, filters);
-    return [...nextProducts].sort(
-      (left, right) => new Date(right.createdAt).getTime() - new Date(left.createdAt).getTime()
-    );
-  }, [filters, usedProducts]);
+    return [...nextProducts].sort((left, right) => {
+      if (sortOption === 'price-asc') return left.price - right.price;
+      if (sortOption === 'price-desc') return right.price - left.price;
+      // 'recent' — default
+      return new Date(right.createdAt).getTime() - new Date(left.createdAt).getTime();
+    });
+  }, [filters, usedProducts, sortOption]);
+
+  // Count active non-default filters (#7)
+  const activeFilterCount = useMemo(() => {
+    let count = 0;
+    if (filters.vehicleType !== 'all') count++;
+    if (filters.brand !== 'all') count++;
+    if (filters.dedouanee !== 'all') count++;
+    if (filters.transmission !== 'all') count++;
+    if (filters.minKilometers) count++;
+    if (filters.maxKilometers) count++;
+    if (filters.minPrice) count++;
+    if (filters.maxPrice) count++;
+    return count;
+  }, [filters]);
 
   const structuredData = useMemo(
     () => [
@@ -135,11 +171,16 @@ export default function Stock() {
 
   const keywords = t('stockUsedPage.seoKeywords');
 
-  useSeo(t('stockUsedPage.seoTitle'), t('stockUsedPage.seoDescription'), {
+  // Dynamic SEO title with result count (#11)
+  const dynamicSeoTitle = usedProducts.length > 0
+    ? `${usedProducts.length} ${t('stockUsedPage.seoTitle')}`
+    : t('stockUsedPage.seoTitle');
+
+  useSeo(dynamicSeoTitle, t('stockUsedPage.seoDescription'), {
     keywords,
     canonical: getAbsoluteSiteUrl('/stock/used'),
     og: {
-      title: t('stockUsedPage.seoTitle'),
+      title: dynamicSeoTitle,
       description: t('stockUsedPage.seoDescription'),
       type: 'website',
       url: getAbsoluteSiteUrl('/stock/used'),
@@ -323,12 +364,28 @@ export default function Stock() {
               }}
             >
               {t('filters.reset')}
+              {activeFilterCount > 0 && (
+                <span className="ml-2 inline-flex size-5 items-center justify-center rounded-full bg-brand-blue text-[11px] font-bold text-white">
+                  {activeFilterCount}
+                </span>
+              )}
             </Button>
           </div>
         </div>
 
         <div className="flex items-center justify-between text-sm text-slate-600">
           <p>{t('stockUsedPage.showing', { filtered: filteredProducts.length, total: usedProducts.length })}</p>
+          {/* Sort control (#8) */}
+          <Select value={sortOption} onValueChange={(v) => setSortOption(v as SortOption)}>
+            <SelectTrigger className="w-[200px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="recent">{t('filters.sortRecent', 'Plus récents')}</SelectItem>
+              <SelectItem value="price-asc">{t('filters.sortPriceAsc', 'Prix croissant')}</SelectItem>
+              <SelectItem value="price-desc">{t('filters.sortPriceDesc', 'Prix décroissant')}</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {filteredProducts.length === 0 ? (
@@ -343,6 +400,12 @@ export default function Stock() {
             >
               {t('filters.reset')}
             </Button>
+          </div>
+        ) : isLoading ? (
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <ProductCardSkeleton key={i} />
+            ))}
           </div>
         ) : (
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">

@@ -1,0 +1,217 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-04-26T23:19:19.9756574+01:00",
+  "title": "Design System: SAKI TRAILER 29",
+  "extensions": {
+    "colorMeta": {
+      "brand-blue": {
+        "role": "primary",
+        "displayName": "Official Lecitrailer Blue",
+        "canonical": "#0047AB",
+        "tonalRamp": ["oklch(20% 0.09 263)", "oklch(30% 0.13 263)", "oklch(40% 0.16 263)", "oklch(50% 0.17 263)", "oklch(62% 0.15 263)", "oklch(74% 0.11 263)", "oklch(86% 0.07 263)", "oklch(95% 0.03 263)"]
+      },
+      "brand-gold": {
+        "role": "secondary",
+        "displayName": "Showroom Gold",
+        "canonical": "#FFD700",
+        "tonalRamp": ["oklch(24% 0.07 91)", "oklch(34% 0.1 91)", "oklch(46% 0.13 91)", "oklch(58% 0.15 91)", "oklch(70% 0.16 91)", "oklch(82% 0.14 91)", "oklch(90% 0.09 91)", "oklch(96% 0.04 91)"]
+      },
+      "brand-red": {
+        "role": "tertiary",
+        "displayName": "Action Red",
+        "canonical": "#E31E24",
+        "tonalRamp": ["oklch(22% 0.09 28)", "oklch(32% 0.13 28)", "oklch(42% 0.17 28)", "oklch(52% 0.2 28)", "oklch(64% 0.17 28)", "oklch(76% 0.12 28)", "oklch(88% 0.07 28)", "oklch(95% 0.03 28)"]
+      },
+      "surface-page": {
+        "role": "neutral",
+        "displayName": "Page Slate",
+        "canonical": "#F8FAFC",
+        "tonalRamp": ["#0F172A", "#1E293B", "#334155", "#475569", "#64748B", "#CBD5E1", "#E2E8F0", "#F8FAFC"]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero headlines and official brand statements."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section titles and major showroom/catalog headings."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Product names, card titles, panels, dialogs, and detail subsections."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Readable copy, forms, filters, and product detail text."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Eyebrows, metadata, categories, and compact UI captions."
+      }
+    },
+    "shadows": [
+      {
+        "name": "utility-rest",
+        "value": "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+        "purpose": "Quiet UI separation for filters, inputs, and low-emphasis panels."
+      },
+      {
+        "name": "card-rest",
+        "value": "0 4px 20px rgba(0,0,0,0.1)",
+        "purpose": "Light showroom tactility for public cards."
+      },
+      {
+        "name": "card-hover",
+        "value": "0 20px 60px rgba(0,0,0,0.2)",
+        "purpose": "Interactive lift for cards that also move or scale."
+      },
+      {
+        "name": "dialog-lift",
+        "value": "0 25px 50px -12px rgb(0 0 0 / 0.25)",
+        "purpose": "Large admin dialogs and focused overlays."
+      }
+    ],
+    "motion": [
+      {
+        "name": "state-standard",
+        "value": "300ms ease-out",
+        "purpose": "Hover, color, and transform transitions."
+      },
+      {
+        "name": "hero-entrance",
+        "value": "expo.out",
+        "purpose": "GSAP hero and scroll-triggered entrances."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Official blue action button for stock, forms, and admin actions.",
+      "html": "<button class=\"ds-btn-primary\">View details</button>",
+      "css": ".ds-btn-primary{background:#0047AB;color:#FFFFFF;border:0;border-radius:8px;padding:12px 32px;font-family:Poppins,sans-serif;font-size:14px;font-weight:700;display:inline-flex;align-items:center;gap:8px;transition:background-color 300ms ease-out,transform 300ms ease-out}.ds-btn-primary:hover{background:#0066CC;transform:translateY(-1px)}.ds-btn-primary:focus-visible{outline:2px solid #FFD700;outline-offset:2px}"
+    },
+    {
+      "name": "Accent CTA Button",
+      "kind": "button",
+      "refersTo": "button-accent",
+      "description": "Gold CTA for hero and selected high-value commercial actions.",
+      "html": "<button class=\"ds-btn-accent\">View stock</button>",
+      "css": ".ds-btn-accent{background:#FFD700;color:#0047AB;border:0;border-radius:8px;padding:14px 32px;font-family:Poppins,sans-serif;font-size:18px;font-weight:700;display:inline-flex;align-items:center;gap:10px;transition:background-color 300ms ease-out,transform 300ms ease-out}.ds-btn-accent:hover{background:#FFE44D;transform:translateY(-1px)}.ds-btn-accent:focus-visible{outline:2px solid #FFD700;outline-offset:2px}"
+    },
+    {
+      "name": "Input Field",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "White, bordered field for filters, forms, and admin data entry.",
+      "html": "<label class=\"ds-field\"><span>Search stock</span><input placeholder=\"Search by title\" /></label>",
+      "css": ".ds-field{display:grid;gap:8px;font-family:Poppins,sans-serif;color:#475569}.ds-field span{font-size:14px;font-weight:500}.ds-field input{height:40px;border:1px solid #E2E8F0;border-radius:8px;background:#FFFFFF;color:#020617;padding:10px 12px;font:inherit}.ds-field input:focus-visible{outline:2px solid #FFD700;outline-offset:2px;border-color:#0047AB}"
+    },
+    {
+      "name": "Product Card",
+      "kind": "card",
+      "refersTo": "product-card",
+      "description": "Image-first stock object with status, brand, category, specs, and one action.",
+      "html": "<article class=\"ds-product-card\"><div class=\"ds-product-media\"><span class=\"ds-status\">Available</span></div><div class=\"ds-product-body\"><p class=\"ds-category\">Trailers</p><h3>Fix Curtainsiders</h3><p>Standard curtainsider for general cargo transport requiring lateral access.</p><button>View details</button></div></article>",
+      "css": ".ds-product-card{overflow:hidden;border:1px solid #E2E8F0;border-radius:16px;background:#FFFFFF;color:#020617;box-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);font-family:Poppins,sans-serif;max-width:360px;transition:box-shadow 300ms ease-out,transform 300ms ease-out}.ds-product-card:hover{box-shadow:0 20px 60px rgba(0,0,0,0.2);transform:translateY(-4px)}.ds-product-media{height:180px;background:linear-gradient(135deg,#0047AB,#0066CC);position:relative}.ds-status{position:absolute;left:16px;top:16px;border-radius:999px;background:#10B981;color:#FFFFFF;padding:4px 10px;font-size:12px;font-weight:600}.ds-product-body{padding:20px}.ds-category{color:#0047AB;font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase}.ds-product-body h3{font-family:Teko,sans-serif;font-size:28px;line-height:1.1;letter-spacing:.02em;margin:8px 0;color:#020617}.ds-product-body p{font-size:14px;line-height:1.55;color:#475569}.ds-product-body button{margin-top:16px;width:100%;border:0;border-radius:8px;background:#0047AB;color:#FFFFFF;padding:10px 16px;font-weight:700}.ds-product-body button:focus-visible{outline:2px solid #FFD700;outline-offset:2px}"
+    },
+    {
+      "name": "Fixed Header",
+      "kind": "nav",
+      "refersTo": "navigation",
+      "description": "Blue business-first navigation with white links and gold active state.",
+      "html": "<nav class=\"ds-nav\"><strong>SAKI TRAILER 29</strong><a class=\"ds-active\">Stock</a><a>Services</a><a>Contact</a></nav>",
+      "css": ".ds-nav{height:80px;background:#0047AB;color:#FFFFFF;display:flex;align-items:center;gap:24px;padding:0 24px;font-family:Poppins,sans-serif}.ds-nav strong{font-family:Teko,sans-serif;font-size:30px;letter-spacing:.02em}.ds-nav a{color:rgba(255,255,255,.8);font-size:14px;font-weight:500;text-decoration:none}.ds-nav a:hover{color:#FFFFFF}.ds-nav .ds-active{color:#FFD700}"
+    },
+    {
+      "name": "Status Badge",
+      "kind": "chip",
+      "refersTo": "chip-status",
+      "description": "Text-paired stock status token for available, reserved, and sold states.",
+      "html": "<span class=\"ds-status-badge\">Available</span>",
+      "css": ".ds-status-badge{display:inline-flex;align-items:center;border-radius:999px;background:#10B981;color:#FFFFFF;padding:4px 10px;font-family:Poppins,sans-serif;font-size:12px;font-weight:600}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Working Showroom",
+    "overview": "This system should feel like a serious commercial vehicle showroom built for operators, not a decorative brochure. The public site can be bold and brand-forward, especially in the hero and service areas, but every visual choice must lead back to inventory clarity, Lecitrailer authority, and fast contact.",
+    "keyCharacteristics": [
+      "Official Lecitrailer blue anchors navigation, hero overlays, primary buttons, and category cues.",
+      "Gold is the high-confidence action accent for hero CTAs, selected service states, and showroom highlights.",
+      "Product photography is the main visual asset. It should stay large, sharp, and inspectable.",
+      "Cards exist for stock items, forms, dashboards, and repeated records, not as a default page-section wrapper.",
+      "Multilingual layout resilience matters as much as visual polish."
+    ],
+    "rules": [
+      {
+        "name": "The Authority Blue Rule",
+        "body": "Blue should tell the user where the business stands: official, stable, and ready to act. Do not replace it with generic navy, purple, or black.",
+        "section": "colors"
+      },
+      {
+        "name": "The Gold Means Action Rule",
+        "body": "Gold must remain scarce enough to matter. Use it for primary brand CTAs and selected states, not as general decoration.",
+        "section": "colors"
+      },
+      {
+        "name": "The Status Is Operational Rule",
+        "body": "Available, reserved, and sold colors communicate real stock state. Pair them with text labels and never rely on color alone.",
+        "section": "colors"
+      },
+      {
+        "name": "The Showroom Voice Rule",
+        "body": "Use Teko for confident public headings. Use Poppins when the user is reading, filtering, entering data, or comparing specs.",
+        "section": "typography"
+      },
+      {
+        "name": "The No Tiny Authority Rule",
+        "body": "The Lecitrailer Morocco message must never be buried in small eyebrow text alone. It needs real headline presence on brand surfaces.",
+        "section": "typography"
+      },
+      {
+        "name": "The Lift On Intent Rule",
+        "body": "Shadows should answer user intent: hover, active state, modal focus, or visual separation. Static pages should not become a stack of floating panels.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do keep the official Lecitrailer Morocco role visible in first-screen and service contexts.",
+      "Do make product imagery large enough to inspect and crop it around the actual vehicle, not abstract atmosphere.",
+      "Do preserve fast comparison in stock grids: status, brand, category, year, mileage, location, and action.",
+      "Do test French, English, and Spanish strings before shipping compact cards, buttons, nav, filters, and dialogs.",
+      "Do use cards for repeated inventory, forms, dashboards, and dialogs where the affordance is real.",
+      "Do keep admin and dashboard screens calmer and denser than the public landing surfaces."
+    ],
+    "donts": [
+      "Don't make this feel like a generic automotive marketplace that hides the dealership authority behind endless undifferentiated cards.",
+      "Don't make it feel like a luxury lifestyle car site disconnected from heavy transport work.",
+      "Don't drift into overanimated SaaS dashboard styling with abstract gradients, dark-purple tech mood, decorative glass, or hard-to-scan listings.",
+      "Don't reduce it to a thin brochure site that fails to expose inventory, product detail, contact paths, and showroom visit actions.",
+      "Don't use gradient text, decorative glassmorphism, or side-stripe accent borders as default styling patterns.",
+      "Don't create nested cards or wrap whole page sections in floating cards.",
+      "Don't let color alone communicate status, validation, selection, or destructive actions."
+    ]
+  }
+}

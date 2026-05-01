@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Star, Quote } from 'lucide-react';
+import { usePrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -46,6 +47,7 @@ function ReviewCard({ review }: { review: Review }) {
 
 export default function Testimonials() {
   const { t } = useTranslation();
+  const prefersReducedMotion = usePrefersReducedMotion();
   const sectionRef = useRef<HTMLDivElement>(null);
   const column1Ref = useRef<HTMLDivElement>(null);
   const column2Ref = useRef<HTMLDivElement>(null);
@@ -53,6 +55,10 @@ export default function Testimonials() {
   const reviews = t('testimonials.items', { returnObjects: true }) as Review[];
 
   useEffect(() => {
+    if (prefersReducedMotion) {
+      return;
+    }
+
     const ctx = gsap.context(() => {
       gsap.fromTo(
         '.testimonial-header',
@@ -97,7 +103,7 @@ export default function Testimonials() {
     }, sectionRef);
 
     return () => ctx.revert();
-  }, [reviews]);
+  }, [prefersReducedMotion, reviews]);
 
   const column1 = [...reviews.slice(0, 2), ...reviews.slice(0, 2)];
   const column2 = [...reviews.slice(2, 4), ...reviews.slice(2, 4)];
@@ -112,36 +118,63 @@ export default function Testimonials() {
           <p className="mx-auto max-w-2xl text-gray-600">{t('testimonials.description')}</p>
         </div>
 
-        <div className="relative h-[600px] overflow-hidden">
-          <div className="pointer-events-none absolute left-0 right-0 top-0 z-10 h-32 bg-gradient-to-b from-gray-50 to-transparent" />
-          <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-10 h-32 bg-gradient-to-t from-gray-50 to-transparent" />
+        {prefersReducedMotion ? (
+          <div className="relative h-[600px] overflow-hidden">
+            <div className="pointer-events-none absolute left-0 right-0 top-0 z-10 h-32 bg-gradient-to-b from-gray-50 to-transparent" />
+            <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-10 h-32 bg-gradient-to-t from-gray-50 to-transparent" />
 
-          <div className="grid h-full grid-cols-1 gap-6 md:grid-cols-3">
-            <div ref={column1Ref} className="hidden space-y-4 md:block">
-              {column1.map((review, index) => (
-                <div key={`c1-${index}`} className="review-card-wrapper">
-                  <ReviewCard review={review} />
-                </div>
-              ))}
-            </div>
+            <div className="grid h-full grid-cols-1 gap-6 md:grid-cols-3">
+              <div className="hidden space-y-4 md:block">
+                {reviews.slice(0, 2).map((review) => (
+                  <ReviewCard key={`reduced-c1-${review.id}`} review={review} />
+                ))}
+              </div>
 
-            <div ref={column2Ref} className="space-y-4">
-              {column2.map((review, index) => (
-                <div key={`c2-${index}`} className="review-card-wrapper">
-                  <ReviewCard review={review} />
-                </div>
-              ))}
-            </div>
+              <div className="space-y-4">
+                {reviews.slice(2, 4).map((review) => (
+                  <ReviewCard key={`reduced-c2-${review.id}`} review={review} />
+                ))}
+              </div>
 
-            <div ref={column3Ref} className="hidden space-y-4 md:block">
-              {column3.map((review, index) => (
-                <div key={`c3-${index}`} className="review-card-wrapper">
-                  <ReviewCard review={review} />
-                </div>
-              ))}
+              <div className="hidden space-y-4 md:block">
+                {reviews.slice(4, 6).map((review) => (
+                  <ReviewCard key={`reduced-c3-${review.id}`} review={review} />
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <div className="relative h-[600px] overflow-hidden">
+            <div className="pointer-events-none absolute left-0 right-0 top-0 z-10 h-32 bg-gradient-to-b from-gray-50 to-transparent" />
+            <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-10 h-32 bg-gradient-to-t from-gray-50 to-transparent" />
+
+            <div className="grid h-full grid-cols-1 gap-6 md:grid-cols-3">
+              <div ref={column1Ref} className="hidden space-y-4 md:block">
+                {column1.map((review, index) => (
+                  <div key={`c1-${index}`} className="review-card-wrapper">
+                    <ReviewCard review={review} />
+                  </div>
+                ))}
+              </div>
+
+              <div ref={column2Ref} className="space-y-4">
+                {column2.map((review, index) => (
+                  <div key={`c2-${index}`} className="review-card-wrapper">
+                    <ReviewCard review={review} />
+                  </div>
+                ))}
+              </div>
+
+              <div ref={column3Ref} className="hidden space-y-4 md:block">
+                {column3.map((review, index) => (
+                  <div key={`c3-${index}`} className="review-card-wrapper">
+                    <ReviewCard review={review} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

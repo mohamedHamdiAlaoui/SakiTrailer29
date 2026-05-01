@@ -5,12 +5,14 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { MapPin, Clock, Phone } from 'lucide-react';
 import VisitRequestDialog from '@/components/VisitRequestDialog';
 import ShowroomMap from '@/components/ShowroomMap';
+import { usePrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion';
 import { SHOWROOM_LOCATIONS } from '@/lib/site';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Showroom() {
   const { t } = useTranslation();
+  const prefersReducedMotion = usePrefersReducedMotion();
   const sectionRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -25,6 +27,10 @@ export default function Showroom() {
   )}&destination=${encodeURIComponent(`${showroomLocations[1].latitude},${showroomLocations[1].longitude}`)}`;
 
   useEffect(() => {
+    if (prefersReducedMotion) {
+      return;
+    }
+
     const ctx = gsap.context(() => {
       const isDesktop = window.matchMedia('(min-width: 1024px)').matches;
 
@@ -74,13 +80,19 @@ export default function Showroom() {
     }, sectionRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [prefersReducedMotion]);
 
   return (
     <section ref={sectionRef} id="about" className="relative overflow-hidden py-14 lg:py-20">
       <div ref={imageRef} className="absolute inset-0 -top-[10%] h-[120%] w-full">
-        <img src="/showroom-aerial.jpg" alt={t('showroom.title')} className="h-full w-full object-cover" loading="lazy" />
-        <div className="absolute inset-0 bg-brand-blue/40" />
+        <img
+          src="/showroom-aerial.jpg"
+          alt={t('showroom.title')}
+          className="h-full w-full object-cover brightness-[0.55] saturate-[0.7]"
+          loading="lazy"
+        />
+        <div className="absolute inset-0 bg-brand-blue/60" />
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/55 via-slate-950/35 to-slate-950/65" />
       </div>
 
       <div className="relative z-10">
@@ -89,14 +101,14 @@ export default function Showroom() {
             <div className="max-w-2xl text-white">
               <p className="mb-2 font-semibold text-brand-gold">{t('showroom.subtitle')}</p>
               <h2 className="mb-6 font-display text-4xl font-bold leading-tight md:text-5xl lg:text-6xl">{t('showroom.title')}</h2>
-              <p className="mb-8 max-w-xl text-lg leading-relaxed text-white/80">{t('showroom.description')}</p>
+              <p className="mb-8 max-w-xl text-lg leading-relaxed text-white">{t('showroom.description')}</p>
 
                 <div className="flex flex-wrap gap-4">
-                  <div className="flex items-center gap-2 text-white/80">
+                  <div className="flex items-center gap-2 text-white">
                   <MapPin className="h-5 w-5 text-brand-gold" />
                   <span>{locationSummary}</span>
                 </div>
-                <div className="flex items-center gap-2 text-white/80">
+                <div className="flex items-center gap-2 text-white">
                   <Clock className="h-5 w-5 text-brand-gold" />
                   <span>{t('showroom.hours')}</span>
                 </div>
@@ -117,7 +129,7 @@ export default function Showroom() {
                       <div className="space-y-2">
                         {showroomLocations.map((location, index) => (
                           <div key={location.id}>
-                            <p className="text-sm text-white/70">{t('showroom.locationLabel', { index: index + 1 })}: {location.name}</p>
+                            <p className="text-sm text-white">{t('showroom.locationLabel', { index: index + 1 })}: {location.name}</p>
                             <a
                               href={location.mapsUrl}
                               target="_blank"
@@ -146,8 +158,8 @@ export default function Showroom() {
                     </div>
                     <div>
                       <p className="font-semibold text-white">{t('showroom.openingHours')}</p>
-                      <p className="text-sm text-white/70">{t('showroom.hours')}</p>
-                      <p className="text-sm text-white/70">{t('showroom.sundayClosed')}</p>
+                      <p className="text-sm text-white">{t('showroom.hours')}</p>
+                      <p className="text-sm text-white">{t('showroom.sundayClosed')}</p>
                     </div>
                   </div>
 
@@ -157,8 +169,8 @@ export default function Showroom() {
                     </div>
                     <div>
                       <p className="font-semibold text-white">{t('showroom.contact')}</p>
-                      <p className="text-sm text-white/70">+212 666-341519</p>
-                      <p className="text-sm text-white/70">contact@sakitrailer29.com</p>
+                      <p className="text-sm text-white">+212 666-341519</p>
+                      <p className="text-sm text-white">commercial@sakitrailer29.com</p>
                     </div>
                   </div>
                 </div>

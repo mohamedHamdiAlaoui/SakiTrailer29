@@ -3,18 +3,33 @@ import { useTranslation } from 'react-i18next';
 import { gsap } from 'gsap';
 import { ArrowRight, Shield, Globe, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { usePrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion';
 import { Link } from 'react-router-dom';
+
+// Stats data — target numbers and suffixes
+const STATS = [
+  { key: 'vehicles', target: 1200, suffix: '+' },
+  { key: 'regions', target: 12, suffix: '' },
+  { key: 'customers', target: 20, suffix: '+' },
+  { key: 'experience', target: 10, suffix: '+' },
+];
 
 export default function Hero() {
   const { t } = useTranslation();
+  const prefersReducedMotion = usePrefersReducedMotion();
   const heroImage = '/service-logistics.jpg';
   const heroRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const subheadingRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
+  const statsBarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (prefersReducedMotion) {
+      return;
+    }
+
     const ctx = gsap.context(() => {
       gsap.fromTo(imageRef.current,
         { scale: 1.2, clipPath: 'polygon(100% 0, 100% 0, 100% 100%, 100% 100%)' },
@@ -25,7 +40,7 @@ export default function Hero() {
         const chars = headingRef.current.querySelectorAll('.char');
         gsap.fromTo(chars,
           { y: '100%', opacity: 0 },
-          { y: '0%', opacity: 1, duration: 1, delay: 0.4, stagger: 0.03, ease: 'back.out(1.7)' }
+          { y: '0%', opacity: 1, duration: 1, delay: 0.4, stagger: 0.03, ease: 'expo.out' }
         );
       }
 
@@ -46,9 +61,13 @@ export default function Hero() {
     }, heroRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [prefersReducedMotion]);
 
   useEffect(() => {
+    if (prefersReducedMotion) {
+      return;
+    }
+
     const handleScroll = () => {
       if (imageRef.current) {
         const scrollY = window.scrollY;
@@ -57,7 +76,41 @@ export default function Hero() {
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [prefersReducedMotion]);
+
+  // Count-up animation for stats bar (#9)
+  useEffect(() => {
+    const bar = statsBarRef.current;
+    if (!bar) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries[0]?.isIntersecting) return;
+        observer.disconnect();
+
+        if (prefersReducedMotion) return;
+
+        STATS.forEach(({ key, target, suffix }) => {
+          const el = bar.querySelector<HTMLElement>(`[data-stat="${key}"]`);
+          if (!el) return;
+          const counter = { value: 0 };
+          gsap.to(counter, {
+            value: target,
+            duration: 2,
+            ease: 'power2.out',
+            delay: 1.2,
+            onUpdate: () => {
+              el.textContent = `${Math.round(counter.value).toLocaleString()}${suffix}`;
+            },
+          });
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    observer.observe(bar);
+    return () => observer.disconnect();
+  }, [prefersReducedMotion]);
 
   const splitText = (text: string) => {
     return text.split('').map((char, i) => (
@@ -102,11 +155,11 @@ export default function Hero() {
             ref={headingRef}
             className="mb-6 font-display text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight text-white overflow-hidden"
           >
-            <span className="block overflow-hidden whitespace-nowrap">
-              {splitText(t('hero.title1'))}
+            <span className="block overflow-hidden">
+              {prefersReducedMotion ? t('hero.title1') : splitText(t('hero.title1'))}
             </span>
             <span className="block overflow-hidden text-brand-gold">
-              {splitText(t('hero.title2'))}
+              {prefersReducedMotion ? t('hero.title2') : splitText(t('hero.title2'))}
             </span>
           </h1>
 
@@ -154,25 +207,20 @@ export default function Hero() {
       </div>
 
       {/* Stats Bar */}
-      <div className="absolute bottom-0 left-0 right-0 z-20 bg-brand-blue/90 backdrop-blur-md border-t border-white/10">
+      <div ref={statsBarRef} className="absolute bottom-0 left-0 right-0 z-20 bg-brand-blue/90 backdrop-blur-md border-t border-white/10">
         <div className="container mx-auto px-4 py-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div className="text-center">
-              <p className="font-display text-3xl lg:text-4xl font-bold text-brand-gold">2,400+</p>
-              <p className="text-white/70 text-sm">{t('hero.stats.vehicles')}</p>
-            </div>
-            <div className="text-center">
-              <p className="font-display text-3xl lg:text-4xl font-bold text-brand-gold">12</p>
-              <p className="text-white/70 text-sm">{t('hero.stats.regions')}</p>
-            </div>
-            <div className="text-center">
-              <p className="font-display text-3xl lg:text-4xl font-bold text-brand-gold">5,000+</p>
-              <p className="text-white/70 text-sm">{t('hero.stats.customers')}</p>
-            </div>
-            <div className="text-center">
-              <p className="font-display text-3xl lg:text-4xl font-bold text-brand-gold">15+</p>
-              <p className="text-white/70 text-sm">{t('hero.stats.experience')}</p>
-            </div>
+            {STATS.map(({ key, target, suffix }) => (
+              <div key={key} className="text-center">
+                <p
+                  data-stat={key}
+                  className="font-display text-3xl lg:text-4xl font-bold text-brand-gold"
+                >
+                  {prefersReducedMotion ? `${target.toLocaleString()}${suffix}` : '0'}
+                </p>
+                <p className="text-white/70 text-sm">{t(`hero.stats.${key}`)}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>

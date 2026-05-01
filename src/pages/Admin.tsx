@@ -120,6 +120,18 @@ type ProductFormInput = z.input<ReturnType<typeof createProductSchema>>;
 type ProductFormSchema = z.output<ReturnType<typeof createProductSchema>>;
 type OrderFormInput = z.input<ReturnType<typeof createOrderSchema>>;
 type OrderFormSchema = z.output<ReturnType<typeof createOrderSchema>>;
+type AdminProductSortField =
+  | 'createdAt'
+  | 'id'
+  | 'title'
+  | 'category'
+  | 'brand'
+  | 'stockType'
+  | 'source'
+  | 'year'
+  | 'modelYear'
+  | 'price'
+  | 'status';
 
 function getProductMutationToastError(errorCode: string | undefined, fallbackMessage: string, t: TFunction) {
   if (errorCode === 'backend_unreachable') {
@@ -297,6 +309,9 @@ export default function Admin({ standaloneModeOverride }: { standaloneModeOverri
   const [imageUploadProgress, setImageUploadProgress] = useState(0);
   const [isUploadingCatalogues, setIsUploadingCatalogues] = useState(false);
   const [catalogueUploadProgress, setCatalogueUploadProgress] = useState(0);
+  const [productSearch, setProductSearch] = useState('');
+  const [productSortField, setProductSortField] = useState<AdminProductSortField>('createdAt');
+  const [productSortOrder, setProductSortOrder] = useState<'asc' | 'desc'>('desc');
   const productSchema = useMemo(() => createProductSchema(t), [t]);
   const orderSchema = useMemo(() => createOrderSchema(t), [t]);
   const [analytics, setAnalytics] = useState<{
@@ -395,6 +410,76 @@ export default function Admin({ standaloneModeOverride }: { standaloneModeOverri
     () => [...products].sort((left, right) => new Date(right.createdAt).getTime() - new Date(left.createdAt).getTime()),
     [products]
   );
+
+  const filteredProducts = useMemo(() => {
+    const query = productSearch.trim().toLowerCase();
+
+    if (!query) {
+      return sortedProducts;
+    }
+
+    return sortedProducts.filter((product) => {
+      const searchableValues = [
+        product.id,
+        product.title,
+        product.titleFr,
+        product.titleEs,
+        product.brand,
+        getProductCategoryLabel(product, t),
+        getStockTypeLabel(product.stockType ?? 'used', t),
+        getSourceLabel(product.source ?? 'sakitrailer29', t),
+        getLocalizedStatusName(product.status, t),
+      ]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase();
+
+      return searchableValues.includes(query);
+    });
+  }, [productSearch, sortedProducts, t]);
+
+  const displayedProducts = useMemo(() => {
+    const direction = productSortOrder === 'asc' ? 1 : -1;
+
+    const getSortValue = (product: Product) => {
+      switch (productSortField) {
+        case 'id':
+          return product.id.toLowerCase();
+        case 'title':
+          return getLocalizedProductTitle(product, i18n.language).toLowerCase();
+        case 'category':
+          return getProductCategoryLabel(product, t).toLowerCase();
+        case 'brand':
+          return product.brand.toLowerCase();
+        case 'stockType':
+          return getStockTypeLabel(product.stockType ?? 'used', t).toLowerCase();
+        case 'source':
+          return getSourceLabel(product.source ?? 'sakitrailer29', t).toLowerCase();
+        case 'year':
+          return product.year;
+        case 'modelYear':
+          return product.modelYear ?? -1;
+        case 'price':
+          return product.price;
+        case 'status':
+          return getLocalizedStatusName(product.status, t).toLowerCase();
+        case 'createdAt':
+        default:
+          return new Date(product.createdAt).getTime();
+      }
+    };
+
+    return [...filteredProducts].sort((left, right) => {
+      const leftValue = getSortValue(left);
+      const rightValue = getSortValue(right);
+
+      if (typeof leftValue === 'number' && typeof rightValue === 'number') {
+        return (leftValue - rightValue) * direction;
+      }
+
+      return String(leftValue).localeCompare(String(rightValue), i18n.language, { sensitivity: 'base' }) * direction;
+    });
+  }, [filteredProducts, i18n.language, productSortField, productSortOrder, t]);
 
   const sortedOrders = useMemo(
     () => [...orders].sort((left, right) => new Date(right.updatedAt).getTime() - new Date(left.updatedAt).getTime()),
@@ -1348,9 +1433,52 @@ export default function Admin({ standaloneModeOverride }: { standaloneModeOverri
         <Card className="rounded-3xl border-0 shadow-xl">
           <CardHeader>
             <CardTitle>{t('admin.productsTitle')}</CardTitle>
-            <CardDescription>{t('admin.productsCount', { count: sortedProducts.length })}</CardDescription>
           </CardHeader>
           <CardContent className="overflow-x-auto">
+            <div className="mb-4 flex flex-col gap-3 md:flex-row">
+              <div className="flex-1">
+                <Label htmlFor="admin-product-search">{t('admin.productControls.searchLabel')}</Label>
+                <Input
+                  id="admin-product-search"
+                  value={productSearch}
+                  onChange={(event) => setProductSearch(event.target.value)}
+                  placeholder={t('admin.productControls.searchPlaceholder')}
+                />
+              </div>
+              <div className="w-full md:w-64">
+                <Label htmlFor="admin-product-sort-field">{t('admin.productControls.sortByLabel')}</Label>
+                <Select value={productSortField} onValueChange={(value) => setProductSortField(value as AdminProductSortField)}>
+                  <SelectTrigger id="admin-product-sort-field">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="createdAt">{t('admin.productControls.sortOptions.createdAt')}</SelectItem>
+                    <SelectItem value="id">{t('admin.productControls.sortOptions.id')}</SelectItem>
+                    <SelectItem value="title">{t('admin.productControls.sortOptions.title')}</SelectItem>
+                    <SelectItem value="category">{t('admin.productControls.sortOptions.category')}</SelectItem>
+                    <SelectItem value="brand">{t('admin.productControls.sortOptions.brand')}</SelectItem>
+                    <SelectItem value="stockType">{t('admin.productControls.sortOptions.stockType')}</SelectItem>
+                    <SelectItem value="source">{t('admin.productControls.sortOptions.source')}</SelectItem>
+                    <SelectItem value="year">{t('admin.productControls.sortOptions.year')}</SelectItem>
+                    <SelectItem value="modelYear">{t('admin.productControls.sortOptions.modelYear')}</SelectItem>
+                    <SelectItem value="price">{t('admin.productControls.sortOptions.price')}</SelectItem>
+                    <SelectItem value="status">{t('admin.productControls.sortOptions.status')}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="w-full md:w-52">
+                <Label htmlFor="admin-product-sort-order">{t('admin.productControls.sortOrderLabel')}</Label>
+                <Select value={productSortOrder} onValueChange={(value) => setProductSortOrder(value as 'asc' | 'desc')}>
+                  <SelectTrigger id="admin-product-sort-order">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="asc">{t('admin.productControls.sortOrder.asc')}</SelectItem>
+                    <SelectItem value="desc">{t('admin.productControls.sortOrder.desc')}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -1370,7 +1498,7 @@ export default function Admin({ standaloneModeOverride }: { standaloneModeOverri
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {sortedProducts.map((product) => (
+                {displayedProducts.map((product) => (
                   <TableRow key={product.id}>
                     <TableCell>{product.id}</TableCell>
                     <TableCell>{getLocalizedProductTitle(product, i18n.language)}</TableCell>
@@ -1408,6 +1536,13 @@ export default function Admin({ standaloneModeOverride }: { standaloneModeOverri
                     </TableCell>
                   </TableRow>
                 ))}
+                {displayedProducts.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={13} className="text-center text-sm text-muted-foreground">
+                      {t('admin.productControls.empty')}
+                    </TableCell>
+                  </TableRow>
+                ) : null}
               </TableBody>
             </Table>
           </CardContent>

@@ -47,7 +47,6 @@ interface AuthContextValue {
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
-const isGoogleAuthDebugEnabled = import.meta.env.DEV;
 const SESSION_USER_STORAGE_KEY = 'sakitrailer29_session_user_v1';
 const legacyPasswordFallbackErrors = new Set([
   'firebase_not_configured',
@@ -60,19 +59,6 @@ const legacyPasswordFallbackErrors = new Set([
   'firebase_admin_unavailable',
   'invalid_id_token',
 ]);
-
-function logGoogleAuthDebug(message: string, details?: Record<string, unknown>) {
-  if (!isGoogleAuthDebugEnabled) {
-    return;
-  }
-
-  if (details) {
-    console.info(`[auth][google] ${message}`, details);
-    return;
-  }
-
-  console.info(`[auth][google] ${message}`);
-}
 
 function isBrowser() {
   return typeof window !== 'undefined';
@@ -221,25 +207,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       },
       async loginWithGoogle() {
         try {
-          logGoogleAuthDebug('requesting Google identity from Firebase');
           const googleResult = await signInWithGoogleFirebase();
-          logGoogleAuthDebug('sending Google identity to backend session endpoint', {
-            email: googleResult.email,
-          });
           const nextUser = await createFirebaseSessionInApi(googleResult.idToken);
-          logGoogleAuthDebug('backend session created', {
-            userId: nextUser.id,
-            role: nextUser.role,
-            email: nextUser.email,
-          });
           setUser(nextUser);
           setCachedSessionUser(nextUser);
           return { success: true };
         } catch (error) {
           const errorCode = error instanceof Error ? error.message : 'google_auth_failed';
-          logGoogleAuthDebug('google login flow failed in auth context', {
-            error: errorCode,
-          });
           return { success: false, error: errorCode };
         }
       },

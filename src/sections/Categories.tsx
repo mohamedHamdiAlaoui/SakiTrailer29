@@ -39,8 +39,7 @@ export default function Categories() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                 <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/60">{t('categoriesSection.vehicleType')}</p>
-                    <h3 className="mt-2 text-2xl font-semibold text-white">{getLocalizedCategoryName(category.id, t)}</h3>
+                    <h3 className="text-2xl font-semibold text-white">{getLocalizedCategoryName(category.id, t)}</h3>
                   </div>
                   <ArrowRight className="size-5 text-white transition-transform group-hover:translate-x-1" />
                 </div>

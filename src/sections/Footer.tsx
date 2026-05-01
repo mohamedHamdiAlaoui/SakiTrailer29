@@ -19,8 +19,8 @@ export default function Footer() {
           />
           <p className="max-w-md text-sm text-white/70">{t('footer.description')}</p>
           <div className="space-y-2 text-sm text-white/70">
-            <p>{t('footer.phone')}</p>
-            <p>{t('footer.email')}</p>
+            <a href="tel:+212666341519" className="block transition-colors hover:text-brand-gold">{t('footer.phone')}</a>
+            <a href="mailto:commercial@sakitrailer29.com" className="block transition-colors hover:text-brand-gold">{t('footer.email')}</a>
             <p>{t('footer.location')}</p>
           </div>
         </div>

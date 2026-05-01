@@ -383,7 +383,7 @@ export const categories: Array<{ id: KnownProductCategory; name: string; nameFr:
     nameFr: 'Rideaux coulissants et semi-rideaux',
     nameEs: 'Cortinas y semilonas',
   },
-  { id: 'reefers', name: 'Reefers', nameFr: 'Frigorifiques', nameEs: 'Frigorificos' },
+  { id: 'reefers', name: 'Reefers', nameFr: 'Frigorifiques', nameEs: 'Frigoríficos' },
   { id: 'dry-freight-vans', name: 'Dry freight vans', nameFr: 'Fourgons de fret sec', nameEs: 'Furgones de carga seca' },
   {
     id: 'container-carrier-chassis',
@@ -397,10 +397,10 @@ export const categories: Array<{ id: KnownProductCategory; name: string; nameFr:
   {
     id: 'special-vehicles-tailor-made',
     name: 'Special vehicles and tailor made',
-    nameFr: 'Vehicules speciaux et sur mesure',
-    nameEs: 'Vehiculos especiales y a medida',
+    nameFr: 'Véhicules spéciaux et sur mesure',
+    nameEs: 'Vehículos especiales y a medida',
   },
-  { id: 'rigids', name: 'Rigids', nameFr: 'Porteurs rigides', nameEs: 'Rigidos' },
+  { id: 'rigids', name: 'Rigids', nameFr: 'Porteurs rigides', nameEs: 'Rígidos' },
 ];
 
 export const categoryImages: Record<KnownProductCategory, string> = { ...CATEGORY_IMAGE_PATHS };

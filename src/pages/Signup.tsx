@@ -34,7 +34,6 @@ type SignupFormValues = z.infer<ReturnType<typeof createSignupSchema>>;
 export default function Signup() {
   const { t } = useTranslation();
   const [authError, setAuthError] = useState('');
-  const isGoogleAuthDebugEnabled = import.meta.env.DEV;
 
   useSeo(t('auth.signup.seoTitle'), t('auth.signup.seoDescription'), {
     keywords: 'signup trailer dealership morocco, create account, used vehicles',
@@ -72,23 +71,13 @@ export default function Signup() {
       return;
     }
 
-    toast.success("Account created! Please check your email to verify your account before logging in.", { duration: 10000 });
+    toast.success(t('auth.signup.verifyEmailSuccess'), { duration: 10000 });
     navigate('/login', { replace: true });
   };
 
   const onGoogleSignup = async () => {
-    if (isGoogleAuthDebugEnabled) {
-      console.info('[auth][google][signup] button clicked');
-    }
-
     const result = await loginWithGoogle();
     if (!result.success) {
-      if (isGoogleAuthDebugEnabled) {
-        console.info('[auth][google][signup] flow finished with error', {
-          error: result.error,
-        });
-      }
-
       let message = t('auth.signup.failed');
 
       if (result.error === 'firebase_not_configured') {
@@ -108,10 +97,6 @@ export default function Signup() {
       setAuthError(message);
       toast.error(message);
       return;
-    }
-
-    if (isGoogleAuthDebugEnabled) {
-      console.info('[auth][google][signup] flow completed successfully');
     }
 
     setAuthError('');
@@ -138,7 +123,7 @@ export default function Signup() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="companyName">Company Name (Optional)</Label>
+                  <Label htmlFor="companyName">{t('dashboard.companyName')}</Label>
                   <Input id="companyName" {...form.register('companyName')} />
                   {form.formState.errors.companyName ? <p className="text-sm text-red-500">{form.formState.errors.companyName.message}</p> : null}
                 </div>

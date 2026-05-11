@@ -9,6 +9,7 @@ import {
   updateProductInApi,
 } from '@/lib/products-api';
 import { getCachedProducts, getInitialProductCatalog, saveCachedProducts, STORAGE_KEYS } from '@/utils/storage';
+import { seedProducts } from '@/data/products';
 
 interface ProductStoreActionResult {
   success: boolean;
@@ -41,11 +42,11 @@ interface ProductStoreContextValue {
 const ProductStoreContext = createContext<ProductStoreContextValue | null>(null);
 
 export function ProductStoreProvider({ children }: { children: ReactNode }) {
-  const initialProducts = useMemo(() => getInitialProductCatalog(), []);
-  const [products, setProducts] = useState<Product[]>(initialProducts);
-  const [isLoading, setIsLoading] = useState(initialProducts.length === 0);
+  const cachedProducts = useMemo(() => getInitialProductCatalog(), []);
+  const [products, setProducts] = useState<Product[]>(cachedProducts);
+  const [isLoading, setIsLoading] = useState(cachedProducts.length === 0);
   const [loadError, setLoadError] = useState<string | null>(null);
-  const hasProductsRef = useRef(initialProducts.length > 0);
+  const hasProductsRef = useRef(cachedProducts.length > 0);
 
   useEffect(() => {
     const handleStorage = (event: StorageEvent) => {
@@ -76,32 +77,33 @@ export function ProductStoreProvider({ children }: { children: ReactNode }) {
       const remoteProducts = await fetchProductsFromApi();
 
       if (remoteProducts.length > 0) {
-        const cachedProducts = saveCachedProducts(remoteProducts);
-        setProducts(cachedProducts);
+        const freshProducts = saveCachedProducts(remoteProducts);
+        setProducts(freshProducts);
         setIsLoading(false);
         return;
       }
 
-      const seededProducts = initialProducts;
-      if (seededProducts.length === 0) {
+      // API returned empty — bootstrap with seed data
+      if (seedProducts.length === 0) {
         setProducts([]);
         setIsLoading(false);
         return;
       }
 
-      const bootstrappedProducts = await bootstrapProductsInApi(seededProducts);
-      const nextProducts = bootstrappedProducts.length > 0 ? bootstrappedProducts : seededProducts;
+      const bootstrappedProducts = await bootstrapProductsInApi(seedProducts);
+      const nextProducts = bootstrappedProducts.length > 0 ? bootstrappedProducts : seedProducts;
       setProducts(saveCachedProducts(nextProducts));
     } catch (error) {
       const errorCode = error instanceof Error ? error.message : 'products_load_failed';
       setLoadError(errorCode);
+      // Only fall back to seed data when we have nothing else to show
       if (!hasProductsRef.current) {
-        setProducts(initialProducts);
+        setProducts(seedProducts);
       }
     } finally {
       setIsLoading(false);
     }
-  }, [initialProducts]);
+  }, []);
 
   useEffect(() => {
     void refreshProducts();

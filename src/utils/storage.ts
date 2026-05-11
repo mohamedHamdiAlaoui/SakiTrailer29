@@ -90,12 +90,7 @@ export function saveCachedProducts(products: Product[]) {
 }
 
 export function getInitialProductCatalog() {
-  const cachedProducts = getCachedProducts();
-  if (cachedProducts.length > 0) {
-    return cachedProducts;
-  }
-
-  return seedProducts.map(normalizeStoredProduct);
+  return getCachedProducts();
 }
 
 export function ensureProductSeed() {

@@ -6,6 +6,12 @@ import App from './App.tsx'
 import { AuthProvider } from '@/context/AuthContext.tsx'
 import { ProductStoreProvider } from '@/context/ProductStoreContext.tsx'
 import { OrderProvider } from '@/context/OrderContext.tsx'
+import { initBackendKeepAlive } from '@/lib/backend-keepalive'
+
+// Wake up the Render backend immediately — before React renders.
+// This runs in parallel with component mounting so the API is ready
+// sooner when ProductStoreProvider makes its first data fetch.
+initBackendKeepAlive();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

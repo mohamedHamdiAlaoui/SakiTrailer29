@@ -388,7 +388,13 @@ export default function Stock() {
           </Select>
         </div>
 
-        {filteredProducts.length === 0 ? (
+        {isLoading ? (
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <ProductCardSkeleton key={i} />
+            ))}
+          </div>
+        ) : filteredProducts.length === 0 ? (
           <div className="rounded-3xl border border-dashed bg-white px-6 py-16 text-center">
             <h2 className="text-2xl font-semibold text-slate-950">{t('stockUsedPage.noResultsTitle')}</h2>
             <p className="mt-2 text-slate-600">{t('stockUsedPage.noResultsDescription')}</p>
@@ -400,12 +406,6 @@ export default function Stock() {
             >
               {t('filters.reset')}
             </Button>
-          </div>
-        ) : isLoading ? (
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <ProductCardSkeleton key={i} />
-            ))}
           </div>
         ) : (
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">

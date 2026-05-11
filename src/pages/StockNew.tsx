@@ -15,6 +15,21 @@ import {
   type ProductSortOption,
 } from '@/utils/product-filters';
 
+function ProductCardSkeleton() {
+  return (
+    <div className="overflow-hidden rounded-2xl border bg-white shadow-sm animate-pulse">
+      <div className="h-56 bg-slate-200" />
+      <div className="space-y-3 p-5">
+        <div className="h-3 w-1/3 rounded bg-slate-200" />
+        <div className="h-5 w-2/3 rounded bg-slate-200" />
+        <div className="h-3 w-full rounded bg-slate-200" />
+        <div className="h-3 w-5/6 rounded bg-slate-200" />
+        <div className="mt-4 h-9 w-full rounded-lg bg-slate-200" />
+      </div>
+    </div>
+  );
+}
+
 function normalizeProductSortOption(value: string | null): ProductSortOption {
   if (value === 'year-desc' || value === 'mileage-asc' || value === 'newest') {
     return value;
@@ -38,7 +53,7 @@ export default function StockNew() {
   const { t } = useTranslation();
   const description = t('stockNewPage.description');
 
-  const { products } = useProductStore();
+  const { products, isLoading } = useProductStore();
   const [searchParams, setSearchParams] = useSearchParams();
   const [filters, setFilters] = useState<ProductFilters>(() => getFiltersFromSearchParams(searchParams));
   const [sort, setSort] = useState<ProductSortOption>(() => normalizeProductSortOption(searchParams.get('sort')));
@@ -174,7 +189,13 @@ export default function StockNew() {
           <p>{t('stockNewPage.showing', { filtered: filteredProducts.length, total: newProducts.length })}</p>
         </div>
 
-        {filteredProducts.length === 0 ? (
+        {isLoading ? (
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <ProductCardSkeleton key={i} />
+            ))}
+          </div>
+        ) : filteredProducts.length === 0 ? (
           <div className="rounded-3xl border border-dashed bg-white px-6 py-16 text-center">
             <h2 className="text-2xl font-semibold text-slate-950">{t('stockNewPage.noResultsTitle')}</h2>
             <p className="mt-2 text-slate-600">{t('stockNewPage.noResultsDescription')}</p>

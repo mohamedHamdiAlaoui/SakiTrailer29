@@ -29,7 +29,7 @@
   "hero": {
     "title1": "Lecitrailer au Maroc",
     "title2": "Représentant officiel",
-    "subtitle": "SAKI TRAILER 29 SARL est l'unique représentant de Lecitrailer au Maroc. L'entreprise fournit des remorques, semi-remorques, frigorifiques, rideaux coulissants, porteurs rigides et d'autres véhicules Lecitrailer dans tout le pays, tout en proposant aussi des véhicules d'occasion et un accompagnement pour les opérations transport.",
+    "subtitle": "SAKI TRAILER 29 SARL est l'unique représentant de Lecitrailer au Maroc. L'entreprise fournit des remorques, semi-remorques, frigorifiques, bâchées, porteurs rigides et d'autres véhicules Lecitrailer dans tout le pays, tout en proposant aussi des véhicules d'occasion et un accompagnement pour les opérations transport.",
     "viewStock": "Voir le stock",
     "contactUs": "Nous contacter",
     "delivery": "Support de livraison national",
@@ -83,8 +83,8 @@
   },
   "stockNewPage": {
     "seoTitle": "Remorques et semi-remorques Lecitrailer neuves au Maroc | SAKI TRAILER 29",
-    "seoDescription": "Découvrez les semi-remorques Lecitrailer, frigorifiques, rideaux coulissants, porteurs et équipements de transport neufs au Maroc avec recherche et demandes rapides.",
-    "seoKeywords": "lecitrailer maroc, véhicules lecitrailer neufs, remorques neuves maroc, semi-remorques maroc, rideaux coulissants maroc, frigorifiques maroc",
+    "seoDescription": "Découvrez les semi-remorques Lecitrailer, frigorifiques, bâchées, porteurs et équipements de transport neufs au Maroc avec recherche et demandes rapides.",
+    "seoKeywords": "lecitrailer maroc, véhicules lecitrailer neufs, remorques neuves maroc, semi-remorques maroc, bâchées maroc, frigorifiques maroc",
     "eyebrow": "Stock neuf",
     "title": "Véhicules Lecitrailer neufs",
     "description": "",
@@ -176,16 +176,16 @@
       "semiAutomatic": "Semi automatique"
     },
     "categories": {
-      "curtainsiders-semicurtainsiders": "Rideaux coulissants et semi-rideaux",
-      "reefers": "Frigorifiques",
-      "dry-freight-vans": "Fourgons de fret sec",
-      "platforms": "Plateformes",
+      "curtainsiders-semicurtainsiders": "Bâchées et semi-bâchées",
+      "reefers": "Frigos",
+      "dry-freight-vans": "Fourgons",
+      "platforms": "Porteconteneur",
       "trailers": "Remorques",
       "dolly": "Dolly",
       "special-vehicles-tailor-made": "Véhicules spéciaux et sur mesure",
       "rigids": "Porteurs rigides",
       "other": "Autre",
-      "container-carrier-chassis": "Chassis porte-conteneurs"
+      "container-carrier-chassis": "Porteconteneur"
     }
   },
   "productDetailPage": {
@@ -607,7 +607,7 @@
     "newVehicles": {
       "title": "Véhicules Lecitrailer neufs",
       "subtitle": "Approvisionnement officiel Lecitrailer au Maroc",
-      "description": "Découvrez des remorques, semi-remorques, frigorifiques, rideaux coulissants, porteurs rigides, châssis porte-conteneurs et solutions sur mesure Lecitrailer pour les flottes marocaines.",
+      "description": "Découvrez des remorques, semi-remorques, frigorifiques, bâchées, porteurs rigides, châssis porte-conteneurs et solutions sur mesure Lecitrailer pour les flottes marocaines.",
       "features": [
         "Représentant officiel au Maroc",
         "Conseil produit direct",

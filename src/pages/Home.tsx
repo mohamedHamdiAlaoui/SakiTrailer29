@@ -12,6 +12,21 @@ import { useProductStore } from '@/context/ProductStoreContext';
 import { useSeo } from '@/hooks/use-seo';
 import { BUSINESS_EMAIL, BUSINESS_PHONE, getAbsoluteSiteUrl, SHOWROOM_COORDINATES } from '@/lib/site';
 
+function ProductCardSkeleton() {
+  return (
+    <div className="overflow-hidden rounded-2xl border bg-white shadow-sm animate-pulse">
+      <div className="h-56 bg-slate-200" />
+      <div className="space-y-3 p-5">
+        <div className="h-3 w-1/3 rounded bg-slate-200" />
+        <div className="h-5 w-2/3 rounded bg-slate-200" />
+        <div className="h-3 w-full rounded bg-slate-200" />
+        <div className="h-3 w-5/6 rounded bg-slate-200" />
+        <div className="mt-4 h-9 w-full rounded-lg bg-slate-200" />
+      </div>
+    </div>
+  );
+}
+
 export default function Home() {
   const { t } = useTranslation();
   const ogImage = 'https://lecitrailer.es/banners/a54dc1b60206b7776046588bea59d2e4.jpg';
@@ -76,7 +91,7 @@ export default function Home() {
     structuredData,
   });
 
-  const { products } = useProductStore();
+  const { products, isLoading } = useProductStore();
   const latestProducts = useMemo(
     () =>
       [...products]
@@ -98,7 +113,13 @@ export default function Home() {
             <p className="mt-3 text-slate-600">{t('home.inventoryDescription')}</p>
           </div>
 
-          {latestProducts.length === 0 ? (
+          {isLoading ? (
+            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+              {Array.from({ length: 9 }).map((_, i) => (
+                <ProductCardSkeleton key={i} />
+              ))}
+            </div>
+          ) : latestProducts.length === 0 ? (
             <div className="rounded-3xl border border-dashed bg-slate-50 px-6 py-16 text-center">
               <h3 className="text-2xl font-semibold text-slate-950">{t('home.noResultsTitle')}</h3>
               <p className="mt-2 text-slate-600">{t('home.noResultsDescription')}</p>
